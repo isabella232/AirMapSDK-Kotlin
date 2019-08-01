@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 data class Manufacturer(val id: String, val name: String, val url: String?)
 
 @JsonClass(generateAdapter = true)
-data class Model(val id: String, val name: String, val manufacturer: Manufacturer)
+data class Model(val id: String, val name: String, val manufacturer: Manufacturer, val metadata: Map<String, String>?)
 
 @JsonClass(generateAdapter = true)
 data class Aircraft(val id: String, val nickname: String, val model: Model)

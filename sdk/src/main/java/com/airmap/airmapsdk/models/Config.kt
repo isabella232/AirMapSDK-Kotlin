@@ -15,7 +15,7 @@ data class Config(
 data class AirMapConfig(
     @Json(name = "api_key") val apiKey: String,
     @Json(name = "client_id") val clientId: String,
-    val domain: String = "api.airmap.com",
+    val domain: String = "airmap.com",
     val environment: String?,
     @Json(name = "map_style") val mapStyle: String?
 )
