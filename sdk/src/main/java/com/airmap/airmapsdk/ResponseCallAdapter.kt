@@ -16,7 +16,7 @@ class Response<R>(private val call: Call<R>) {
 
     // support for java, TODO: why no work?
 //    fun execute(responseHandler: ResponseHandler<R?>) {
-//        return execute(responseHandler::accept)
+//        return execute(responseHandler::onResult)
 //    }
 
     fun execute(responseHandler: (R?, Throwable?) -> Unit): Subscription {
@@ -60,7 +60,7 @@ class AirMapResponseCallAdapterFactory : CallAdapter.Factory() {
 }
 
 interface ResponseHandler<T> {
-    fun accept(response: T, throwable: Throwable)
+    fun onResult(response: T, throwable: Throwable)
 }
 
 class Subscription {

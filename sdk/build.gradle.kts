@@ -33,10 +33,8 @@ dependencies {
     debugImplementation("com.readystatesoftware.chuck:library:1.1.0") // TODO: Remove?
     releaseImplementation("com.readystatesoftware.chuck:library-no-op:1.1.0") // TODO: Remove?
 
-    implementation("com.jakewharton.timber:timber:4.7.1")
-    implementation("com.jakewharton.threetenabp:threetenabp:1.2.1") // java.time.*
+    api("com.jakewharton.timber:timber:4.7.1")
+    api("com.jakewharton.threetenabp:threetenabp:1.2.1") // java.time.*
 
-    implementation("com.mapbox.mapboxsdk:mapbox-android-sdk:8.2.0")
-
-
+    api("com.mapbox.mapboxsdk:mapbox-android-sdk:8.2.0")
 }

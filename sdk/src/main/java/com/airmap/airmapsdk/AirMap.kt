@@ -50,14 +50,9 @@ object AirMap {
                 it.proceed(it.request().newBuilder().addHeader("X-API-Key", config.airmap.apiKey).build())
             }
             addInterceptor {
-                // Don't intercept if not logged in or refresh token not yet expired or request is for login/refresh
-                // TODO: Don't intercept if matches login URL
-                // TODO: Don't intercept if matches token refresh URL
                 when {
+                    // TODO: Login logic
                     authToken.isBlank() -> it.proceed(it.request())
-//                    authToken.matchesRefreshUrl() -> it.proceed(it.request())
-//                    authToken.matchesLoginUrl() -> it.proceed(it.request())
-//                    authToken.isExpired -> refreshAuthToken()
                     else -> it.proceed(
                         it.request().newBuilder().addHeader("Authorization", "Bearer $authToken").build()
                     )
@@ -68,7 +63,6 @@ object AirMap {
 
         aircraftClient = getClient("aircraft", 2, okHttpClient, moshi)
     }
-
 
     private fun getConfig(context: Context, moshi: Moshi) = try {
         moshi.adapter(Config::class.java).fromJson(
