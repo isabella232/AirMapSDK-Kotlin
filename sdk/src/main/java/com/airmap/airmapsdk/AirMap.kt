@@ -6,7 +6,6 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.airmap.airmapsdk.clients.AircraftClient
 import com.airmap.airmapsdk.models.Config
-import com.airmap.airmapsdk.models.Manufacturer
 import com.readystatesoftware.chuck.ChuckInterceptor
 import com.serjltt.moshi.adapters.Wrapped
 import okhttp3.*
@@ -87,10 +86,10 @@ object AirMap {
             .addPathSegments("$serviceName/v$v/")
             .toString()
 
-        // TODO: Custom CallAdapter
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .addCallAdapterFactory(AirMapResponseCallAdapterFactory())
             .client(client)
             .build()
             .create()
