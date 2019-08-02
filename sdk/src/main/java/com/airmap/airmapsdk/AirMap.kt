@@ -8,25 +8,22 @@ import com.airmap.airmapsdk.clients.AircraftClient
 import com.airmap.airmapsdk.models.Config
 import com.readystatesoftware.chuck.ChuckInterceptor
 import com.serjltt.moshi.adapters.Wrapped
-import okhttp3.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import com.squareup.moshi.Moshi
+import okhttp3.CertificatePinner
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import timber.log.Timber
-import com.squareup.moshi.Moshi
 import java.io.Reader
 
-
 object AirMap {
-    lateinit var aircraftClient: AircraftClient
+    lateinit var client: AirMapClient
     lateinit var preferences: SharedPreferences
     lateinit var config: Config
 
     private lateinit var authToken: String
-
 
     fun init(context: Context, enableCertificatePinning: Boolean = false) {
         Timber.plant(Timber.DebugTree())
@@ -61,7 +58,8 @@ object AirMap {
             }
         }.build()
 
-        aircraftClient = getClient("aircraft", 2, okHttpClient, moshi)
+        val aircraftClient = getClient<AircraftClient>("aircraft", 2, okHttpClient, moshi)
+        client = AirMapClient(aircraftClient)
     }
 
     private fun getConfig(context: Context, moshi: Moshi) = try {
@@ -101,3 +99,5 @@ object AirMap {
             .build()
     }
 }
+
+class AirMapClient(private val aircraftClient: AircraftClient) : AircraftClient by aircraftClient

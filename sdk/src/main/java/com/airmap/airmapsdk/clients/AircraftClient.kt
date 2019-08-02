@@ -8,14 +8,18 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.lang.RuntimeException
 
 interface AircraftClient {
-    @GET("manufacturer") @Wrapped(path=["data"])
+    @GET("manufacturer")
+    @Wrapped(path = ["data"])
     fun getManufacturers(@Query("q") name: String? = null): Response<List<Manufacturer>>
 
-    @GET("model") @Wrapped(path=["data"])
+    @GET("model")
+    @Wrapped(path = ["data"])
     fun getModels(@Query("q") name: String? = null, @Query("manufacturer") manufacturerId: String? = null): Response<List<Model>>
 
-    @GET("model/{id}") @Wrapped(path=["data"])
+    @GET("model/{id}")
+    @Wrapped(path = ["data"])
     fun getModel(@Path("id") id: String): Response<Model>
 }
