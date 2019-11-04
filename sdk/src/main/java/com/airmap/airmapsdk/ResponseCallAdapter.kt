@@ -14,10 +14,12 @@ import java.lang.reflect.Type
 // Based on: https://github.com/ebi-igweze/simple-call-adapter
 class Response<R>(private val call: Call<R>) {
 
-    // support for java, TODO: why no work?
-//    fun execute(responseHandler: ResponseHandler<R?>) {
-//        return execute(responseHandler::onResult)
-//    }
+    /**
+     * Java compatibility
+     */
+    fun execute(responseHandler: ResponseHandler<R?>) {
+        execute(responseHandler::onResult)
+    }
 
     fun execute(responseHandler: (R?, Throwable?) -> Unit): Subscription {
         val subscription = Subscription()
@@ -59,8 +61,8 @@ class AirMapResponseCallAdapterFactory : CallAdapter.Factory() {
     }
 }
 
-interface ResponseHandler<T> {
-    fun onResult(response: T, throwable: Throwable)
+interface ResponseHandler<R> {
+    fun onResult(response: R?, throwable: Throwable?)
 }
 
 class Subscription {

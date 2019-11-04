@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 
 plugins {
     id("com.android.library")
@@ -16,13 +17,23 @@ android {
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+
+    (kotlinOptions as KotlinJvmOptions).apply {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
 }
 
 dependencies {
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
 
-    implementation("androidx.core:core-ktx:1.0.2")
-    implementation("androidx.appcompat:appcompat:1.0.2")
+    implementation("androidx.core:core-ktx:1.1.0")
+    implementation("androidx.appcompat:appcompat:1.1.0")
     implementation("androidx.security:security-crypto:1.0.0-alpha02")
 
     implementation("com.squareup.retrofit2:retrofit:2.6.0")

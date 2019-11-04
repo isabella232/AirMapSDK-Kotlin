@@ -31,3 +31,9 @@ data class Pilot(
     @Json(name = "user_metadata") val userMetadata: Map<String, Any?>?,
     @Json(name = "app_metadata") val appMetadata: Map<String, Any?>?
 )
+
+@JsonClass(generateAdapter = true)
+data class VerificationRequest(val token: String)
+
+@JsonClass(generateAdapter = true)
+data class VerificationResult(val verified: Boolean)

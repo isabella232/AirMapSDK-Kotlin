@@ -5,6 +5,8 @@ import android.content.SharedPreferences
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.airmap.airmapsdk.clients.AircraftClient
+import com.airmap.airmapsdk.clients.FlightClient
+import com.airmap.airmapsdk.clients.PilotClient
 import com.airmap.airmapsdk.models.Config
 import com.readystatesoftware.chuck.ChuckInterceptor
 import com.serjltt.moshi.adapters.Wrapped
@@ -22,6 +24,7 @@ object AirMap {
     lateinit var client: AirMapClient
     lateinit var preferences: SharedPreferences
     lateinit var config: Config
+    val userId: String get() = preferences.getString("user_id", "auth0|5761a4279732f5844b1db844")!! // TODO
 
     private lateinit var authToken: String
 
@@ -37,7 +40,9 @@ object AirMap {
         authToken = ""
 
 
-        val moshi = Moshi.Builder().add(Wrapped.ADAPTER_FACTORY).build()
+        val moshi = Moshi.Builder()
+            .add(Wrapped.ADAPTER_FACTORY) // This needs to be the first adapter added to Moshi
+            .build()
         config = getConfig(context, moshi)
 
         val okHttpClient = OkHttpClient.Builder().apply {
@@ -59,7 +64,9 @@ object AirMap {
         }.build()
 
         val aircraftClient = getClient<AircraftClient>("aircraft", 2, okHttpClient, moshi)
-        client = AirMapClient(aircraftClient)
+        val pilotClient = getClient<PilotClient>("pilot", 2, okHttpClient, moshi)
+        val flightClient = getClient<FlightClient>("flight", 2, okHttpClient, moshi)
+        client = AirMapClient(aircraftClient, pilotClient, flightClient)
     }
 
     private fun getConfig(context: Context, moshi: Moshi) = try {
@@ -100,4 +107,13 @@ object AirMap {
     }
 }
 
-class AirMapClient(private val aircraftClient: AircraftClient) : AircraftClient by aircraftClient
+class AirMapClient(
+    private val aircraftClient: AircraftClient,
+    private val pilotClient: PilotClient,
+    private val flightClient: FlightClient
+) : AircraftClient by aircraftClient,
+    PilotClient by pilotClient,
+    FlightClient by flightClient
+//{
+//    fun verifySMS(token: String) = verifySMS(com.airmap.airmapsdk.models.VerificationRequest(token))
+//}
