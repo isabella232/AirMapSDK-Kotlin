@@ -4,11 +4,9 @@ import com.airmap.airmapsdk.Response
 import com.airmap.airmapsdk.models.Manufacturer
 import com.airmap.airmapsdk.models.Model
 import com.serjltt.moshi.adapters.Wrapped
-import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
-import java.lang.RuntimeException
 
 interface AircraftClient {
     @GET("manufacturer")

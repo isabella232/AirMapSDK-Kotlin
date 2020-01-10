@@ -10,5 +10,7 @@ import retrofit2.http.Path
 interface FlightClient {
     @GET("{id}/aircraft")
     @Wrapped(path = ["data"])
-    fun getFlights(@Path("id") pilotId: String = AirMap.userId): Response<List<Flight>>
+    fun getFlights(@Path("id") pilotId: String = AirMap.userId.orEmpty()): Response<List<Flight>>
+
+    
 }
