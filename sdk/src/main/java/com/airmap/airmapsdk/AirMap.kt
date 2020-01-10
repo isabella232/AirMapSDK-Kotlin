@@ -30,6 +30,7 @@ object AirMap {
 
     //    context: Context,
     fun init(config: Config, enableCertificatePinning: Boolean = false) {
+        // TODO: Add R8/ProGuard rules for all included libraries (e.g. retrofit, okhttp, moshi)
         Timber.plant(Timber.DebugTree())
 //        preferences = EncryptedSharedPreferences.create(
 //            "airmap_prefs",

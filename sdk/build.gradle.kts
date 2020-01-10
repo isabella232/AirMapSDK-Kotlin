@@ -32,20 +32,20 @@ android {
 dependencies {
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
 
-    implementation("androidx.core:core-ktx:1.1.0")
-    implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation("androidx.security:security-crypto:1.0.0-alpha02")
+//    implementation("androidx.core:core-ktx:1.1.0")
+//    implementation("androidx.appcompat:appcompat:1.1.0")
+//    implementation("androidx.security:security-crypto:1.0.0-alpha02")
 
-    implementation("com.squareup.retrofit2:retrofit:2.6.0")
-    implementation("com.squareup.retrofit2:converter-moshi:2.6.0")
-    implementation("com.squareup.moshi:moshi:1.8.0")
-    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.8.0")
+    implementation("com.squareup.retrofit2:retrofit:2.7.1")
+    implementation("com.squareup.retrofit2:converter-moshi:2.7.1")
+    implementation("com.squareup.moshi:moshi:1.9.2")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")
     implementation("com.serjltt.moshi:moshi-lazy-adapters:2.2")
-    debugImplementation("com.readystatesoftware.chuck:library:1.1.0") // TODO: Remove?
-    releaseImplementation("com.readystatesoftware.chuck:library-no-op:1.1.0") // TODO: Remove?
+//    debugImplementation("com.readystatesoftware.chuck:library:1.1.0") // TODO: Remove?
+//    releaseImplementation("com.readystatesoftware.chuck:library-no-op:1.1.0") // TODO: Remove?
 
     api("com.jakewharton.timber:timber:4.7.1")
     api("com.jakewharton.threetenabp:threetenabp:1.2.1") // java.time.*
 
-    api("com.mapbox.mapboxsdk:mapbox-android-sdk:8.2.0")
+//    api("com.mapbox.mapboxsdk:mapbox-android-sdk:9.0.0-alpha.1")
 }
