@@ -29,8 +29,9 @@ android {
 
 dependencies {
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
+    implementation(project(":sdk"))
     implementation("androidx.appcompat:appcompat:1.1.0")
     implementation("androidx.core:core-ktx:1.1.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    implementation(project(":sdk"))
+    implementation("com.squareup.moshi:moshi:1.9.2")
 }

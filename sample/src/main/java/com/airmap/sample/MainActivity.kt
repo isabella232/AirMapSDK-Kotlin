@@ -1,16 +1,20 @@
 package com.airmap.sample
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.airmap.airmapsdk.AirMap
+import com.airmap.airmapsdk.models.Config
+import com.squareup.moshi.Moshi
 import timber.log.Timber
+import java.io.Reader
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        AirMap.init(this)
+        AirMap.init(getConfig(this, Moshi.Builder().build()))
         demoAircraft()
         demoPilot()
     }
@@ -32,4 +36,16 @@ class MainActivity : AppCompatActivity() {
     private fun demoPilot() {
         AirMap.client.getPilot().execute(::genericLogResponseHandler)
     }
+
+    private fun getConfig(context: Context, moshi: Moshi) = try {
+        moshi.adapter(Config::class.java)
+            .fromJson(
+                context.resources.assets.open("airmap.config.json")
+                    .reader()
+                    .use(Reader::readText)
+            )!!
+    } catch (e: Exception) {
+        throw RuntimeException("Please ensure airmap.config.json is in your /assets directory")
+    }
+
 }

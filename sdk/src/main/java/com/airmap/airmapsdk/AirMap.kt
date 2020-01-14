@@ -1,66 +1,64 @@
 package com.airmap.airmapsdk
 
-//import android.content.Context
-//import android.content.SharedPreferences
-//import androidx.security.crypto.EncryptedSharedPreferences
-//import androidx.security.crypto.MasterKeys
 import com.airmap.airmapsdk.clients.AircraftClient
 import com.airmap.airmapsdk.clients.FlightClient
 import com.airmap.airmapsdk.clients.PilotClient
 import com.airmap.airmapsdk.models.Config
-//import com.readystatesoftware.chuck.ChuckInterceptor
 import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.Moshi
 import okhttp3.CertificatePinner
 import okhttp3.HttpUrl
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import timber.log.Timber
-//import java.io.Reader
 
 object AirMap {
     lateinit var client: AirMapClient
-//    private lateinit var preferences: SharedPreferences
     private lateinit var config: Config
-//    val userId: String get() = preferences.getString("user_id", "auth0|5761a4279732f5844b1db844")!! // TODO
-    var userId: String? = null
+    var userId: String? = null // "auth0|5761a4279732f5844b1db844"
     private var authToken: String? = null
+    private val certificatePinner: CertificatePinner
+        get() {
+            val host = "api.airmap.com"
+            val hostJP = "api.airmap.jp"
+            // TODO: Add other hosts?
+            return CertificatePinner.Builder()
+                .add(host, "sha256/47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=")
+                .add(host, "sha256/CJlvFGiErgX6zPm0H+oO/TRbKOERdQOAYOs2nUlvIQ0=")
+                .add(host, "sha256/8Rw90Ej3Ttt8RRkrg+WYDS9n7IS03bk5bjP/UXPtaY8=")
+                .add(host, "sha256/Ko8tivDrEjiY90yGasP6ZpBU4jwXvHqVvQI0GS3GNdA=")
+                .add(hostJP, "sha256/W5rhIQ2ZbJKFkRvsGDwQVS/H/NSixP33+Z/fpJ0O25Q=")
+                .build()
+        }
 
-    //    context: Context,
     fun init(config: Config, enableCertificatePinning: Boolean = false) {
-        // TODO: Add R8/ProGuard rules for all included libraries (e.g. retrofit, okhttp, moshi)
         Timber.plant(Timber.DebugTree())
-//        preferences = EncryptedSharedPreferences.create(
-//            "airmap_prefs",
-//            MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
-//            context,
-//            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-//            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
-//        )
-
-        authToken = ""
-
 
         val moshi = Moshi.Builder()
             .add(Wrapped.ADAPTER_FACTORY) // This needs to be the first adapter added to Moshi
             .build()
-//        config = getConfig(context, moshi)
 
         val okHttpClient = OkHttpClient.Builder().apply {
-            if (enableCertificatePinning) certificatePinner(getCertificatePinner())
-//            addInterceptor(ChuckInterceptor(context))
-            addInterceptor {
-                it.proceed(it.request().newBuilder().addHeader("X-API-Key", config.airmap.apiKey).build())
+            if (enableCertificatePinning) {
+                certificatePinner(certificatePinner)
             }
+
+            // API Key Interceptor
+            addInterceptor {
+                addHeaderToRequest(it, "X-API-Key", config.airmap.apiKey)
+            }
+
+            // Auth Token Interceptor - We always add the interceptor regardless of if the token has a value yet. We
+            // check inside the Interceptor for a token value since the Interceptor itself is persistent
             addInterceptor {
                 when {
-                    // TODO: Login logic
+                    // TODO: Login logic (Add a listener when auth token is blank for apps to be able to consume?)
                     authToken.isNullOrBlank() -> it.proceed(it.request())
-                    else -> it.proceed(
-                        it.request().newBuilder().addHeader("Authorization", "Bearer $authToken").build()
-                    )
+                    else -> addHeaderToRequest(it, "Authorization", "Bearer $authToken")
                 }
 
             }
@@ -72,15 +70,9 @@ object AirMap {
         client = AirMapClient(aircraftClient, pilotClient, flightClient)
     }
 
-//    private fun getConfig(context: Context, moshi: Moshi) = try {
-//        moshi.adapter(Config::class.java)
-//            .fromJson(
-//                context.resources.assets.open("airmap.config.json")
-//                .reader()
-//                .use(Reader::readText))!!
-//    } catch (e: Exception) {
-//        throw RuntimeException("Please ensure airmap.config.json is in your /assets directory")
-//    }
+    private fun addHeaderToRequest(chain: Interceptor.Chain, name: String, value: String): Response {
+        return chain.proceed(chain.request().newBuilder().addHeader(name, value).build())
+    }
 
     private inline fun <reified T> getClient(serviceName: String, v: Int, client: OkHttpClient, moshi: Moshi): T {
         val prefix = if (config.airmap.environment.isNullOrBlank()) "" else "${config.airmap.environment}."
@@ -97,18 +89,6 @@ object AirMap {
             .client(client)
             .build()
             .create()
-    }
-
-    private fun getCertificatePinner(): CertificatePinner {
-        val host = "api.airmap.com"
-        val hostJP = "api.airmap.jp"
-        return CertificatePinner.Builder()
-            .add(host, "sha256/47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=")
-            .add(host, "sha256/CJlvFGiErgX6zPm0H+oO/TRbKOERdQOAYOs2nUlvIQ0=")
-            .add(host, "sha256/8Rw90Ej3Ttt8RRkrg+WYDS9n7IS03bk5bjP/UXPtaY8=")
-            .add(host, "sha256/Ko8tivDrEjiY90yGasP6ZpBU4jwXvHqVvQI0GS3GNdA=")
-            .add(hostJP, "sha256/W5rhIQ2ZbJKFkRvsGDwQVS/H/NSixP33+Z/fpJ0O25Q=")
-            .build()
     }
 }
 
