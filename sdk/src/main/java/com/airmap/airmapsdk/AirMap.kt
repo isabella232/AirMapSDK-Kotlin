@@ -3,7 +3,7 @@ package com.airmap.airmapsdk
 import com.airmap.airmapsdk.clients.AircraftClient
 import com.airmap.airmapsdk.clients.FlightClient
 import com.airmap.airmapsdk.clients.PilotClient
-import com.airmap.airmapsdk.models.Config
+import com.airmap.airmapsdk.models.*
 import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.Moshi
 import okhttp3.CertificatePinner
@@ -15,6 +15,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import timber.log.Timber
+import java.lang.NullPointerException
 
 object AirMap {
     lateinit var client: AirMapClient
@@ -49,7 +50,7 @@ object AirMap {
 
             // API Key Interceptor
             addInterceptor {
-                addHeaderToRequest(it, "X-API-Key", config.airmap.apiKey)
+                it.addHeaderToRequest("X-API-Key", config.airmap.apiKey)
             }
 
             // Auth Token Interceptor - We always add the interceptor regardless of if the token has a value yet. We
@@ -58,7 +59,7 @@ object AirMap {
                 when {
                     // TODO: Login logic (Add a listener when auth token is blank for apps to be able to consume?)
                     authToken.isNullOrBlank() -> it.proceed(it.request())
-                    else -> addHeaderToRequest(it, "Authorization", "Bearer $authToken")
+                    else -> it.addHeaderToRequest("Authorization", "Bearer $authToken")
                 }
 
             }
@@ -70,8 +71,8 @@ object AirMap {
         client = AirMapClient(aircraftClient, pilotClient, flightClient)
     }
 
-    private fun addHeaderToRequest(chain: Interceptor.Chain, name: String, value: String): Response {
-        return chain.proceed(chain.request().newBuilder().addHeader(name, value).build())
+    private fun Interceptor.Chain.addHeaderToRequest(name: String, value: String): Response {
+        return this.proceed(this.request().newBuilder().addHeader(name, value).build())
     }
 
     private inline fun <reified T> getClient(serviceName: String, v: Int, client: OkHttpClient, moshi: Moshi): T {
@@ -92,6 +93,7 @@ object AirMap {
     }
 }
 
+// The clients represent the raw REST API. Any extra methods defined in AirMapClient are convenience
 class AirMapClient(
     private val aircraftClient: AircraftClient,
     private val pilotClient: PilotClient,
@@ -99,6 +101,14 @@ class AirMapClient(
 ) : AircraftClient by aircraftClient,
     PilotClient by pilotClient,
     FlightClient by flightClient
-//{
-//    fun verifySMS(token: String) = verifySMS(com.airmap.airmapsdk.models.VerificationRequest(token))
-//}
+{
+    fun verifySMS(token: String) = verifySMS(VerificationRequest(token))
+    fun createFlight(flight: Flight) = when (flight.geometry) {
+        is Point -> createFlightPoint(flight)
+        is Path -> createFlightPath(flight)
+        is Polygon -> createFlightPolygon(flight)
+        else -> throw Exception("Flight geometry was null or an unsupported type")
+    }
+
+    // getPublicFlights (make use of getFlights with custom paramters)
+}
