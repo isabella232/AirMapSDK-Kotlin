@@ -4,37 +4,59 @@ import com.airmap.airmapsdk.AirMap
 import com.airmap.airmapsdk.Response
 import com.airmap.airmapsdk.models.Comm
 import com.airmap.airmapsdk.models.Flight
+import com.airmap.airmapsdk.models.Geometry
 import com.serjltt.moshi.adapters.Wrapped
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
+import java.util.*
 
 interface FlightClient {
-//    @GET("flight/{id}")
-//    @Wrapped(path = ["data"])
-//    fun getFlights(@Path("id") pilotId: String = AirMap.userId.orEmpty()): Response<List<Flight>>
-
-    // getFlights
+    /**
+     * TODO: Copy description from https://developers.airmap.com/reference
+     * TODO: This method returns a paged response. Create a class to wrap+expose the paged response
+     *
+     * @param pilotId
+     * @param startAfter
+     * @param startBefore
+     * @param endAfter
+     * @param endBefore
+     * @param country
+     * @param state
+     * @param city
+     * @param enhance
+     * @param limit
+     * @return
+     */
+    @GET("/")
+    @Wrapped(path = ["data", "results"])
+    fun getFlights(
+        @Query("pilot_id") pilotId: String? = null,
+        @Query("start_before") startBefore: Date? = null,
+        @Query("start_after") startAfter: Date? = null,
+        @Query("end_before") endBefore: Date? = null,
+        @Query("end_after") endAfter: Date? = null,
+        @Query("country") country: String? = null,
+        @Query("state") state: String? = null,
+        @Query("city") city: String? = null,
+        @Query("geometry") geometry: Geometry? = null,
+        @Query("enhance") enhance: Boolean? = null,
+        @Query("limit") limit: Int? = null
+    ): Response<List<Flight>>
 
     @GET("{id}")
     @Wrapped(path = ["data"])
     fun getFlight(@Path("id") flightId: String, @Query("enhance") enhance: Boolean = false): Response<Flight>
 
-    // TODO: express input as raw params instead of as Flight
     @POST("/point")
     @Wrapped(path = ["data"])
-    fun createFlightPoint(flight: Flight): Response<Flight>
+    fun createFlightPoint(@Body flight: Flight): Response<Flight>
 
-    // TODO: express input as raw params instead of as Flight
     @POST("/path")
     @Wrapped(path = ["data"])
-    fun createFlightPath(flight: Flight): Response<Flight>
+    fun createFlightPath(@Body flight: Flight): Response<Flight>
 
-    // TODO: express input as raw params instead of as Flight
     @POST("/polygon")
     @Wrapped(path = ["data"])
-    fun createFlightPolygon(flight: Flight): Response<Flight>
+    fun createFlightPolygon(@Body flight: Flight): Response<Flight>
 
     @POST("{id}/end")
     @Wrapped(path = ["data"])

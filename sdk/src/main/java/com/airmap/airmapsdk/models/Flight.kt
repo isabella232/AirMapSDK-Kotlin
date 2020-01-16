@@ -16,7 +16,7 @@ data class Flight(
     val aircraft: Aircraft? = null,
     @Json(name = "aircraft_id") val aircraftId: String? = null,
     @Json(name = "created_at") val createdAt: Date = Date(),
-    @Json(name = "start_time") val startTime: Date,
+    @Json(name = "start_time") val startTime: Date, // TODO: Need to use "now" for start_time value if start_time is in the past/close to now during flight creation
     @Json(name = "end_time") val endTime: Date,
     val city: String,
     val state: String,
@@ -29,3 +29,4 @@ data class Flight(
 ) {
 //    val f = Flight().apply { country = "" }
 }
+

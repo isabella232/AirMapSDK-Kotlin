@@ -102,6 +102,7 @@ class AirMapClient(
     PilotClient by pilotClient,
     FlightClient by flightClient
 {
+    // todo: look into implications of moving this into the respective clients themselves
     fun verifySMS(token: String) = verifySMS(VerificationRequest(token))
     fun createFlight(flight: Flight) = when (flight.geometry) {
         is Point -> createFlightPoint(flight)
@@ -110,5 +111,5 @@ class AirMapClient(
         else -> throw Exception("Flight geometry was null or an unsupported type")
     }
 
-    // getPublicFlights (make use of getFlights with custom paramters)
+    // getPublicFlights (make use of getFlights with custom parameters)
 }
