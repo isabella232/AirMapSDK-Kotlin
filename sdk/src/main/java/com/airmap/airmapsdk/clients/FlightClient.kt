@@ -2,11 +2,10 @@ package com.airmap.airmapsdk.clients
 
 import com.airmap.airmapsdk.AirMap
 import com.airmap.airmapsdk.Response
-import com.airmap.airmapsdk.models.Comm
-import com.airmap.airmapsdk.models.Flight
-import com.airmap.airmapsdk.models.Geometry
+import com.airmap.airmapsdk.models.*
 import com.serjltt.moshi.adapters.Wrapped
 import retrofit2.http.*
+import retrofit2.http.Path
 import java.util.*
 
 interface FlightClient {
@@ -44,7 +43,10 @@ interface FlightClient {
 
     @GET("{id}")
     @Wrapped(path = ["data"])
-    fun getFlight(@Path("id") flightId: String, @Query("enhance") enhance: Boolean = false): Response<Flight>
+    fun getFlight(
+        @Path("id") flightId: String,
+        @Query("enhance") enhance: Boolean = false
+    ): Response<Flight>
 
     @POST("/point")
     @Wrapped(path = ["data"])
@@ -76,5 +78,48 @@ interface FlightClient {
 
     @GET("{id}/plan")
     @Wrapped(path = ["data"])
-    fun getFlightPlan(@Path("id") flightId: String)
+    fun getFlightPlan(@Path("id") flightId: String): Response<FlightPlan>
+
+    @POST("plan")
+    @Wrapped(path = ["data"])
+    fun createFlightPlan(
+        pilotId: String,
+        geometry: Geometry,
+        takeoffLatitude: Double,
+        takeoffLongitude: Double,
+        maxAltitudeAgl: Double,
+        startTime: Date,
+        endTime: Date,
+        buffer: Int,
+        flightDescription: String,
+        rulesets: List<String>? = null,
+        flightFeatures: List<FlightFeatureValue>? = null
+    ): Response<FlightPlan>
+
+    @PATCH("plan/{id}")
+    @Wrapped(path = ["data"])
+    fun updateFlightPlan(
+        @Path("id") flightPlanId: String,
+        geometry: Geometry? = null,
+        takeoffLatitude: Double? = null,
+        takeoffLongitude: Double? = null,
+        maxAltitudeAgl: Double? = null,
+        startTime: Date? = null,
+        endTime: Date? = null,
+        buffer: Int? = null,
+        flightDescription: String? = null,
+        rulesets: List<String>? = null,
+        flightFeatures: List<FlightFeatureValue>? = null
+    ): Response<FlightPlan>
+
+    @POST("plan/{id}/submit")
+    @FormUrlEncoded // TODO: test if this works (not sure if API accepts form url encoded format)
+    @Wrapped(path = ["data"])
+    fun submitFlightPlan(@Path("id") flightPlanId: String, @Field("public") isPublic: Boolean)
+
+    @GET("plan/{id}/briefing")
+    @Wrapped(path = ["data"])
+    fun getFlightBriefing(@Path("id") flightPlanId: String): Response<FlightBriefing>
+
+
 }

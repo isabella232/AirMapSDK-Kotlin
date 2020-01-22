@@ -15,7 +15,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import timber.log.Timber
-import java.lang.NullPointerException
 
 object AirMap {
     lateinit var client: AirMapClient
@@ -44,14 +43,10 @@ object AirMap {
             .build()
 
         val okHttpClient = OkHttpClient.Builder().apply {
-            if (enableCertificatePinning) {
-                certificatePinner(certificatePinner)
-            }
+            if (enableCertificatePinning) certificatePinner(certificatePinner)
 
             // API Key Interceptor
-            addInterceptor {
-                it.addHeaderToRequest("X-API-Key", config.airmap.apiKey)
-            }
+            addInterceptor { it.addHeaderToRequest("X-API-Key", config.airmap.apiKey) }
 
             // Auth Token Interceptor - We always add the interceptor regardless of if the token has a value yet. We
             // check inside the Interceptor for a token value since the Interceptor itself is persistent
@@ -61,7 +56,6 @@ object AirMap {
                     authToken.isNullOrBlank() -> it.proceed(it.request())
                     else -> it.addHeaderToRequest("Authorization", "Bearer $authToken")
                 }
-
             }
         }.build()
 
