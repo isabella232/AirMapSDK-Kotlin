@@ -6,25 +6,27 @@ import java.time.LocalDateTime
 
 @JsonClass(generateAdapter = true)
 data class Wind(
-    val heading: Int,
-    val speed: Int,
-    val gusting: Int
+    @Json(name = "heading") val heading: Int,
+    @Json(name = "speed") val speed: Int,
+    @Json(name = "gusting") val gusting: Int
 )
 
 @JsonClass(generateAdapter = true)
 data class WeatherUpdate(
-    val time: LocalDateTime,
-    val timezone: String,
-    val condition: String,
-    val icon: String,
-    val wind: Wind,
-    val humidity: Double,
-    val visibility: Double,
-    val precipitation: Double,
-    val temperature: Double,
+    @Json(name = "time") val time: LocalDateTime,
+    @Json(name = "timezone") val timezone: String,
+    @Json(name = "condition") val condition: String,
+    @Json(name = "icon") val icon: String,
+    @Json(name = "wind") val wind: Wind,
+    @Json(name = "humidity") val humidity: Double,
+    @Json(name = "visibility") val visibility: Double,
+    @Json(name = "precipitation") val precipitation: Double,
+    @Json(name = "temperature") val temperature: Double,
     @Json(name = "dew_point") val dewPoint: Double,
-    val mslp: Double
+    @Json(name = "coordinate") val mslp: Double
 )
 
 @JsonClass(generateAdapter = true)
-data class Forecast(val weather: List<WeatherUpdate>)
+data class Forecast(
+    @Json(name = "weather") val weather: List<WeatherUpdate>
+)

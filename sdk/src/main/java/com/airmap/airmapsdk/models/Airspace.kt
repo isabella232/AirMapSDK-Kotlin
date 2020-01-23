@@ -1,19 +1,20 @@
 package com.airmap.airmapsdk.models
 
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Airspace(
-    val id: String,
-    val name: String,
-    val type: Type,
-    val country: String,
-    val state: String,
-    val city: String,
-    val geometry: Geometry,
-    val propertyBoundary: Geometry // TODO: this is found at related_geometry.property_boundary.geometry
+    @Json(name = "id") val id: String,
+    @Json(name = "name") val name: String,
+    @Json(name = "type") val type: Type,
+    @Json(name = "country") val country: String,
+    @Json(name = "state") val state: String,
+    @Json(name = "city") val city: String,
+    @Json(name = "geometry") val geometry: Geometry,
+    @Json(name = "propertyBoundary") val propertyBoundary: Geometry // TODO: this is found at related_geometry.property_boundary.geometry
 ) {
-//    @JsonClass(generateAdapter = true)
+//    TODO: @JsonClass(generateAdapter = true)
     enum class Type(private val apiName: String) {
         Airport("airport"),
         AMAField("ama_field"),
