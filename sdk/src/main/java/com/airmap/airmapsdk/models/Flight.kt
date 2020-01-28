@@ -28,6 +28,7 @@ data class Flight(
     @Json(name = "geometry") val geometry: Geometry?
 )
 
+@JsonClass(generateAdapter = true)
 data class FlightPlan(
     val id: String,
     @Json(name = "flight_id") val flightId: String,
@@ -48,12 +49,13 @@ data class FlightPlan(
     @Json(name = "notify") val notify: Boolean
 )
 
+@JsonClass(generateAdapter = true)
 data class FlightBriefing(
     @Json(name = "flight_plan_id") val flightPlanId: String,
     @Json(name = "color") val color: String,
     @Json(name = "created_at") val createdAt: Date,
     @Json(name = "rulesets") val rulesets: List<Ruleset>,
-    @Json(name = "airspace") val airspace: AirspaceStatus,
+    @Json(name = "airspace") val airspace: Status,
     @Json(name = "validations") val validations: List<Validation>,
     @Json(name = "authorizations") val authorizations: List<Authorization>
 )

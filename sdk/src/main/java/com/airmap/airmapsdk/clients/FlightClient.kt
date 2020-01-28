@@ -1,12 +1,13 @@
 package com.airmap.airmapsdk.clients
 
-import com.airmap.airmapsdk.AirMap
 import com.airmap.airmapsdk.Response
 import com.airmap.airmapsdk.models.*
 import com.serjltt.moshi.adapters.Wrapped
 import retrofit2.http.*
 import retrofit2.http.Path
 import java.util.*
+
+typealias FlightFeatureValue = Any // TODO
 
 interface FlightClient {
     /**
