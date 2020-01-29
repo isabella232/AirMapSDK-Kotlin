@@ -55,7 +55,7 @@ data class FlightBriefing(
     @Json(name = "color") val color: String,
     @Json(name = "created_at") val createdAt: Date,
     @Json(name = "rulesets") val rulesets: List<Ruleset>,
-    @Json(name = "airspace") val airspace: Status,
+    @Json(name = "airspace") val airspace: Airspace.Status,
     @Json(name = "validations") val validations: List<Validation>,
     @Json(name = "authorizations") val authorizations: List<Authorization>
 )

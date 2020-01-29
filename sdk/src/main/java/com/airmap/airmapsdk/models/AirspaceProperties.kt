@@ -5,6 +5,7 @@ import com.squareup.moshi.JsonClass
 import java.util.*
 
 // TODO: Verify all these fields, Swift SDK has different fields...
+// TODO: Create custom sealed class deserializer
 sealed class AirspaceProperties
 
 @JsonClass(generateAdapter = true)

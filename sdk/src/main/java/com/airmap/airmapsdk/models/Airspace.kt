@@ -15,7 +15,7 @@ data class Airspace(
     @Json(name = "geometry") val geometry: Geometry,
     @Json(name = "related_geometry.property_boundary.geometry") val propertyBoundary: Geometry // TODO: this is found at related_geometry.property_boundary.geometry
 ) {
-    // TODO: @JsonClass(generateAdapter = true)
+    @JsonClass(generateAdapter = true)
     enum class Type(private val apiName: String) {
         Airport("airport"),
         AMAField("ama_field"),
@@ -61,15 +61,16 @@ data class Airspace(
 
         override fun toString() = apiName
     }
+
+    @JsonClass(generateAdapter = true)
+    data class Status(
+        @Json(name = "color") val color: Color,
+        @Json(name = "advisories") val advisories: List<Advisory>
+    )
 }
 
-@JsonClass(generateAdapter = true)
-data class Status(
-    @Json(name = "color") val color: Color,
-    @Json(name = "advisories") val advisories: List<Advisory>
-)
-
 // TODO: Should we make this an inner class of Status?
+// TODO: Verify how to serialize/deserialize
 @JsonClass(generateAdapter = true)
 enum class Color(private val apiName: String) {
     Red("red"),
