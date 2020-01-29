@@ -94,7 +94,7 @@ data class Advisory(
     @Json(name = "longitude") val longitude: Double,
     @Json(name = "geometry") val geometry: Geometry,
     @Json(name = "requirements") val requirements: Requirements,
-    @Json(name = "properties") val properties: Properties
+    @Json(name = "properties") val properties: AirspaceProperties
 )
 
 @JsonClass(generateAdapter = true)
@@ -108,7 +108,7 @@ data class Notice(
     @Json(name = "phone") val phone: String
 )
 
-sealed class Properties
+sealed class AirspaceProperties
 
 @JsonClass(generateAdapter = true)
 data class AirportProperties(
@@ -125,7 +125,7 @@ data class AirportProperties(
     @Json(name = "elevation") val elevation: Int?,
     @Json(name = "icao_country") val icaoCountry: String?,
     @Json(name = "longest_runway") val longestRunway: Int?
-) : Properties() {
+) : AirspaceProperties() {
     @JsonClass(generateAdapter = true)
     data class Runway(
         @Json(name = "name") val name: String,
@@ -134,3 +134,56 @@ data class AirportProperties(
     )
 }
 
+// TODO: Verify, Swift SDK has different fields...
+@JsonClass(generateAdapter = true)
+data class ControlledAirspaceProperties(
+    @Json(name = "url") val url: String?,
+    @Json(name = "description") val description: String?,
+    @Json(name = "class_airspace") val classAirspace: String?,
+    @Json(name = "airport_identifier") val airportIdentifier: String?,
+    @Json(name = "laanc") val laanc: Boolean = false,
+    @Json(name = "authorization") val authorization: Boolean = false
+
+): AirspaceProperties()
+
+@JsonClass(generateAdapter = true)
+data class EmergencyProperties(
+    @Json(name = "url") val url: String?,
+    @Json(name = "description") val description: String?,
+    @Json(name = "agency_id") val agencyId: String?,
+    @Json(name = "date_effective") val dateEffective: Date?
+): AirspaceProperties()
+
+@JsonClass(generateAdapter = true)
+data class HeliportProperties(
+    @Json(name = "url") val url: String?,
+    @Json(name = "description") val description: String?,
+    @Json(name = "phone") val phone: String?,
+    @Json(name = "use") val use: String?
+): AirspaceProperties()
+
+@JsonClass(generateAdapter = true)
+data class NotamProperties(
+    @Json(name = "url") val url: String?,
+    @Json(name = "description") val description: String?,
+    @Json(name = "effective_start") val effectiveStart: Date?,
+    @Json(name = "effective_end") val effectiveEnd: Date?
+): AirspaceProperties()
+
+@JsonClass(generateAdapter = true)
+data class ParkProperties(
+    @Json(name = "url") val url: String?,
+    @Json(name = "description") val description: String?,
+    @Json(name = "size") val size: Int?,
+    @Json(name = "type") val type: String?
+): AirspaceProperties()
+
+@JsonClass(generateAdapter = true)
+data class PowerPlantProperties(
+    @Json(name = "url") val url: String?,
+    @Json(name = "description") val description: String?,
+    @Json(name = "tech") val tech: String?,
+    @Json(name = "plant_code") val plantCode: Int?
+): AirspaceProperties()
+
+// TODO: Rest of the properties
