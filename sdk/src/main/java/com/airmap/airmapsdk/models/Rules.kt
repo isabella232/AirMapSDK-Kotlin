@@ -86,3 +86,25 @@ enum class Region(private val apiName: String) {
     City("city"),
     Local("local")
 }
+
+@JsonClass(generateAdapter = true)
+data class Validation(
+    @Json(name = "data") val data: String?,
+    @Json(name = "status") val status: Status?,
+    @Json(name = "message") val message: String?,
+    @Json(name = "feature") val feature: Feature?,
+    @Json(name = "authority") val authority: Authority?
+) {
+    @JsonClass(generateAdapter = true)
+    enum class Status(private val apiName: String) {
+        Valid("valid"),
+        Invalid("invalid"),
+        Unknown("unknown")
+    }
+}
+
+@JsonClass(generateAdapter = true)
+data class Feature(
+    @Json(name = "code") val code: String,
+    @Json(name = "description") val description: String
+)

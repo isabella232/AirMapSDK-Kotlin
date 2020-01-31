@@ -25,8 +25,23 @@ data class Flight(
     @Json(name = "notify") val notify: Boolean,
     @Json(name = "public") val isPublic: Boolean,
     @Json(name = "permits") val permits: List<String> = emptyList(),
+    @Json(name = "statuses") val statuses: List<Status>,
     @Json(name = "geometry") val geometry: Geometry?
-)
+) {
+    @JsonClass(generateAdapter = true)
+    data class Status(
+        @Json(name = "id") val id: String,
+        @Json(name = "manager_id") val managerId: String,
+        @Json(name = "status") val status: Type
+    ) {
+        @JsonClass(generateAdapter = true)
+        enum class Type(private val apiName: String) {
+            Accepted("accepted"),
+            Rejected("rejected"),
+            Pending("pending")
+        }
+    }
+}
 
 @JsonClass(generateAdapter = true)
 data class FlightPlan(
