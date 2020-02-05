@@ -41,6 +41,7 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.9.2")
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")
     implementation("com.serjltt.moshi:moshi-lazy-adapters:2.2")
+    api("com.aungkyawpaing.geoshi:geoshi-adapter:0.0.2")
 
     // Other
     api("com.jakewharton.timber:timber:4.7.1")

@@ -4,6 +4,10 @@ import com.airmap.airmapsdk.clients.AircraftClient
 import com.airmap.airmapsdk.clients.FlightClient
 import com.airmap.airmapsdk.clients.PilotClient
 import com.airmap.airmapsdk.models.*
+import com.aungkyawpaing.geoshi.adapter.GeoshiJsonAdapterFactory
+import com.aungkyawpaing.geoshi.model.LineString
+import com.aungkyawpaing.geoshi.model.Point
+import com.aungkyawpaing.geoshi.model.Polygon
 import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.Moshi
 import okhttp3.CertificatePinner
@@ -40,6 +44,7 @@ object AirMap {
 
         val moshi = Moshi.Builder()
             .add(Wrapped.ADAPTER_FACTORY) // This needs to be the first adapter added to Moshi
+            .add(GeoshiJsonAdapterFactory())
             .build()
 
         val okHttpClient = OkHttpClient.Builder().apply {
@@ -100,7 +105,7 @@ class AirMapClient(
     fun verifySMS(token: String) = verifySMS(VerificationRequest(token))
     fun createFlight(flight: Flight) = when (flight.geometry) {
         is Point -> createFlightPoint(flight)
-        is Path -> createFlightPath(flight)
+        is LineString -> createFlightPath(flight)
         is Polygon -> createFlightPolygon(flight)
         else -> throw Exception("Flight geometry was null or an unsupported type")
     }
