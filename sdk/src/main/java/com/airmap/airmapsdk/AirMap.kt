@@ -1,19 +1,19 @@
 package com.airmap.airmapsdk
 
 import com.airmap.airmapsdk.clients.AircraftClient
+import com.airmap.airmapsdk.clients.AirspaceClient
 import com.airmap.airmapsdk.clients.FlightClient
 import com.airmap.airmapsdk.clients.PilotClient
-import com.airmap.airmapsdk.models.*
+import com.airmap.airmapsdk.models.Config
+import com.airmap.airmapsdk.models.Flight
+import com.airmap.airmapsdk.models.VerificationRequest
 import com.aungkyawpaing.geoshi.adapter.GeoshiJsonAdapterFactory
 import com.aungkyawpaing.geoshi.model.LineString
 import com.aungkyawpaing.geoshi.model.Point
 import com.aungkyawpaing.geoshi.model.Polygon
 import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.Moshi
-import okhttp3.CertificatePinner
-import okhttp3.HttpUrl
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
+import okhttp3.*
 import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -64,16 +64,32 @@ object AirMap {
             }
         }.build()
 
-        val aircraftClient = getClient<AircraftClient>("aircraft", 2, okHttpClient, moshi)
-        val pilotClient = getClient<PilotClient>("pilot", 2, okHttpClient, moshi)
-        val flightClient = getClient<FlightClient>("flight", 2, okHttpClient, moshi)
-        client = AirMapClient(aircraftClient, pilotClient, flightClient)
+        client = AirMapClient(
+            getClient("aircraft", 2, okHttpClient, moshi),
+            getClient("pilot", 2, okHttpClient, moshi),
+            getClient("flight", 2, okHttpClient, moshi),
+            getClient("airspace", 2, okHttpClient, moshi)
+        )
     }
 
+    /**
+     * Convenience method to simplify the verbose syntax of using an Interceptor to add a Header
+     */
     private fun Interceptor.Chain.addHeaderToRequest(name: String, value: String): Response {
         return this.proceed(this.request().newBuilder().addHeader(name, value).build())
     }
 
+
+    /**
+     * Instantiate a client for the given service name and version
+     *
+     * @param T The Client abstract class to instantiate
+     * @param serviceName The service name as used in the API URL
+     * @param v The API version to access
+     * @param client OkHttpClient instance used to create the client
+     * @param moshi Moshi instance used for JSON serialization and deserialization
+     * @return
+     */
     private inline fun <reified T> getClient(serviceName: String, v: Int, client: OkHttpClient, moshi: Moshi): T {
         val prefix = if (config.airmap.environment.isNullOrBlank()) "" else "${config.airmap.environment}."
         val baseUrl = HttpUrl.Builder()
@@ -96,12 +112,13 @@ object AirMap {
 class AirMapClient(
     private val aircraftClient: AircraftClient,
     private val pilotClient: PilotClient,
-    private val flightClient: FlightClient
+    private val flightClient: FlightClient,
+    private val airspaceClient: AirspaceClient
 ) : AircraftClient by aircraftClient,
     PilotClient by pilotClient,
     FlightClient by flightClient
 {
-    // todo: look into implications of moving this into the respective clients themselves
+    // TODO: look into implications of moving this into the respective clients themselves
     fun verifySMS(token: String) = verifySMS(VerificationRequest(token))
     fun createFlight(flight: Flight) = when (flight.geometry) {
         is Point -> createFlightPoint(flight)
