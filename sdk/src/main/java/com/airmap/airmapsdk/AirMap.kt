@@ -1,9 +1,6 @@
 package com.airmap.airmapsdk
 
-import com.airmap.airmapsdk.clients.AircraftClient
-import com.airmap.airmapsdk.clients.AirspaceClient
-import com.airmap.airmapsdk.clients.FlightClient
-import com.airmap.airmapsdk.clients.PilotClient
+import com.airmap.airmapsdk.clients.*
 import com.airmap.airmapsdk.models.Config
 import com.airmap.airmapsdk.models.Flight
 import com.airmap.airmapsdk.models.VerificationRequest
@@ -68,7 +65,9 @@ object AirMap {
             getClient("aircraft", 2, okHttpClient, moshi),
             getClient("pilot", 2, okHttpClient, moshi),
             getClient("flight", 2, okHttpClient, moshi),
-            getClient("airspace", 2, okHttpClient, moshi)
+            getClient("airspace", 2, okHttpClient, moshi),
+            getClient("rules", 1, okHttpClient, moshi),
+            getClient("advisory", 1, okHttpClient, moshi)
         )
     }
 
@@ -113,10 +112,15 @@ class AirMapClient(
     private val aircraftClient: AircraftClient,
     private val pilotClient: PilotClient,
     private val flightClient: FlightClient,
-    private val airspaceClient: AirspaceClient
+    private val airspaceClient: AirspaceClient,
+    private val rulesClient: RulesClient,
+    private val advisoryClient: AdvisoryClient
 ) : AircraftClient by aircraftClient,
     PilotClient by pilotClient,
-    FlightClient by flightClient
+    FlightClient by flightClient,
+    AirspaceClient by airspaceClient,
+    RulesClient by rulesClient,
+    AdvisoryClient by advisoryClient
 {
     // TODO: look into implications of moving this into the respective clients themselves
     fun verifySMS(token: String) = verifySMS(VerificationRequest(token))

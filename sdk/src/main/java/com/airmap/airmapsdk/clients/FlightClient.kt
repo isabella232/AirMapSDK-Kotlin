@@ -2,6 +2,7 @@ package com.airmap.airmapsdk.clients
 
 import com.airmap.airmapsdk.Response
 import com.airmap.airmapsdk.models.*
+import com.aungkyawpaing.geoshi.model.Geometry
 import com.serjltt.moshi.adapters.Wrapped
 import retrofit2.http.*
 import retrofit2.http.Path
@@ -26,7 +27,7 @@ interface FlightClient {
      * @param limit
      * @return
      */
-    @GET("/")
+    @GET("")
     @Wrapped(path = ["data", "results"])
     fun getFlights(
         @Query("pilot_id") pilotId: String? = null,
@@ -121,6 +122,4 @@ interface FlightClient {
     @GET("plan/{id}/briefing")
     @Wrapped(path = ["data"])
     fun getFlightBriefing(@Path("id") flightPlanId: String): Response<FlightBriefing>
-
-
 }
