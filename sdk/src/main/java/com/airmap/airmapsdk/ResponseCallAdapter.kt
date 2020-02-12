@@ -1,10 +1,10 @@
 package com.airmap.airmapsdk
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Lifecycle.Event.*
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.OnLifecycleEvent
+//import androidx.lifecycle.Lifecycle
+//import androidx.lifecycle.Lifecycle.Event.*
+//import androidx.lifecycle.LifecycleObserver
+//import androidx.lifecycle.LifecycleOwner
+//import androidx.lifecycle.OnLifecycleEvent
 import retrofit2.*
 import retrofit2.Response
 import timber.log.Timber
@@ -21,23 +21,40 @@ class Response<R>(private val call: Call<R>) {
         execute(responseHandler::onResult)
     }
 
-    fun execute(responseHandler: (R?, Throwable?) -> Unit): Subscription {
-        val subscription = Subscription()
+    fun execute(responseHandler: (R?, Throwable?) -> Unit) {
         call.enqueue(object : Callback<R> {
             override fun onFailure(call: Call<R>?, t: Throwable?) {
-                if (!subscription.isDisposed()) responseHandler(null, t)
+                responseHandler(null, t)
             }
 
             override fun onResponse(call: Call<R>?, response: Response<R>?) {
-                if (!subscription.isDisposed()) when {
+                when {
                     response?.isSuccessful == true -> responseHandler(response.body(), null)
                     response?.code() in 400..511 -> responseHandler(null, HttpException(response))
                     else -> responseHandler(response?.body(), null)
                 }
             }
         })
-        return subscription
     }
+//todo
+
+//    fun execute(responseHandler: (R?, Throwable?) -> Unit): Subscription {
+//        val subscription = Subscription()
+//        call.enqueue(object : Callback<R> {
+//            override fun onFailure(call: Call<R>?, t: Throwable?) {
+//                if (!subscription.isDisposed()) responseHandler(null, t)
+//            }
+//
+//            override fun onResponse(call: Call<R>?, response: Response<R>?) {
+//                if (!subscription.isDisposed()) when {
+//                    response?.isSuccessful == true -> responseHandler(response.body(), null)
+//                    response?.code() in 400..511 -> responseHandler(null, HttpException(response))
+//                    else -> responseHandler(response?.body(), null)
+//                }
+//            }
+//        })
+//        return subscription
+//    }
 }
 
 class AirMapResponseCallAdapter<R>(private val responseType: Type) : CallAdapter<R, Any> {
@@ -65,45 +82,45 @@ interface ResponseHandler<R> {
     fun onResult(response: R?, throwable: Throwable?)
 }
 
-class Subscription {
-    private var disposed = false
-    fun isDisposed() = disposed
-    fun dispose() {
-        disposed = true
-    }
-
-    fun bind(owner: LifecycleOwner) = bind(owner, ON_DESTROY)
-
-    fun bind(owner: LifecycleOwner, event: Lifecycle.Event) {
-
-        owner.lifecycle.addObserver(object : LifecycleObserver {
-
-            @OnLifecycleEvent(ON_PAUSE)
-            fun onPause() {
-                if (event == ON_PAUSE) {
-                    removeObserverAndDispose(owner)
-                }
-            }
-
-            @OnLifecycleEvent(ON_STOP)
-            fun onStop(owner: LifecycleOwner) {
-                if (event == ON_STOP) {
-                    removeObserverAndDispose(owner)
-                }
-            }
-
-            @OnLifecycleEvent(ON_DESTROY)
-            fun onDestroy(owner: LifecycleOwner) {
-                if (event == ON_DESTROY) {
-                    removeObserverAndDispose(owner)
-                }
-            }
-
-            fun removeObserverAndDispose(owner: LifecycleOwner) {
-                owner.lifecycle.removeObserver(this)
-                dispose()
-            }
-        })
-    }
-
-}
+//class Subscription {
+//    private var disposed = false
+//    fun isDisposed() = disposed
+//    fun dispose() {
+//        disposed = true
+//    }
+//
+//    fun bind(owner: LifecycleOwner) = bind(owner, ON_DESTROY)
+//
+//    fun bind(owner: LifecycleOwner, event: Lifecycle.Event) {
+//
+//        owner.lifecycle.addObserver(object : LifecycleObserver {
+//
+//            @OnLifecycleEvent(ON_PAUSE)
+//            fun onPause() {
+//                if (event == ON_PAUSE) {
+//                    removeObserverAndDispose(owner)
+//                }
+//            }
+//
+//            @OnLifecycleEvent(ON_STOP)
+//            fun onStop(owner: LifecycleOwner) {
+//                if (event == ON_STOP) {
+//                    removeObserverAndDispose(owner)
+//                }
+//            }
+//
+//            @OnLifecycleEvent(ON_DESTROY)
+//            fun onDestroy(owner: LifecycleOwner) {
+//                if (event == ON_DESTROY) {
+//                    removeObserverAndDispose(owner)
+//                }
+//            }
+//
+//            fun removeObserverAndDispose(owner: LifecycleOwner) {
+//                owner.lifecycle.removeObserver(this)
+//                dispose()
+//            }
+//        })
+//    }
+//
+//}

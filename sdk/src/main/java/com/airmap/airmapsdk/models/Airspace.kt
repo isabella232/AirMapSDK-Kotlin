@@ -16,68 +16,63 @@ data class Airspace(
     @Json(name = "geometry") val geometry: Geometry,
     @Json(name = "related_geometry.property_boundary.geometry") val propertyBoundary: Geometry // TODO: this is found at related_geometry.property_boundary.geometry
 ) {
-    @JsonClass(generateAdapter = true)
-    enum class Type(private val apiName: String) {
-        Airport("airport"),
-        AMAField("ama_field"),
-        City("city"),
-        ControlledAirspace("controlled_airspace"),
-        Country("country"),
-        County("county"),
-        Custom("custom"),
-        Embassy("embassy"),
-        Emergency("emergency"),
-        FederalBuilding("federal_building"),
-        FIR("fir"),
-        Fire("fire"),
-        Gliderport("gliderport"),
-        HazardArea("hazard_area"),
-        Heliport("heliport"),
-        Highway("highway"),
-        Hospital("hospital"),
-        IndustrialProperty("industrial_property"),
-        JapanBase("jpn_base"),
-        MilitaryProperty("military_property"),
-        NOTAM("notam"),
-        Park("park"),
-        PoliceStation("police_station"),
-        Powerline("powerline"),
-        PowerPlant("power_plant"),
-        Prison("prison"),
-        Railway("railway"),
-        RecreationalArea("recreational_area"),
-        ResidentialProperty("residential_property"),
-        School("school"),
-        SeaplaneBase("seaplane_base"),
-        SpecialUse("special_use_airspace"),
-        Stadium("stadium"),
-        State("state"),
-        Subprefecture("subprefecture"),
-        Supercity("supercity"),
-        TFR("tfr"),
-        UltralightField("ulm_field"),
-        University("university"),
-        Waterway("waterway"),
-        Wildfire("wildfire");
-
-        override fun toString() = apiName
+    enum class Type {
+        @Json(name = "airport") Airport,
+        @Json(name = "ama_field") AMAField,
+        @Json(name = "city") City,
+        @Json(name = "controlled_airspace") ControlledAirspace,
+        @Json(name = "country") Country,
+        @Json(name = "county") County,
+        @Json(name = "custom") Custom,
+        @Json(name = "embassy") Embassy,
+        @Json(name = "emergency") Emergency,
+        @Json(name = "federal_building") FederalBuilding,
+        @Json(name = "fir") FIR,
+        @Json(name = "fire") Fire,
+        @Json(name = "gliderport") Gliderport,
+        @Json(name = "hazard_area") HazardArea,
+        @Json(name = "heliport") Heliport,
+        @Json(name = "highway") Highway,
+        @Json(name = "hospital") Hospital,
+        @Json(name = "industrial_property") IndustrialProperty,
+        @Json(name = "jpn_base") JapanBase,
+        @Json(name = "military_property") MilitaryProperty,
+        @Json(name = "notam") NOTAM,
+        @Json(name = "notification") Notification,
+        @Json(name = "park") Park,
+        @Json(name = "police_station") PoliceStation,
+        @Json(name = "power_plant") PowerPlant,
+        @Json(name = "powerline") Powerline,
+        @Json(name = "prison") Prison,
+        @Json(name = "railway") Railway,
+        @Json(name = "recreational_area") RecreationalArea,
+        @Json(name = "residential_property") ResidentialProperty,
+        @Json(name = "school") School,
+        @Json(name = "seaplane_base") SeaplaneBase,
+        @Json(name = "special_use_airspace") SpecialUse,
+        @Json(name = "stadium") Stadium,
+        @Json(name = "state") State,
+        @Json(name = "subprefecture") Subprefecture,
+        @Json(name = "supercity") Supercity,
+        @Json(name = "tfr") TFR,
+        @Json(name = "ulm_field") UltralightField,
+        @Json(name = "university") University,
+        @Json(name = "waterway") Waterway,
+        @Json(name = "wildfire") Wildfire,
     }
 
     @JsonClass(generateAdapter = true)
     data class Status(
         @Json(name = "color") val color: Color,
         @Json(name = "advisories") val advisories: List<Advisory>
-    )
-}
-
-// TODO: Should we make this an inner class of Status?
-// TODO: Verify how to serialize/deserialize
-@JsonClass(generateAdapter = true)
-enum class Color(private val apiName: String) {
-    Red("red"),
-    Orange("orange"),
-    Yellow("yellow"),
-    Green("green"),
+    ) {
+        enum class Color {
+            @Json(name = "red") Red,
+            @Json(name = "orange") Orange,
+            @Json(name = "yellow") Yellow,
+            @Json(name = "green") Green,
+        }
+    }
 }
 
 @JsonClass(generateAdapter = true)
@@ -90,7 +85,7 @@ data class Advisory(
     @Json(name = "state") val state: String,
     @Json(name = "city") val city: String,
     @Json(name = "last_updated") val lastUpdated: Date,
-    @Json(name = "color") val color: Color,
+    @Json(name = "color") val color: Airspace.Status.Color,
     @Json(name = "distance") val distance: Int,
     @Json(name = "latitude") val latitude: Double,
     @Json(name = "longitude") val longitude: Double,

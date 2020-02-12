@@ -37,6 +37,7 @@ interface RulesClient {
     @Wrapped(path = ["data"])
     fun getEvaluation(rulesets: List<String>, geometry: Geometry): Response<FlightBriefing>
 
+    // TODO: All the Jurisdiction calls require extra processing
     @GET("")
     @Wrapped(path = ["data"])
     // TODO: This is a bit weird, all the parameters are appended together

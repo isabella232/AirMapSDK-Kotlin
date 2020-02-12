@@ -38,7 +38,7 @@ object AirMap {
 
     fun init(config: Config, enableCertificatePinning: Boolean = false) {
         Timber.plant(Timber.DebugTree())
-
+        this.config = config
         val moshi = Moshi.Builder()
             .add(Wrapped.ADAPTER_FACTORY) // This needs to be the first adapter added to Moshi
             .add(GeoshiJsonAdapterFactory())

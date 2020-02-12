@@ -55,17 +55,15 @@ data class Authorization(
     @Json(name = "message") val message: String?,
     @Json(name = "reference_number") val referenceNumber: String?
 ) {
-    // TODO: Verify how to serialize/deserialize
-    @JsonClass(generateAdapter = true)
-    enum class Status(private val apiName: String) {
-        NotRequested("not_requested"),
-        RejectedUponSubmission("rejected_upon_submission"),
-        AuthorizedUponSubmission("authorized_upon_submission"),
-        ManualAuthorization("manual_authorization"),
-        Pending("pending"),
-        Accepted("accepted"),
-        Rejected("rejected"),
-        Cancelled("cancelled")
+    enum class Status {
+        @Json(name = "not_requested") NotRequested,
+        @Json(name = "rejected_upon_submission") RejectedUponSubmission,
+        @Json(name = "authorized_upon_submission") AuthorizedUponSubmission,
+        @Json(name = "manual_authorization") ManualAuthorization,
+        @Json(name = "pending") Pending,
+        @Json(name = "accepted") Accepted,
+        @Json(name = "rejected") Rejected,
+        @Json(name = "cancelled") Cancelled,
     }
 }
 
@@ -78,13 +76,12 @@ data class Jurisdiction(
 )
 
 // TODO: Verify how to serialize/deserialize
-@JsonClass(generateAdapter = true)
-enum class Region(private val apiName: String) {
-    National("national"),
-    State("statee"),
-    County("county"),
-    City("city"),
-    Local("local")
+enum class Region {
+    @Json(name = "national") National,
+    @Json(name = "statee") State,
+    @Json(name = "county") County,
+    @Json(name = "city") City,
+    @Json(name = "local") Local,
 }
 
 @JsonClass(generateAdapter = true)
@@ -95,11 +92,10 @@ data class Validation(
     @Json(name = "feature") val feature: Feature?,
     @Json(name = "authority") val authority: Authority?
 ) {
-    @JsonClass(generateAdapter = true)
-    enum class Status(private val apiName: String) {
-        Valid("valid"),
-        Invalid("invalid"),
-        Unknown("unknown")
+    enum class Status {
+        @Json(name = "valid") Valid,
+        @Json(name = "invalid") Invalid,
+        @Json(name = "unknown") Unknown,
     }
 }
 

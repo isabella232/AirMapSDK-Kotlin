@@ -35,11 +35,10 @@ data class Flight(
         @Json(name = "manager_id") val managerId: String,
         @Json(name = "status") val status: Type
     ) {
-        @JsonClass(generateAdapter = true)
-        enum class Type(private val apiName: String) {
-            Accepted("accepted"),
-            Rejected("rejected"),
-            Pending("pending")
+        enum class Type {
+            @Json(name = "accepted") Accepted,
+            @Json(name = "rejected") Rejected,
+            @Json(name = "pending") Pending,
         }
     }
 }

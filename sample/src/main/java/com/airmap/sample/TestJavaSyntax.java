@@ -7,8 +7,8 @@ import com.airmap.airmapsdk.AirMap;
  */
 public class TestJavaSyntax {
     public static void test() {
-        AirMap.client.getFlights("").execute((response, throwable) -> {
-
-        });
+//        AirMap.client.getFlights("").execute((response, throwable) -> {
+//
+//        });
     }
 }
