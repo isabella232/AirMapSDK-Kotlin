@@ -58,9 +58,6 @@ class Response<R>(private val call: Call<R>) {
 }
 
 class AirMapResponseCallAdapter<R>(private val responseType: Type) : CallAdapter<R, Any> {
-    init {
-        Timber.d("In here")
-    }
     override fun responseType(): Type = responseType
     override fun adapt(call: Call<R>): Any = Response(call)
 }

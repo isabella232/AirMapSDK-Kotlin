@@ -10,13 +10,13 @@ data class Flight(
     @Json(name = "id") val id: String,
     @Json(name = "flight_plan_id") val flightPlanId: String? = null,
     @Json(name = "pilot_id") val pilotId: String,
-    @Json(name = "pilot") val pilot: Pilot,
+    @Json(name = "pilot") val pilot: Pilot?,
     @Json(name = "latitude") val latitude: Double,
     @Json(name = "longitude") val longitude: Double, // TODO: Provide a MapBox LatLng getter
     @Json(name = "max_altitude") val maxAltitude: Double,
     @Json(name = "aircraft") val aircraft: Aircraft? = null,
     @Json(name = "aircraft_id") val aircraftId: String? = null,
-    @Json(name = "created_at") val createdAt: Date = Date(),
+    @Json(name = "created_at") val createdAt: Date,
     @Json(name = "start_time") val startTime: Date, // TODO: Need to use "now" for start_time value if start_time is in the past/close to now during flight creation
     @Json(name = "end_time") val endTime: Date,
     @Json(name = "city") val city: String,
@@ -25,8 +25,8 @@ data class Flight(
     @Json(name = "buffer") val buffer: Double,
     @Json(name = "notify") val notify: Boolean,
     @Json(name = "public") val isPublic: Boolean,
-    @Json(name = "permits") val permits: List<String> = emptyList(),
-    @Json(name = "statuses") val statuses: List<Status>,
+    @Json(name = "permits") val permits: List<String>?,
+    @Json(name = "statuses") val statuses: List<Status>?,
     @Json(name = "geometry") val geometry: Geometry?
 ) {
     @JsonClass(generateAdapter = true)
