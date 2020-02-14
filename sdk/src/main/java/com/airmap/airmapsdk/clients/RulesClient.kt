@@ -18,32 +18,32 @@ interface RulesClient {
     @Wrapped(path = ["data"])
     fun getRuleset(id: String): Response<Ruleset>
 
-    @GET("")
+    @GET(".")
     @Wrapped(path = ["data"])
     @FormUrlEncoded
     fun getRulesets(@Field("rulesets") rulesets: List<String>): Response<List<Ruleset>>
 
-    @GET("")
+    @GET(".")
     @Wrapped(path = ["data"])
     @FormUrlEncoded
     fun getRulesets(@Field("geometry") geometry: Geometry): Response<List<Ruleset>>
 
-    @GET("")
+    @GET(".")
     @Wrapped(path = ["data"])
     @FormUrlEncoded
     fun getRulesets(@Field("latitude") latitude: Double, @Field("longitude") longitude: Double): Response<List<Ruleset>>
 
-    @GET("")
+    @GET(".")
     @Wrapped(path = ["data"])
     fun getEvaluation(rulesets: List<String>, geometry: Geometry): Response<FlightBriefing>
 
     // TODO: All the Jurisdiction calls require extra processing
-    @GET("")
+    @GET(".")
     @Wrapped(path = ["data"])
     // TODO: This is a bit weird, all the parameters are appended together
     fun getJurisdictions(southwestLatitude: Double, southwestLongitude: Double, northeastLatitude: Double, northeastLongitude: Double)
 
-    @GET("")
+    @GET(".")
     @Wrapped(path = ["data"])
     @FormUrlEncoded
     fun getJurisdictions(@Field("geometry") geometry: Geometry): Response<List<Jurisdiction>>

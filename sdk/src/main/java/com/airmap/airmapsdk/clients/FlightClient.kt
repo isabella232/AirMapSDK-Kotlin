@@ -27,7 +27,7 @@ interface FlightClient {
      * @param limit
      * @return
      */
-    @GET("")
+    @GET(".")
     @Wrapped(path = ["data", "results"])
     fun getFlights(
         @Query("pilot_id") pilotId: String? = null,
