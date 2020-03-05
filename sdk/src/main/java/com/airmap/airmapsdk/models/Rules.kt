@@ -13,8 +13,8 @@ data class Ruleset(
     @Json(name = "type") val type: Type,
     @Json(name = "default") val isDefault: Boolean = false,
     @Json(name = "summary") val summary: String,
-    @Json(name = "layers") val layers: List<String>,
-    @Json(name = "rules") val rules: List<Rule>
+    @Json(name = "layers") val layers: List<String> = mutableListOf(),
+    @Json(name = "rules") val rules: List<Rule> = mutableListOf()
 ) {
     enum class Type(private val apiName: String) {
         PickOne("pickone"),
@@ -30,7 +30,7 @@ data class Rule(
     @Json(name = "description") val description: String?,
     @Json(name = "status") val status: Status?,
     @Json(name = "display_order") val displayOrder: Int?,
-    @Json(name = "flight_features") val flightFeatures: List<FlightFeatureValue>
+    @Json(name = "flight_features") val flightFeatures: List<FlightFeatureValue> = mutableListOf()
 ) {
     enum class Status(private val apiName: String) {
         Conflicting("conflicting"),
@@ -72,7 +72,7 @@ data class Jurisdiction(
     @Json(name = "id") val id: Int,
     @Json(name = "name") val name: String,
     @Json(name = "region") val region: Region,
-    @Json(name = "rulesets") val rulesets: List<Ruleset>
+    @Json(name = "rulesets") val rulesets: List<Ruleset> = mutableListOf()
 )
 
 // TODO: Verify how to serialize/deserialize

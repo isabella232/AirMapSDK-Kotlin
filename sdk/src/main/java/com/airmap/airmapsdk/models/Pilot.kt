@@ -2,18 +2,18 @@ package com.airmap.airmapsdk.models
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.threeten.bp.LocalDateTime
+import java.util.*
 
 @JsonClass(generateAdapter = true)
 data class VerificationStatus(
-    @Json(name = "phone") val phone: String,
-    @Json(name = "email") val email: String
+    @Json(name = "phone") val phone: Boolean,
+    @Json(name = "email") val email: Boolean
 )
 
 @JsonClass(generateAdapter = true)
 data class FlightStatistics(
     @Json(name = "total") val total: Int,
-    @Json(name = "last_flight_time") val lastFlightTime: LocalDateTime
+    @Json(name = "last_flight_time") val lastFlightTime: Date
 )
 
 @JsonClass(generateAdapter = true)
@@ -36,16 +36,17 @@ data class Pilot(
     @Json(name = "username") val username: String?,
     @Json(name = "picture_url") val pictureUrl: String?,
     @Json(name = "phone") val phone: String?,
+    @Json(name = "created_at") val createdAt: Date,
     @Json(name = "anonymized_id") val anonymizedId: String?,
     @Json(name = "verification_status") val verificationStatus: VerificationStatus,
     @Json(name = "statistics") val statistics: Statistics,
-    @Json(name = "user_metadata") val userMetadata: Map<String, Any?>?,
-    @Json(name = "app_metadata") val appMetadata: Map<String, Any?>?
+    @Json(name = "user_metadata") val userMetadata: Map<String, Any?> = mutableMapOf(),
+    @Json(name = "app_metadata") val appMetadata: Map<String, Any?> = mutableMapOf()
 )
 
 @JsonClass(generateAdapter = true)
 data class VerificationRequest(
-    @Json(name = "token") val token: String
+    @Json(name = "token") val token: Int
 )
 
 @JsonClass(generateAdapter = true)

@@ -19,7 +19,7 @@ data class AirportProperties(
     @Json(name = "iata") val iata: String?,
     @Json(name = "paved") val paved: Boolean?,
     @Json(name = "tower") val tower: Boolean?,
-    @Json(name = "runways") val runways: List<Runway>?,
+    @Json(name = "runways") val runways: List<Runway> = mutableListOf(),
     @Json(name = "elevation") val elevation: Int?,
     @Json(name = "icao_country") val icaoCountry: String?,
     @Json(name = "longest_runway") val longestRunway: Int?

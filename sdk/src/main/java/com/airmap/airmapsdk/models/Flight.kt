@@ -19,14 +19,14 @@ data class Flight(
     @Json(name = "created_at") val createdAt: Date,
     @Json(name = "start_time") val startTime: Date, // TODO: Need to use "now" for start_time value if start_time is in the past/close to now during flight creation
     @Json(name = "end_time") val endTime: Date,
-    @Json(name = "city") val city: String,
-    @Json(name = "state") val state: String,
-    @Json(name = "country") val country: String,
+    @Json(name = "city") val city: String?,
+    @Json(name = "state") val state: String?,
+    @Json(name = "country") val country: String?,
     @Json(name = "buffer") val buffer: Double,
     @Json(name = "notify") val notify: Boolean,
     @Json(name = "public") val isPublic: Boolean,
-    @Json(name = "permits") val permits: List<String>?,
-    @Json(name = "statuses") val statuses: List<Status>?,
+    @Json(name = "permits") val permits: List<String> = mutableListOf(),
+    @Json(name = "statuses") val statuses: List<Status> = mutableListOf(),
     @Json(name = "geometry") val geometry: Geometry?
 ) {
     @JsonClass(generateAdapter = true)
@@ -58,8 +58,8 @@ data class FlightPlan(
     @Json(name = "max_altitude") val maxAltitude: Double,
     @Json(name = "takeoff_latitude") val takeoffLatitude: Double,
     @Json(name = "takeoff_longitude") val takeoffLongitude: Double,
-    @Json(name = "rulests") val rulesetIds: List<String>,
-    @Json(name = "flight_features") val flightFeatures: Map<String, Any>, // TODO: Check how Flight Features are returned
+    @Json(name = "rulests") val rulesetIds: List<String> = mutableListOf(),
+    @Json(name = "flight_features") val flightFeatures: Map<String, Any> = mutableMapOf(), // TODO: Check how Flight Features are returned
     @Json(name = "public") val isPublic: Boolean,
     @Json(name = "notify") val notify: Boolean
 )
@@ -69,8 +69,8 @@ data class FlightBriefing(
     @Json(name = "flight_plan_id") val flightPlanId: String,
     @Json(name = "color") val color: String,
     @Json(name = "created_at") val createdAt: Date,
-    @Json(name = "rulesets") val rulesets: List<Ruleset>,
+    @Json(name = "rulesets") val rulesets: List<Ruleset> = mutableListOf(),
     @Json(name = "airspace") val airspace: Airspace.Status,
-    @Json(name = "validations") val validations: List<Validation>,
-    @Json(name = "authorizations") val authorizations: List<Authorization>
+    @Json(name = "validations") val validations: List<Validation> = mutableListOf(),
+    @Json(name = "authorizations") val authorizations: List<Authorization> = mutableListOf()
 )

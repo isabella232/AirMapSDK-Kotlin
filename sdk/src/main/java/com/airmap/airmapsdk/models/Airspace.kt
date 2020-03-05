@@ -64,7 +64,7 @@ data class Airspace(
     @JsonClass(generateAdapter = true)
     data class Status(
         @Json(name = "color") val color: Color,
-        @Json(name = "advisories") val advisories: List<Advisory>
+        @Json(name = "advisories") val advisories: List<Advisory> = mutableListOf()
     ) {
         enum class Color {
             @Json(name = "red") Red,

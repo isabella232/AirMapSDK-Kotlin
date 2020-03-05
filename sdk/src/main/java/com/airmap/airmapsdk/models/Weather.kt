@@ -2,7 +2,7 @@ package com.airmap.airmapsdk.models
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import java.time.LocalDateTime
+import java.util.*
 
 @JsonClass(generateAdapter = true)
 data class Wind(
@@ -13,7 +13,7 @@ data class Wind(
 
 @JsonClass(generateAdapter = true)
 data class WeatherUpdate(
-    @Json(name = "time") val time: LocalDateTime,
+    @Json(name = "time") val time: Date,
     @Json(name = "timezone") val timezone: String,
     @Json(name = "condition") val condition: String,
     @Json(name = "icon") val icon: String,
@@ -28,5 +28,5 @@ data class WeatherUpdate(
 
 @JsonClass(generateAdapter = true)
 data class Forecast(
-    @Json(name = "weather") val weather: List<WeatherUpdate>
+    @Json(name = "weather") val weather: List<WeatherUpdate> = mutableListOf()
 )
