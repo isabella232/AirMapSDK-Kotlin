@@ -35,11 +35,18 @@ data class AirportProperties(
 @JsonClass(generateAdapter = true)
 data class ControlledAirspaceProperties(
     @Json(name = "url") val url: String?,
-    @Json(name = "description") val description: String?,
-    @Json(name = "class_airspace") val classAirspace: String?,
-    @Json(name = "airport_identifier") val airportIdentifier: String?,
+    @Json(name = "icao") val icao: String?,
     @Json(name = "laanc") val laanc: Boolean = false,
-    @Json(name = "authorization") val authorization: Boolean = false
+    @Json(name = "ceiling") val ceiling: Int?,
+    @Json(name = "airport_id") val airportId: String?,
+    @Json(name = "airport_name") val airportName: String?,
+    @Json(name = "lowest_limit") val lowestLimit: Int?,
+    @Json(name = "authorization") val authorization: Boolean = false,
+    @Json(name = "last_edit_date") val lastEditDate: String?, // TODO: This does not come back as ISO 8601 (comes back as 10/10/2020). How to parse this into a Date?
+    @Json(name = "description") val description: String?,
+    @Json(name = "airspace_class") val airspaceClass: String?,
+    @Json(name = "airspace_classification") val airspaceClassification: String?,
+    @Json(name = "facility_id") val facilityId: String?
 
 ): AirspaceProperties()
 
@@ -52,6 +59,14 @@ data class EmergencyProperties(
 ): AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
+data class FireProperties(
+    @Json(name = "url") val url: String?,
+    @Json(name = "description") val description: String?,
+    @Json(name = "size") val size: Int?,
+    @Json(name = "date_effective") val dateEffective: Date?
+): AirspaceProperties()
+
+@JsonClass(generateAdapter = true)
 data class HeliportProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
@@ -60,12 +75,18 @@ data class HeliportProperties(
 ): AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
-data class NotamProperties(
+data class NOTAMProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "effective_start") val effectiveStart: Date?,
     @Json(name = "effective_end") val effectiveEnd: Date?
 ): AirspaceProperties()
+
+@JsonClass(generateAdapter = true)
+data class NotificationProperties(
+    @Json(name = "url") val url: String?,
+    @Json(name = "description") val description: String?
+) : AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
 data class ParkProperties(
@@ -102,15 +123,8 @@ data class SpecialUseProperties(
 @JsonClass(generateAdapter = true)
 data class TFRProperties(
     @Json(name = "url") val url: String?,
+    @Json(name = "body") val body: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "effective_start") val effectiveStart: Date?,
     @Json(name = "effective_end") val effectiveEnd: Date?
-): AirspaceProperties()
-
-@JsonClass(generateAdapter = true)
-data class WildfireProperties(
-    @Json(name = "url") val url: String?,
-    @Json(name = "description") val description: String?,
-    @Json(name = "size") val size: Int?,
-    @Json(name = "date_effective") val dateEffective: Date?
 ): AirspaceProperties()

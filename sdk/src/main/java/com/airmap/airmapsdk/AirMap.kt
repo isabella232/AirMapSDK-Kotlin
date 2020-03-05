@@ -1,6 +1,7 @@
 package com.airmap.airmapsdk
 
 import com.airmap.airmapsdk.clients.*
+import com.airmap.airmapsdk.models.AdvisoryJsonAdapterFactory
 import com.airmap.airmapsdk.models.Config
 import com.airmap.airmapsdk.models.VerificationRequest
 import com.aungkyawpaing.geoshi.adapter.GeoshiJsonAdapterFactory
@@ -48,6 +49,7 @@ object AirMap {
             .add(Wrapped.ADAPTER_FACTORY) // This needs to be the first adapter added to Moshi
             .add(GeoshiJsonAdapterFactory())
             .add(GeometryJsonAdapterFactory())
+            .add(AdvisoryJsonAdapterFactory())
             .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
             .build()
 
@@ -130,7 +132,7 @@ class AirMapClient(
     RulesClient by rulesClient,
     AdvisoryClient by advisoryClient {
     // TODO: look into implications of moving this into the respective clients themselves
-    fun verifySMS(token: String) = verifySMS(VerificationRequest(token))
+    fun verifySMS(token: Int) = verifySMS(VerificationRequest(token))
 //    fun createFlight(flight: Flight) = when (flight.geometry) {
 //        is Point -> createFlightPoint(flight)
 //        is LineString -> createFlightPath(flight)

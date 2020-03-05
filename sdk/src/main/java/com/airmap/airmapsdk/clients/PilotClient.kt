@@ -12,13 +12,13 @@ import retrofit2.http.*
 interface PilotClient {
     @GET("{id}")
     @Wrapped(path = ["data"])
-    fun getPilot(@Path("id") pilotId: String = AirMap.userId.orEmpty()): Response<Pilot>
+    fun getPilot(@Path("id") id: String = AirMap.userId.orEmpty()): Response<Pilot>
 
     @PATCH("{id}")
     @Wrapped(path = ["data"])
     fun updatePilot(
         @Body updatedPilot: Pilot,
-        @Path("id") pilotId: String = AirMap.userId.orEmpty()
+        @Path("id") id: String = AirMap.userId.orEmpty()
     ): Response<Pilot>
 
     @POST("{id}/phone/send_token")
