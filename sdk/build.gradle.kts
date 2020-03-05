@@ -34,8 +34,8 @@ dependencies {
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
 
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.7.1")
-    implementation("com.squareup.retrofit2:converter-moshi:2.7.1")
+    implementation("com.squareup.retrofit2:retrofit:2.7.2")
+    implementation("com.squareup.retrofit2:converter-moshi:2.7.2")
 
     // Moshi
     kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.2")
@@ -45,7 +45,5 @@ dependencies {
     api("com.aungkyawpaing.geoshi:geoshi-adapter:0.0.2")
 
     // Other
-    api("com.jakewharton.timber:timber:4.7.1")
-    api("com.jakewharton.threetenabp:threetenabp:1.2.2") // java.time.*
-//    api("com.mapbox.mapboxsdk:mapbox-android-sdk:9.0.0-alpha.1")
+    api("com.jakewharton.timber:timber:4.7.1") // TODO: Remove this in order to target non Android
 }
