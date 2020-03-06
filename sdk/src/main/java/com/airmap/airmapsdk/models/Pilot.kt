@@ -36,10 +36,10 @@ data class Pilot(
     @Json(name = "username") val username: String?,
     @Json(name = "picture_url") val pictureUrl: String?,
     @Json(name = "phone") val phone: String?,
-    @Json(name = "created_at") val createdAt: Date,
+    @Json(name = "created_at") val createdAt: Date?,
     @Json(name = "anonymized_id") val anonymizedId: String?,
-    @Json(name = "verification_status") val verificationStatus: VerificationStatus,
-    @Json(name = "statistics") val statistics: Statistics,
+    @Json(name = "verification_status") val verificationStatus: VerificationStatus?,
+    @Json(name = "statistics") val statistics: Statistics?,
     @Json(name = "user_metadata") val userMetadata: Map<String, Any?> = mutableMapOf(),
     @Json(name = "app_metadata") val appMetadata: Map<String, Any?> = mutableMapOf()
 )

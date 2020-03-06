@@ -21,6 +21,6 @@ data class Model(
 @JsonClass(generateAdapter = true)
 data class Aircraft(
     @Json(name = "id") val id: String,
-    @Json(name = "nickname") val nickname: String,
+    @Json(name = "nickname") val nickname: String?,
     @Json(name = "model") val model: Model
 )

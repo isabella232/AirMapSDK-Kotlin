@@ -107,7 +107,6 @@ class AdvisoryJsonAdapterFactory : JsonAdapter.Factory {
 
         val adapter = moshi.nextAdapter<Advisory>(this, type, annotations)
 
-
         return object : JsonAdapter<Advisory>() {
             override fun toJson(writer: JsonWriter, value: Advisory?) = adapter.toJson(writer, value)
             override fun fromJson(reader: JsonReader): Advisory? {
@@ -115,7 +114,7 @@ class AdvisoryJsonAdapterFactory : JsonAdapter.Factory {
                 val advisory = adapter.fromJson(peekedJson)
 
                 @Suppress("UNCHECKED_CAST")
-                val value = reader.readJsonValue() as Map<String, Any>
+                val value = reader.readJsonValue() as Map<String, Any>? ?: return advisory
                 val propertiesClass = advisory?.type?.propertiesClass
                 return advisory?.copy(
                     properties = moshi.adapter(propertiesClass).nullSafe().fromJsonValue(value["properties"])

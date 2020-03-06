@@ -31,10 +31,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun inProgress() {
-        client.getFlight().executeAndLogResponse()
     }
 
     private fun queue() {
+//            client.getAuthorizations().executeAndLogResponse()
 //            client.createFlight().executeAndLogResponse()// TODO: Test for Point, Path, and Polygon
 //            client.createFlightPoint().executeAndLogResponse()
 //            client.createFlightPath().executeAndLogResponse()
@@ -43,7 +43,6 @@ class MainActivity : AppCompatActivity() {
 //            client.deleteFlight().executeAndLogResponse()
 //            client.startComm().executeAndLogResponse()
 //            client.endComm().executeAndLogResponse()
-//            client.getFlightPlan().executeAndLogResponse()
 //            client.createFlightPlan().executeAndLogResponse()
 //            client.updateFlightPlan().executeAndLogResponse()
 //            client.submitFlightPlan().executeAndLogResponse()
@@ -84,6 +83,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun working() {
+        val flightPlanId = "flight_plan|B5Kv2qGB42Z3c3pRb5xwvg9Z4CpnZEK7a8QzRETQQyBzgM8DG3Q"
+        client.getFlightPlan(flightPlanId).executeAndLogResponse()
+        val flightId = "flight|dwaDYDPGolYY4CQ0kxlGgJN8N7IdRJ8Ypw0LMbyFZn5aMMvJK0Jg"
+        client.getFlight(flightId).executeAndLogResponse()
+        client.getFlight(flightId, enhance = true).executeAndLogResponse()
+        client.getFlightPlanByFlight(flightId).executeAndLogResponse()
         client.getManufacturers().executeAndLogResponse()
         client.getManufacturers("GoPro").executeAndLogResponse()
         client.getModel("c7ed05c7-cbe1-43a4-b2a8-500d5607e994").executeAndLogResponse()

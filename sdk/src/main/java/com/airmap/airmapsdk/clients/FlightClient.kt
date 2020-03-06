@@ -80,7 +80,11 @@ interface FlightClient {
 
     @GET("{id}/plan")
     @Wrapped(path = ["data"])
-    fun getFlightPlan(@Path("id") flightId: String): Response<FlightPlan>
+    fun getFlightPlanByFlight(@Path("id") flightId: String): Response<FlightPlan>
+
+    @GET("plan/{id}")
+    @Wrapped(path = ["data"])
+    fun getFlightPlan(@Path("id") id: String): Response<FlightPlan>
 
     @POST("plan")
     @Wrapped(path = ["data"])
@@ -122,4 +126,8 @@ interface FlightClient {
     @GET("plan/{id}/briefing")
     @Wrapped(path = ["data"])
     fun getFlightBriefing(@Path("id") flightPlanId: String): Response<FlightBriefing>
+
+    // The response FlightBriefing object will only have flightPlanId and authorizations populated
+    @GET("plan/batch/authorizations")
+    fun getAuthorizations(@Query("flight_plan_ids") flightPlanIds: List<String>): Response<List<FlightBriefing>>
 }
