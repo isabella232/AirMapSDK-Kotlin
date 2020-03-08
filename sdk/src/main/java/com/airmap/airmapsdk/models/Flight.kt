@@ -73,6 +73,6 @@ data class FlightBriefing(
     @Json(name = "created_at") val createdAt: Date?,
     @Json(name = "rulesets") val rulesets: List<Ruleset> = mutableListOf(),
     @Json(name = "airspace") val airspace: Airspace.Status?,
-    @Json(name = "validations") val validations: List<Validation> = mutableListOf(),
+    @Json(name = "validations") val validations: List<Validation> = mutableListOf(), // TODO: Remove? (see: https://github.com/airmap/AirMapSDK-Swift/commit/ddaa437cf0623367c21536ae030efc2d42bed903)
     @Json(name = "authorizations") val authorizations: List<Authorization> = mutableListOf()
 )

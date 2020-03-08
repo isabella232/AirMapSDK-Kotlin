@@ -84,6 +84,7 @@ enum class Region {
     @Json(name = "local") Local,
 }
 
+// TODO: Remove? (see: https://github.com/airmap/AirMapSDK-Swift/commit/ddaa437cf0623367c21536ae030efc2d42bed903)
 @JsonClass(generateAdapter = true)
 data class Validation(
     @Json(name = "data") val data: String?,
