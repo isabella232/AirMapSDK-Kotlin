@@ -7,7 +7,6 @@ package com.airmap.airmapsdk
 //import androidx.lifecycle.OnLifecycleEvent
 import retrofit2.*
 import retrofit2.Response
-import timber.log.Timber
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 

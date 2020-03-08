@@ -14,7 +14,6 @@ import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
-import timber.log.Timber
 import java.lang.reflect.Type
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -43,7 +42,6 @@ object AirMap {
         enableCertificatePinning: Boolean = false,
         okHttpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
     ) {
-        Timber.plant(Timber.DebugTree())
         this.config = config
         val moshi = Moshi.Builder()
             .add(Wrapped.ADAPTER_FACTORY) // This needs to be the first adapter added to Moshi
