@@ -16,11 +16,11 @@ data class Ruleset(
     @Json(name = "layers") val layers: List<String> = mutableListOf(),
     @Json(name = "rules") val rules: List<Rule> = mutableListOf()
 ) {
-    enum class Type(private val apiName: String) {
-        PickOne("pickone"),
-        Pick1("pick1"),
-        Required("required"),
-        Optional("optional"),
+    enum class Type {
+        @Json(name = "pickone") PickOne,
+        @Json(name = "pick1") Pick1,
+        @Json(name = "required") Required,
+        @Json(name = "optional") Optional,
     }
 }
 
@@ -32,12 +32,12 @@ data class Rule(
     @Json(name = "display_order") val displayOrder: Int?,
     @Json(name = "flight_features") val flightFeatures: List<FlightFeatureValue> = mutableListOf()
 ) {
-    enum class Status(private val apiName: String) {
-        Conflicting("conflicting"),
-        NotConflicting("not_conflicting"),
-        MissingInfo("missing_info"),
-        Informational("informational"),
-        InformationRules("information_rules"),
+    enum class Status {
+        @Json(name = "conflicting") Conflicting,
+        @Json(name = "not_conflicting") NotConflicting,
+        @Json(name = "missing_info") MissingInfo,
+        @Json(name = "informational") Informational,
+        @Json(name = "information_rules") InformationRules,
     }
 }
 
