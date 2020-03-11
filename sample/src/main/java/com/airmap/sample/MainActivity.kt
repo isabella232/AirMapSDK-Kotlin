@@ -11,10 +11,10 @@ import com.aungkyawpaing.geoshi.model.Polygon
 import com.aungkyawpaing.geoshi.model.Position
 import com.readystatesoftware.chuck.ChuckInterceptor
 import com.squareup.moshi.Moshi
+import java.io.Reader
+import java.util.Date
 import okhttp3.OkHttpClient
 import timber.log.Timber
-import java.io.Reader
-import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -66,7 +66,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun notWorking() {
-        val rulesets = "usa_ama,usa_national_park,usa_sec_91,usa_wilderness_area,usa_sec_336".split(',')
+        val rulesets = "usa_ama,usa_national_park,usa_sec_91,usa_wilderness_area,usa_sec_336"
+            .split(',')
         val geometry = Polygon(
             listOf(
                 listOf(
@@ -79,7 +80,11 @@ class MainActivity : AppCompatActivity() {
             )
         )
         client.getAdvisories(rulesets, geometry, Date(), Date()).executeAndLogResponse()
-        client.getAirspaces(listOf("97f107b9-5688-4842-b98c-18addfcb3a1f", "97f107b9-5688-4842-b98c-18addfcb3a1g")).executeAndLogResponse()
+        client.getAirspaces(
+            listOf(
+                "97f107b9-5688-4842-b98c-18addfcb3a1f", "97f107b9-5688-4842-b98c-18addfcb3a1g"
+            )
+        ).executeAndLogResponse()
     }
 
     private fun working() {
@@ -91,17 +96,21 @@ class MainActivity : AppCompatActivity() {
         client.getFlightPlanByFlight(flightId).executeAndLogResponse()
         client.getManufacturers().executeAndLogResponse()
         client.getManufacturers("GoPro").executeAndLogResponse()
-        client.getModel("c7ed05c7-cbe1-43a4-b2a8-500d5607e994").executeAndLogResponse()
+        val modelId = "c7ed05c7-cbe1-43a4-b2a8-500d5607e994"
+        client.getModel(modelId).executeAndLogResponse()
         client.getModels().executeAndLogResponse()
-        client.getModels(manufacturerId = "63280fbf-3c7f-47f4-9168-5763899048cd").executeAndLogResponse()
+        val manufacturerId = "63280fbf-3c7f-47f4-9168-5763899048cd"
+        client.getModels(manufacturerId).executeAndLogResponse()
         client.getModels(name = "Karma").executeAndLogResponse()
-        client.getFlights(pilotId = "auth0|5761a4279732f5844b1db844").executeAndLogResponse()
+        val pilotId = "auth0|5761a4279732f5844b1db844"
+        client.getFlights(pilotId).executeAndLogResponse()
         client.getFlights().executeAndLogResponse()
         client.getPilot().executeAndLogResponse()
         client.sendVerificationToken().executeAndLogResponse()
         client.verifySMS(187549).executeAndLogResponse()
         client.getAllAircraft().executeAndLogResponse()
-        client.getAirspace("97f107b9-5688-4842-b98c-18addfcb3a1f").executeAndLogResponse()
+        val airspaceId = "97f107b9-5688-4842-b98c-18addfcb3a1f"
+        client.getAirspace(airspaceId).executeAndLogResponse()
     }
 
     private fun <T> genericLogResponseHandler(response: T?, error: Throwable?) {
@@ -123,5 +132,4 @@ class MainActivity : AppCompatActivity() {
     } catch (e: Exception) {
         throw RuntimeException("Please ensure airmap.config.json is in your /assets directory")
     }
-
 }

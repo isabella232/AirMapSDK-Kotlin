@@ -15,7 +15,10 @@ interface AircraftClient {
 
     @GET("model")
     @Wrapped(path = ["data"])
-    fun getModels(@Query("q") name: String? = null, @Query("manufacturer") manufacturerId: String? = null): Response<List<Model>>
+    fun getModels(
+        @Query("q") name: String? = null,
+        @Query("manufacturer") manufacturerId: String? = null
+    ): Response<List<Model>>
 
     @GET("model/{id}")
     @Wrapped(path = ["data"])

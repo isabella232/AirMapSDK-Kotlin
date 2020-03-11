@@ -1,10 +1,15 @@
 package com.airmap.airmapsdk.models
 
 import com.aungkyawpaing.geoshi.model.Geometry
-import com.squareup.moshi.*
-import java.lang.NullPointerException
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.JsonReader
+import com.squareup.moshi.JsonWriter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import java.lang.reflect.Type
-import java.util.*
+import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class Airspace(
@@ -134,4 +139,3 @@ data class Notice(
     @Json(name = "digital") val digital: Boolean,
     @Json(name = "phone") val phone: String
 )
-

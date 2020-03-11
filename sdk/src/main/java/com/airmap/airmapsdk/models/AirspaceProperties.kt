@@ -2,7 +2,7 @@ package com.airmap.airmapsdk.models
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import java.util.*
+import java.util.Date
 
 // TODO: Verify all these fields, Swift SDK has different fields...
 // TODO: Create custom sealed class deserializer
@@ -48,7 +48,7 @@ data class ControlledAirspaceProperties(
     @Json(name = "airspace_classification") val airspaceClassification: String?,
     @Json(name = "facility_id") val facilityId: String?
 
-): AirspaceProperties()
+) : AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
 data class EmergencyProperties(
@@ -56,7 +56,7 @@ data class EmergencyProperties(
     @Json(name = "description") val description: String?,
     @Json(name = "agency_id") val agencyId: String?,
     @Json(name = "date_effective") val dateEffective: Date?
-): AirspaceProperties()
+) : AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
 data class FireProperties(
@@ -64,7 +64,7 @@ data class FireProperties(
     @Json(name = "description") val description: String?,
     @Json(name = "size") val size: Int?,
     @Json(name = "date_effective") val dateEffective: Date?
-): AirspaceProperties()
+) : AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
 data class HeliportProperties(
@@ -72,7 +72,7 @@ data class HeliportProperties(
     @Json(name = "description") val description: String?,
     @Json(name = "phone") val phone: String?,
     @Json(name = "use") val use: String?
-): AirspaceProperties()
+) : AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
 data class NOTAMProperties(
@@ -80,7 +80,7 @@ data class NOTAMProperties(
     @Json(name = "description") val description: String?,
     @Json(name = "effective_start") val effectiveStart: Date?,
     @Json(name = "effective_end") val effectiveEnd: Date?
-): AirspaceProperties()
+) : AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
 data class NotificationProperties(
@@ -94,7 +94,7 @@ data class ParkProperties(
     @Json(name = "description") val description: String?,
     @Json(name = "size") val size: Int?,
     @Json(name = "type") val type: String?
-): AirspaceProperties()
+) : AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
 data class PowerPlantProperties(
@@ -102,7 +102,7 @@ data class PowerPlantProperties(
     @Json(name = "description") val description: String?,
     @Json(name = "tech") val tech: String?,
     @Json(name = "plant_code") val plantCode: Int?
-): AirspaceProperties()
+) : AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
 data class SchoolProperties(
@@ -111,14 +111,14 @@ data class SchoolProperties(
     @Json(name = "type") val type: String?,
     @Json(name = "building") val building: Boolean?,
     @Json(name = "way_area") val wayArea: Double?
-): AirspaceProperties()
+) : AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
 data class SpecialUseProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "currently_active") val currentlyActive: Boolean?
-): AirspaceProperties()
+) : AirspaceProperties()
 
 @JsonClass(generateAdapter = true)
 data class TFRProperties(
@@ -127,4 +127,4 @@ data class TFRProperties(
     @Json(name = "description") val description: String?,
     @Json(name = "effective_start") val effectiveStart: Date?,
     @Json(name = "effective_end") val effectiveEnd: Date?
-): AirspaceProperties()
+) : AirspaceProperties()

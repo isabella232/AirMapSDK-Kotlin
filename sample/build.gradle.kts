@@ -1,9 +1,7 @@
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
-
 plugins {
     id("com.android.application")
     kotlin("android")
-    id("kotlin-android-extensions")
+    kotlin("android.extensions")
 }
 
 android {
@@ -26,6 +24,11 @@ android {
     }
 }
 
+ktlint {
+    android.set(true)
+    debug.set(true)
+}
+
 dependencies {
     implementation(kotlin("stdlib"))
     implementation(project(":sdk"))
@@ -35,4 +38,5 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.9.2")
     debugApi("com.readystatesoftware.chuck:library:1.1.0")
     releaseApi("com.readystatesoftware.chuck:library-no-op:1.1.0")
+    api("com.jakewharton.timber:timber:4.7.1")
 }

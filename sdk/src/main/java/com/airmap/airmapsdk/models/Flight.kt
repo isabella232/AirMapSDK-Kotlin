@@ -3,7 +3,7 @@ package com.airmap.airmapsdk.models
 import com.aungkyawpaing.geoshi.model.Geometry
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import java.util.*
+import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class Flight(

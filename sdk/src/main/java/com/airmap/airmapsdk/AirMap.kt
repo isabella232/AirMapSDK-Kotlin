@@ -1,28 +1,54 @@
 package com.airmap.airmapsdk
 
-import com.airmap.airmapsdk.clients.*
+import com.airmap.airmapsdk.clients.AdvisoryClient
+import com.airmap.airmapsdk.clients.AircraftClient
+import com.airmap.airmapsdk.clients.AirspaceClient
+import com.airmap.airmapsdk.clients.FlightClient
+import com.airmap.airmapsdk.clients.PilotClient
+import com.airmap.airmapsdk.clients.RulesClient
 import com.airmap.airmapsdk.models.AdvisoryJsonAdapterFactory
 import com.airmap.airmapsdk.models.Config
 import com.airmap.airmapsdk.models.VerificationRequest
 import com.aungkyawpaing.geoshi.adapter.GeoshiJsonAdapterFactory
-import com.aungkyawpaing.geoshi.model.*
+import com.aungkyawpaing.geoshi.model.Feature
+import com.aungkyawpaing.geoshi.model.FeatureCollection
+import com.aungkyawpaing.geoshi.model.Geometry
+import com.aungkyawpaing.geoshi.model.GeometryCollection
+import com.aungkyawpaing.geoshi.model.GeometryType
+import com.aungkyawpaing.geoshi.model.LineString
+import com.aungkyawpaing.geoshi.model.MultiLineString
+import com.aungkyawpaing.geoshi.model.MultiPoint
+import com.aungkyawpaing.geoshi.model.MultiPolygon
+import com.aungkyawpaing.geoshi.model.Point
+import com.aungkyawpaing.geoshi.model.Polygon
 import com.serjltt.moshi.adapters.Wrapped
-import com.squareup.moshi.*
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.JsonDataException
+import com.squareup.moshi.JsonReader
+import com.squareup.moshi.JsonWriter
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.ToJson
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
-import okhttp3.*
+import java.lang.reflect.Type
+import java.util.Date
+import java.util.concurrent.TimeUnit
+import okhttp3.CertificatePinner
+import okhttp3.HttpUrl
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
-import java.lang.reflect.Type
-import java.util.*
-import java.util.concurrent.TimeUnit
 
 object AirMap {
     lateinit var client: AirMapClient
     private lateinit var config: Config
-    var userId: String? = null // "auth0|5761a4279732f5844b1db844"
-    private var authToken: String? = null
+//    var userId: String? = null
+    var userId: String? = "auth0|5761a4279732f5844b1db844"
+//    private var authToken: String? = null
+    private var authToken: String = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2aWl1cHRkOUM3Z250NnF2SDhpYzFSQzJaWTROYnFLdF9fR3RjSU1pYzZJIn0.eyJqdGkiOiI3NmMwMGNkYi00NDIxLTQzNDYtOGNkMi05MTI4MDU4MjExODkiLCJleHAiOjE1ODM0Nzk1NjEsIm5iZiI6MCwiaWF0IjoxNTgzNDYxNTYxLCJpc3MiOiJodHRwczovL3N0YWdlLmF1dGguYWlybWFwLmNvbS9yZWFsbXMvYWlybWFwIiwiYXVkIjoiYW0tYXBpcyIsInN1YiI6ImF1dGgwfDU3NjFhNDI3OTczMmY1ODQ0YjFkYjg0NCIsInR5cCI6IkJlYXJlciIsImF6cCI6Iml6TmF4cDNmSkcxTTRQRjg1NlRpQUVpNTRBSU9xMndHIiwiYXV0aF90aW1lIjoxNTgzMzQzMjc5LCJzZXNzaW9uX3N0YXRlIjoiNTMyMDJjY2YtZWI0Ni00YTM4LWFkZmItNjRmMjdiNzdlZjlkIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwczovL29yY2EuYXV0aC5haXJtYXAuY29tIiwiaHR0cHM6Ly9zdGFnZS5hdXRoLmFpcm1hcC5jb20iLCJodHRwczovL2xvY2FsaG9zdDo4MDgwIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyJdfSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBhbS1hcGkgZW1haWwgb2ZmbGluZV9hY2Nlc3MiLCJrY19pZCI6ImFhM2JmOTE5LTRmOTYtNGU5Yy04ZjA5LWM4OGRmZjM3NjIxNSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhdXRoMHw1NzYxYTQyNzk3MzJmNTg0NGIxZGI4NDQiLCJlbWFpbCI6InZhbnNoQGFpcm1hcC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvNjNiMDliNDBhYzRhMDdhMTI3ZTc2NjM1YTMyMmE4NzM_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZ2YS5wbmcifQ.YbRjFR-57MmUOfm0SSRY_88rSyeiClb6ztRehYGaH4h7rodoBB5G0mWb9ihG-ZU1Tdb2-GhHfd3cwuEUJSaWCBBz1U_i0B9eS0x-nHn74xUV6D0Wia-Zebg7mPTvcM4VGiWYWDptVT0r3u6WOOTWFnGF2z2IvYw9Z3DOqiqxakBmCoj7JsA07XPqn2m5sbxfVWmYRa0JTN5LDOQR7xjQ8JTlEK2xOgsOwrTtEuL4d77_7PCCi1UKQ3hUnkxzRNP3RcSkHX0HPIIf-Z7UiLEnsZp1aXmv7_KX2l2aMYWVFmklmaLcZjHKWliKPB3znZukEGPwV-nAJipLGwOKI7rwOA"
     private val certificatePinner: CertificatePinner
         get() {
             val host = "api.airmap.com"
@@ -85,7 +111,6 @@ object AirMap {
     private fun Interceptor.Chain.addHeaderToRequest(name: String, value: String): Response {
         return this.proceed(this.request().newBuilder().addHeader(name, value).build())
     }
-
 
     /**
      * Instantiate a client for the given service name and version

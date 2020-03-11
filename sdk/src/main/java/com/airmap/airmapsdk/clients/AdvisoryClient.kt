@@ -4,11 +4,9 @@ import com.airmap.airmapsdk.Response
 import com.airmap.airmapsdk.models.Airspace
 import com.aungkyawpaing.geoshi.model.Geometry
 import com.serjltt.moshi.adapters.Wrapped
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
+import java.util.Date
 import retrofit2.http.GET
 import retrofit2.http.Query
-import java.util.*
 
 interface AdvisoryClient {
     @GET("airspace")
@@ -20,6 +18,6 @@ interface AdvisoryClient {
         @Query("geometry") geometry: Geometry,
         @Query("start") start: Date? = null,
         @Query("end") end: Date? = null
-//TODO        @Field("flight_features") flightFeatures: List<FlightFeatureValue>? = null
+// TODO        @Field("flight_features") flightFeatures: List<FlightFeatureValue>? = null
     ): Response<Airspace.Status>
 }

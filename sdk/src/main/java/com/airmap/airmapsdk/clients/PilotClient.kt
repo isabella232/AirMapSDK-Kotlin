@@ -7,7 +7,15 @@ import com.airmap.airmapsdk.models.Pilot
 import com.airmap.airmapsdk.models.VerificationRequest
 import com.airmap.airmapsdk.models.VerificationResult
 import com.serjltt.moshi.adapters.Wrapped
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface PilotClient {
     @GET("{id}")
