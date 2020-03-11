@@ -1,0 +1,4 @@
+# Disable Ktlint import ordering temporarily because of AndroidStudio Kotlin formatting bug. read more here:
+# https://youtrack.jetbrains.com/issue/KT-10974
+[*.{kt, kts}]
+disabled_rules = import-ordering

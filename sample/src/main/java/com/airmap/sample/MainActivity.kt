@@ -11,10 +11,10 @@ import com.aungkyawpaing.geoshi.model.Polygon
 import com.aungkyawpaing.geoshi.model.Position
 import com.readystatesoftware.chuck.ChuckInterceptor
 import com.squareup.moshi.Moshi
-import java.io.Reader
-import java.util.Date
 import okhttp3.OkHttpClient
 import timber.log.Timber
+import java.io.Reader
+import java.util.Date
 
 class MainActivity : AppCompatActivity() {
 

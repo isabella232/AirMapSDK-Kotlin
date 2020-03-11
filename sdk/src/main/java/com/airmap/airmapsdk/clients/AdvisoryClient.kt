@@ -4,9 +4,9 @@ import com.airmap.airmapsdk.Response
 import com.airmap.airmapsdk.models.Airspace
 import com.aungkyawpaing.geoshi.model.Geometry
 import com.serjltt.moshi.adapters.Wrapped
-import java.util.Date
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.util.Date
 
 interface AdvisoryClient {
     @GET("airspace")

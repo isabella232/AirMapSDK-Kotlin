@@ -7,7 +7,6 @@ import com.airmap.airmapsdk.models.FlightBriefing
 import com.airmap.airmapsdk.models.FlightPlan
 import com.aungkyawpaing.geoshi.model.Geometry
 import com.serjltt.moshi.adapters.Wrapped
-import java.util.Date
 import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -16,6 +15,7 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import java.util.Date
 
 typealias FlightFeatureValue = Any // TODO
 
