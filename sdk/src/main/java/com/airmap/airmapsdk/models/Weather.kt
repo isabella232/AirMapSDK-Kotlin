@@ -5,10 +5,10 @@ import com.squareup.moshi.JsonClass
 import java.util.Date
 
 @JsonClass(generateAdapter = true)
-data class Wind(
-    @Json(name = "heading") val heading: Int,
-    @Json(name = "speed") val speed: Int,
-    @Json(name = "gusting") val gusting: Int
+data class Forecast(
+    @Json(name = "weather") val weather: List<WeatherUpdate> = listOf(),
+    @Json(name = "attribution") val attribution: String?,
+    @Json(name = "attribution_uri") val attributionUri: String?
 )
 
 @JsonClass(generateAdapter = true)
@@ -23,10 +23,12 @@ data class WeatherUpdate(
     @Json(name = "precipitation") val precipitation: Double,
     @Json(name = "temperature") val temperature: Double,
     @Json(name = "dew_point") val dewPoint: Double,
-    @Json(name = "coordinate") val mslp: Double
+    @Json(name = "mslp") val mslp: Double
 )
 
 @JsonClass(generateAdapter = true)
-data class Forecast(
-    @Json(name = "weather") val weather: List<WeatherUpdate> = mutableListOf()
+data class Wind(
+    @Json(name = "heading") val heading: Int,
+    @Json(name = "speed") val speed: Double,
+    @Json(name = "gusting") val gusting: Double
 )

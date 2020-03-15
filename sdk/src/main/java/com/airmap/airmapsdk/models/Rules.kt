@@ -9,16 +9,15 @@ data class Ruleset(
     @Json(name = "id") val id: String,
     @Json(name = "name") val name: String?,
     @Json(name = "short_name") val shortName: String?,
+    @Json(name = "selection_type") val selectionType: SelectionType?,
+    @Json(name = "airspace_types") val airspaceTypes: List<Airspace.Type> = mutableListOf(),
     @Json(name = "jurisdiction") val jurisdiction: Jurisdiction?,
-    @Json(name = "type") val type: Type,
     @Json(name = "default") val isDefault: Boolean = false,
-    @Json(name = "summary") val summary: String,
-    @Json(name = "layers") val layers: List<String> = mutableListOf(),
+    @Json(name = "description") val description: String?,
     @Json(name = "rules") val rules: List<Rule> = mutableListOf()
 ) {
-    enum class Type {
-        @Json(name = "pickone") PickOne,
-        @Json(name = "pick1") Pick1,
+    enum class SelectionType {
+        @Json(name = "pick1") PickOne,
         @Json(name = "required") Required,
         @Json(name = "optional") Optional,
     }
@@ -78,7 +77,8 @@ data class Jurisdiction(
 // TODO: Verify how to serialize/deserialize
 enum class Region {
     @Json(name = "national") National,
-    @Json(name = "statee") State,
+    @Json(name = "federal") Federal,
+    @Json(name = "state") State,
     @Json(name = "county") County,
     @Json(name = "city") City,
     @Json(name = "local") Local,

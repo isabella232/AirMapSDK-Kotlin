@@ -1,6 +1,7 @@
 package com.airmap.airmapsdk.models
 
 import com.aungkyawpaing.geoshi.model.Geometry
+import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonClass
@@ -22,7 +23,8 @@ data class Airspace(
     @Json(name = "city") val city: String,
     @Json(name = "geometry") val geometry: Geometry,
     // TODO: dot notation!
-    @Json(name = "related_geometry.property_boundary.geometry") val propertyBoundary: Geometry?
+    @Wrapped(path = ["related_geometry", "property_boundary", "geometry"])
+    val propertyBoundary: Geometry?
 ) {
     // Not every Airspace Type has properties
     enum class Type(val propertiesClass: Class<out AirspaceProperties>? = null) {
@@ -45,10 +47,12 @@ data class Airspace(
         @Json(name = "hospital") Hospital,
         @Json(name = "industrial_property") IndustrialProperty,
         @Json(name = "jpn_base") JapanBase,
+        @Json(name = "laanc") LAANC,
         @Json(name = "landing_site") LandingSite,
         @Json(name = "military_property") MilitaryProperty,
         @Json(name = "notam") NOTAM(NOTAMProperties::class.java),
         @Json(name = "notification") Notification(NotificationProperties::class.java),
+        @Json(name = "obstacle") Obstacle,
         @Json(name = "park") Park(ParkProperties::class.java),
         @Json(name = "police_station") PoliceStation,
         @Json(name = "power_plant") PowerPlant(PowerPlantProperties::class.java),
