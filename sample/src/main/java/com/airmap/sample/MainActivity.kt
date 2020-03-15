@@ -7,6 +7,7 @@ import com.airmap.airmapsdk.AirMap
 import com.airmap.airmapsdk.AirMap.client
 import com.airmap.airmapsdk.Response
 import com.airmap.airmapsdk.models.Config
+import com.airmap.airmapsdk.models.FlightPlan
 import com.aungkyawpaing.geoshi.model.Polygon
 import com.aungkyawpaing.geoshi.model.Position
 import com.readystatesoftware.chuck.ChuckInterceptor
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Timber.plant(Timber.DebugTree())
         val okHttpClientBuilder = OkHttpClient.Builder().addInterceptor(ChuckInterceptor(this))
         AirMap.init(getConfig(this, Moshi.Builder().build()), false, okHttpClientBuilder)
         try {
@@ -43,17 +45,8 @@ class MainActivity : AppCompatActivity() {
 //            client.deleteFlight().executeAndLogResponse()
 //            client.startComm().executeAndLogResponse()
 //            client.endComm().executeAndLogResponse()
-//            client.createFlightPlan().executeAndLogResponse()
-//            client.updateFlightPlan().executeAndLogResponse()
-//            client.submitFlightPlan().executeAndLogResponse()
 //            client.getFlightBriefing().executeAndLogResponse()
-//            client.updatePilot().executeAndLogResponse()
-//            client.getAircraft().executeAndLogResponse()
-//            client.createAircraft().executeAndLogResponse()
-//            client.updateAircraft().executeAndLogResponse()
-//            client.deleteAircraft().executeAndLogResponse()
 //            client.getRuleset().executeAndLogResponse()
-//            client.getRulesets().executeAndLogResponse()
 //            client.getRulesets().executeAndLogResponse()
 //            client.getRulesets().executeAndLogResponse()
 //            client.getEvaluation().executeAndLogResponse()
@@ -80,11 +73,14 @@ class MainActivity : AppCompatActivity() {
             )
         )
         client.getAdvisories(rulesets, geometry, Date(), Date()).executeAndLogResponse()
-        client.getAirspaces(
-            listOf(
-                "97f107b9-5688-4842-b98c-18addfcb3a1f", "97f107b9-5688-4842-b98c-18addfcb3a1g"
-            )
-        ).executeAndLogResponse()
+
+        // This should be working, but when testing there were internal errors, so revisit
+        // (update was succeeding but not returning the full Pilot object)
+        client.getPilot().execute { pilot, error ->
+            genericLogResponseHandler(pilot, error)
+            val newLastName = "Update ${System.currentTimeMillis()}"
+            pilot?.let { client.updatePilot(lastName = newLastName).executeAndLogResponse() }
+        }
     }
 
     private fun working() {
@@ -105,12 +101,90 @@ class MainActivity : AppCompatActivity() {
         val pilotId = "auth0|5761a4279732f5844b1db844"
         client.getFlights(pilotId).executeAndLogResponse()
         client.getFlights().executeAndLogResponse()
-        client.getPilot().executeAndLogResponse()
         client.sendVerificationToken().executeAndLogResponse()
-        client.verifySMS(187549).executeAndLogResponse()
+        client.verifySMS(152986).executeAndLogResponse()
+        client.getPilot().executeAndLogResponse()
         client.getAllAircraft().executeAndLogResponse()
-        val airspaceId = "97f107b9-5688-4842-b98c-18addfcb3a1f"
-        client.getAirspace(airspaceId).executeAndLogResponse()
+        val airspaceId1 = "97f107b9-5688-4842-b98c-18addfcb3a1f"
+        val airspaceId2 = "8b819ff6-c9f9-4f70-a747-5263790a640b"
+        client.getAirspace(airspaceId1).executeAndLogResponse()
+        client.getAirspaces(listOf(airspaceId1, airspaceId2)).executeAndLogResponse()
+        val aircraftId = "aircraft|Ew6wlKai03Og6ZHqp5loNiBkK0zX"
+        val mavicProModelId = "18546c9b-c032-4bfd-9741-4cd24e368618"
+        val updateNickname = "Update ${System.currentTimeMillis()}"
+        val newNickname = "New ${System.currentTimeMillis()}"
+        client.getAircraft(aircraftId).executeAndLogResponse()
+        client.updateAircraftNickname(aircraftId, updateNickname).executeAndLogResponse()
+        // TODO: Look into how we can remove the need for ".execute"
+        client.createAircraft(newNickname, mavicProModelId).execute { aircraft, error ->
+            genericLogResponseHandler(aircraft, error)
+            aircraft?.id?.let { client.deleteAircraft(it).executeAndLogResponse() }
+        }
+
+        // Fight creation process
+        val geometry = Polygon(
+            listOf(
+                listOf(
+                    Position(-122.1008657255241, 37.44169541637456),
+                    Position(-122.06715767436634, 37.44169541637456),
+                    Position(-122.06715767436634, 37.40233316192527),
+                    Position(-122.1008657255241, 37.40233316192527),
+                    Position(-122.1008657255241, 37.44169541637456)
+                )
+            )
+        )
+        client.getRulesets(geometry).executeAndLogResponse()
+        client.createFlightPlan(
+            FlightPlan(
+                id = null,
+                pilotId = AirMap.userId.orEmpty(),
+                flightId = null,
+                aircraftId = "aircraft|PngXy95H9OYWWpCnJ2wdbTO8kM33",
+                startTime = Date(),
+                endTime = Date(System.currentTimeMillis() + 1000000),
+                createdAt = null,
+                creationDate = null,
+                buffer = 762.0,
+                takeoffLatitude = 37.42,
+                takeoffLongitude = -122.084,
+                geometry = geometry,
+                minAltitudeAgl = 10.0,
+                maxAltitudeAgl = 40.0,
+                rulesetIds = listOf("usa_fish_wildlife_refuge"),
+                flightDescription = "${System.currentTimeMillis()}",
+                flightFeatures = mutableMapOf(
+                    "test" to "test"
+                ),
+                isPublic = false,
+                shouldNotify = false
+            )
+        ).execute { flightPlan, error ->
+            genericLogResponseHandler(flightPlan, error)
+            client.getFlightPlanBriefing(flightPlan!!.id!!).executeAndLogResponse()
+            client.updateFlightPlan(
+                flightPlan.id!!, flightPlan.copy(
+                    maxAltitudeAgl = 100.0,
+                    flightFeatures = mapOf("test2" to "test2")
+                )
+            ).execute { updatedFlightPlan, updatedError ->
+                genericLogResponseHandler(updatedFlightPlan, updatedError)
+                client.getFlightPlan(updatedFlightPlan!!.id!!).executeAndLogResponse()
+                client.submitFlightPlan(updatedFlightPlan.id!!)
+                    .execute { submittedFlightPlan, submittedError ->
+                        genericLogResponseHandler(submittedFlightPlan, submittedError)
+                        client.getFlight(submittedFlightPlan!!.flightId!!).executeAndLogResponse()
+                        client.getFlightPlanByFlight(submittedFlightPlan.flightId!!)
+                            .executeAndLogResponse()
+                    }
+            }
+
+            client.getWeather(
+                flightPlan.takeoffLatitude!!,
+                flightPlan.takeoffLongitude!!,
+                "2020-03-15T03:54:12.021Z",
+                "2020-03-15T04:10:52.021Z"
+            ).executeAndLogResponse()
+        }
     }
 
     private fun <T> genericLogResponseHandler(response: T?, error: Throwable?) {

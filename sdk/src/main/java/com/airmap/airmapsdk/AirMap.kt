@@ -6,8 +6,8 @@ import com.airmap.airmapsdk.clients.AirspaceClient
 import com.airmap.airmapsdk.clients.FlightClient
 import com.airmap.airmapsdk.clients.PilotClient
 import com.airmap.airmapsdk.clients.RulesClient
-import com.airmap.airmapsdk.models.AdvisoryJsonAdapterFactory
 import com.airmap.airmapsdk.models.Config
+import com.airmap.airmapsdk.models.UpdatePilotRequest
 import com.airmap.airmapsdk.models.VerificationRequest
 import com.aungkyawpaing.geoshi.adapter.GeoshiJsonAdapterFactory
 import com.aungkyawpaing.geoshi.model.Feature
@@ -21,6 +21,7 @@ import com.aungkyawpaing.geoshi.model.MultiPoint
 import com.aungkyawpaing.geoshi.model.MultiPolygon
 import com.aungkyawpaing.geoshi.model.Point
 import com.aungkyawpaing.geoshi.model.Polygon
+import com.serjltt.moshi.adapters.DeserializeOnly
 import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonAdapter
@@ -45,8 +46,9 @@ import java.util.concurrent.TimeUnit
 object AirMap {
     lateinit var client: AirMapClient
     private lateinit var config: Config
+    // TODO: Remove
     var userId: String? = "auth0|5761a4279732f5844b1db844"
-    private var authToken: String = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2aWl1cHRkOUM3Z250NnF2SDhpYzFSQzJaWTROYnFLdF9fR3RjSU1pYzZJIn0.eyJqdGkiOiI3NmMwMGNkYi00NDIxLTQzNDYtOGNkMi05MTI4MDU4MjExODkiLCJleHAiOjE1ODM0Nzk1NjEsIm5iZiI6MCwiaWF0IjoxNTgzNDYxNTYxLCJpc3MiOiJodHRwczovL3N0YWdlLmF1dGguYWlybWFwLmNvbS9yZWFsbXMvYWlybWFwIiwiYXVkIjoiYW0tYXBpcyIsInN1YiI6ImF1dGgwfDU3NjFhNDI3OTczMmY1ODQ0YjFkYjg0NCIsInR5cCI6IkJlYXJlciIsImF6cCI6Iml6TmF4cDNmSkcxTTRQRjg1NlRpQUVpNTRBSU9xMndHIiwiYXV0aF90aW1lIjoxNTgzMzQzMjc5LCJzZXNzaW9uX3N0YXRlIjoiNTMyMDJjY2YtZWI0Ni00YTM4LWFkZmItNjRmMjdiNzdlZjlkIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwczovL29yY2EuYXV0aC5haXJtYXAuY29tIiwiaHR0cHM6Ly9zdGFnZS5hdXRoLmFpcm1hcC5jb20iLCJodHRwczovL2xvY2FsaG9zdDo4MDgwIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyJdfSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBhbS1hcGkgZW1haWwgb2ZmbGluZV9hY2Nlc3MiLCJrY19pZCI6ImFhM2JmOTE5LTRmOTYtNGU5Yy04ZjA5LWM4OGRmZjM3NjIxNSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhdXRoMHw1NzYxYTQyNzk3MzJmNTg0NGIxZGI4NDQiLCJlbWFpbCI6InZhbnNoQGFpcm1hcC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvNjNiMDliNDBhYzRhMDdhMTI3ZTc2NjM1YTMyMmE4NzM_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZ2YS5wbmcifQ.YbRjFR-57MmUOfm0SSRY_88rSyeiClb6ztRehYGaH4h7rodoBB5G0mWb9ihG-ZU1Tdb2-GhHfd3cwuEUJSaWCBBz1U_i0B9eS0x-nHn74xUV6D0Wia-Zebg7mPTvcM4VGiWYWDptVT0r3u6WOOTWFnGF2z2IvYw9Z3DOqiqxakBmCoj7JsA07XPqn2m5sbxfVWmYRa0JTN5LDOQR7xjQ8JTlEK2xOgsOwrTtEuL4d77_7PCCi1UKQ3hUnkxzRNP3RcSkHX0HPIIf-Z7UiLEnsZp1aXmv7_KX2l2aMYWVFmklmaLcZjHKWliKPB3znZukEGPwV-nAJipLGwOKI7rwOA"
+    private var authToken: String = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2aWl1cHRkOUM3Z250NnF2SDhpYzFSQzJaWTROYnFLdF9fR3RjSU1pYzZJIn0.eyJqdGkiOiJjZDExYTBjOS0zYTRmLTQ2MzQtYjY3OC0wYWM3ZGUwZWQ1NzMiLCJleHAiOjE1ODQyNTM4NDgsIm5iZiI6MCwiaWF0IjoxNTg0MjM1ODQ4LCJpc3MiOiJodHRwczovL3N0YWdlLmF1dGguYWlybWFwLmNvbS9yZWFsbXMvYWlybWFwIiwiYXVkIjoiYW0tYXBpcyIsInN1YiI6ImF1dGgwfDU3NjFhNDI3OTczMmY1ODQ0YjFkYjg0NCIsInR5cCI6IkJlYXJlciIsImF6cCI6Iml6TmF4cDNmSkcxTTRQRjg1NlRpQUVpNTRBSU9xMndHIiwiYXV0aF90aW1lIjoxNTgzMzQzMjc5LCJzZXNzaW9uX3N0YXRlIjoiNTMyMDJjY2YtZWI0Ni00YTM4LWFkZmItNjRmMjdiNzdlZjlkIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwczovL29yY2EuYXV0aC5haXJtYXAuY29tIiwiaHR0cHM6Ly9zdGFnZS5hdXRoLmFpcm1hcC5jb20iLCJodHRwczovL2xvY2FsaG9zdDo4MDgwIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyJdfSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBhbS1hcGkgZW1haWwgb2ZmbGluZV9hY2Nlc3MiLCJrY19pZCI6ImFhM2JmOTE5LTRmOTYtNGU5Yy04ZjA5LWM4OGRmZjM3NjIxNSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhdXRoMHw1NzYxYTQyNzk3MzJmNTg0NGIxZGI4NDQiLCJlbWFpbCI6InZhbnNoQGFpcm1hcC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvNjNiMDliNDBhYzRhMDdhMTI3ZTc2NjM1YTMyMmE4NzM_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZ2YS5wbmcifQ.jy4dBDL_RQGmgMix9zsQTRy46cHRbayQ8omF9XczP6rXbUqWiE6WKVu_5xykjGJsRyCb4r45lQnbYR_gefijY8Ewfc1NvyH1GWf8dVavd5drv9Pr61fD30R4_ZlTBhjMGM1IVFBrqL07gvgty_lPdbW19wo__k7WqXnenlQLgL-W2mzYeUwfNEPPgJg0pWgP00hE6tW9q7DQPD_xrMv983ANsCht6xYM6cZ6IeZdGDDI0ckYOLk8e3BM9r1AK71snR6jOiBCQC30NBh5Pcq1mD_wG-lNX6l_6unwYX885B4JJijOu-hSoDxKF6wGFvMwg4tPsmh6CnUTr-d15tVBTA"
     private val certificatePinner: CertificatePinner
         get() {
             val host = "api.airmap.com"
@@ -69,9 +71,10 @@ object AirMap {
         this.config = config
         val moshi = Moshi.Builder()
             .add(Wrapped.ADAPTER_FACTORY) // This needs to be the first adapter added to Moshi
+            .add(DeserializeOnly.ADAPTER_FACTORY)
             .add(GeoshiJsonAdapterFactory())
             .add(GeometryJsonAdapterFactory())
-            .add(AdvisoryJsonAdapterFactory())
+            // .add(AdvisoryJsonAdapterFactory())
             .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
             .build()
 
@@ -153,7 +156,28 @@ class AirMapClient(
     RulesClient by rulesClient,
     AdvisoryClient by advisoryClient {
     // TODO: look into implications of moving this into the respective clients themselves
+    //  Answer: Need to use @JvmDefault annotation and compile with Java 8
+    //  This is specific Java 8 supported by all Android versions
+    //  (https://developer.android.com/studio/write/java8-support)
+    //  We should look into doing this (it will required some build parameter modifications)
+    //  The benefit of this is that the helpers are closer to their actual definition
+
+    // TODO: Some form of automatic translation when the real method is annotated with some
+    //  specially defined annoation (e.g. @CommaSeparated). Track the following issue:
+    //  https://github.com/square/retrofit/issues/626
+    fun getAirspaces(ids: List<String>) = getAirspaces(ids.joinToString(","))
     fun verifySMS(token: Int) = verifySMS(VerificationRequest(token))
+    fun updatePilot(
+        firstName: String? = null,
+        lastName: String? = null,
+        username: String? = null,
+        email: String? = null,
+        phone: String? = null,
+        appMetadata: Map<String, Any>? = null,
+        userMetadata: Map<String, Any>? = null
+    ) = updatePilot(UpdatePilotRequest(
+        firstName, lastName, username, email, phone, appMetadata, userMetadata
+    ))
 //    fun createFlight(flight: Flight) = when (flight.geometry) {
 //        is Point -> createFlightPoint(flight)
 //        is LineString -> createFlightPath(flight)

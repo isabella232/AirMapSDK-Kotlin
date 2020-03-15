@@ -4,6 +4,7 @@ import com.airmap.airmapsdk.AirMap
 import com.airmap.airmapsdk.Response
 import com.airmap.airmapsdk.models.Aircraft
 import com.airmap.airmapsdk.models.Pilot
+import com.airmap.airmapsdk.models.UpdatePilotRequest
 import com.airmap.airmapsdk.models.VerificationRequest
 import com.airmap.airmapsdk.models.VerificationResult
 import com.serjltt.moshi.adapters.Wrapped
@@ -12,7 +13,6 @@ import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -25,56 +25,57 @@ interface PilotClient {
     @PATCH("{id}")
     @Wrapped(path = ["data"])
     fun updatePilot(
-        @Body updatedPilot: Pilot,
+        @Body pilot: UpdatePilotRequest,
         @Path("id") id: String = AirMap.userId.orEmpty()
     ): Response<Pilot>
 
     @POST("{id}/phone/send_token")
-    fun sendVerificationToken(@Path("id") pilotId: String = AirMap.userId.orEmpty()): Response<Unit>
+    fun sendVerificationToken(
+        @Path("id") pilotId: String = AirMap.userId.orEmpty()
+    ): Response<Unit>
 
     @POST("{id}/phone/verify_token")
-    @Headers("Content-Type: application/json")
     @Wrapped(path = ["data"])
     fun verifySMS(
-        @Body body: VerificationRequest,
+        @Body verificationRequest: VerificationRequest,
         @Path("id") pilotId: String = AirMap.userId.orEmpty()
     ): Response<VerificationResult>
 
     @GET("{id}/aircraft")
     @Wrapped(path = ["data"])
-    fun getAllAircraft(@Path("id") pilotId: String = AirMap.userId.orEmpty()): Response<List<Aircraft>>
+    fun getAllAircraft(
+        @Path("id") pilotId: String = AirMap.userId.orEmpty()
+    ): Response<List<Aircraft>>
 
-    @GET("{id}/aircraft/{aircraftId}")
+    @GET("{id}/aircraft/{aircraft_id}")
     @Wrapped(path = ["data"])
     fun getAircraft(
-        @Path("aircraftId") aircraftId: String,
+        @Path("aircraft_id") aircraftId: String,
         @Path("id") pilotId: String = AirMap.userId.orEmpty()
     ): Response<Aircraft>
 
-    // TODO: Verify if these parameters need to be posted as a JSON body instead of Form
-    // TODO: If so, Create some kind of POST body adapter
     @POST("{id}/aircraft")
     @FormUrlEncoded
     @Wrapped(path = ["data"])
     fun createAircraft(
         @Field("nickname") nickname: String,
-        @Field("modelId") modelId: String,
+        @Field("model_id") modelId: String,
         @Path("id") pilotId: String = AirMap.userId.orEmpty()
     ): Response<Aircraft>
 
-    @PATCH("{id}/aircraft/{aircraftId}")
+    @PATCH("{id}/aircraft/{aircraft_id}")
     @FormUrlEncoded
     @Wrapped(path = ["data"])
-    fun updateAircraft(
+    fun updateAircraftNickname(
+        @Path("aircraft_id") aircraftId: String,
         @Field("nickname") nickname: String,
-        @Path("aircraftId") aircraftId: String,
         @Path("id") pilotId: String = AirMap.userId.orEmpty()
     ): Response<Aircraft>
 
-    @DELETE("{id}/aircraft/{aircraftId}")
+    @DELETE("{id}/aircraft/{aircraft_id}")
     @Wrapped(path = ["data"])
     fun deleteAircraft(
-        @Path("aircraftId") aircraftId: String,
+        @Path("aircraft_id") aircraftId: String,
         @Path("id") pilotId: String = AirMap.userId.orEmpty()
     ): Response<Unit>
 }

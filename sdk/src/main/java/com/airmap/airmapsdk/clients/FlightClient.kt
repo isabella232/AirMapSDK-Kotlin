@@ -97,46 +97,31 @@ interface FlightClient {
 
     @POST("plan")
     @Wrapped(path = ["data"])
-    fun createFlightPlan(
-        pilotId: String,
-        geometry: Geometry,
-        takeoffLatitude: Double,
-        takeoffLongitude: Double,
-        maxAltitudeAgl: Double,
-        startTime: Date,
-        endTime: Date,
-        buffer: Int,
-        flightDescription: String,
-        rulesets: List<String>? = null,
-        flightFeatures: List<FlightFeatureValue>? = null
-    ): Response<FlightPlan>
+    // TODO: Create custom adapter with associated annotation to replace with string "null"
+    fun createFlightPlan(@Body flightPlan: FlightPlan): Response<FlightPlan>
 
     @PATCH("plan/{id}")
     @Wrapped(path = ["data"])
     fun updateFlightPlan(
-        @Path("id") flightPlanId: String,
-        geometry: Geometry? = null,
-        takeoffLatitude: Double? = null,
-        takeoffLongitude: Double? = null,
-        maxAltitudeAgl: Double? = null,
-        startTime: Date? = null,
-        endTime: Date? = null,
-        buffer: Int? = null,
-        flightDescription: String? = null,
-        rulesets: List<String>? = null,
-        flightFeatures: List<FlightFeatureValue>? = null
+        @Path("id") id: String,
+        @Body flightPlan: FlightPlan
     ): Response<FlightPlan>
 
     @POST("plan/{id}/submit")
     @FormUrlEncoded // TODO: test if this works (not sure if API accepts form url encoded format)
     @Wrapped(path = ["data"])
-    fun submitFlightPlan(@Path("id") flightPlanId: String, @Field("public") isPublic: Boolean)
+    fun submitFlightPlan(
+        @Path("id") flightPlanId: String,
+        @Field("public") isPublic: Boolean? = null
+    ): Response<FlightPlan>
 
     @GET("plan/{id}/briefing")
     @Wrapped(path = ["data"])
-    fun getFlightBriefing(@Path("id") flightPlanId: String): Response<FlightBriefing>
+    fun getFlightPlanBriefing(@Path("id") flightPlanId: String): Response<FlightBriefing>
 
     // The response FlightBriefing object will only have flightPlanId and authorizations populated
     @GET("plan/batch/authorizations")
-    fun getAuthorizations(@Query("flight_plan_ids") flightPlanIds: List<String>): Response<List<FlightBriefing>>
+    fun getAuthorizations(
+        @Query("flight_plan_ids") flightPlanIds: List<String>
+    ): Response<List<FlightBriefing>>
 }
