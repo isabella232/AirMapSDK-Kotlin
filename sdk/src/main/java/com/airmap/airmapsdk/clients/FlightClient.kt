@@ -59,18 +59,6 @@ interface FlightClient {
         @Query("enhance") enhance: Boolean = false
     ): Response<Flight>
 
-    @POST("/point")
-    @Wrapped(path = ["data"])
-    fun createFlightPoint(@Body flight: Flight): Response<Flight>
-
-    @POST("/path")
-    @Wrapped(path = ["data"])
-    fun createFlightPath(@Body flight: Flight): Response<Flight>
-
-    @POST("/polygon")
-    @Wrapped(path = ["data"])
-    fun createFlightPolygon(@Body flight: Flight): Response<Flight>
-
     @POST("{id}/end")
     @Wrapped(path = ["data"])
     fun endFlight(@Path("id") flightId: String): Response<Flight>
@@ -121,7 +109,8 @@ interface FlightClient {
 
     // The response FlightBriefing object will only have flightPlanId and authorizations populated
     @GET("plan/batch/authorizations")
+    @Wrapped(path = ["data"])
     fun getAuthorizations(
-        @Query("flight_plan_ids") flightPlanIds: List<String>
+        @Query("flight_plan_ids") flightPlanIds: String
     ): Response<List<FlightBriefing>>
 }

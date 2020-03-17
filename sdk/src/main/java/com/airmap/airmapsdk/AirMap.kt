@@ -3,6 +3,7 @@ package com.airmap.airmapsdk
 import com.airmap.airmapsdk.clients.AdvisoryClient
 import com.airmap.airmapsdk.clients.AircraftClient
 import com.airmap.airmapsdk.clients.AirspaceClient
+import com.airmap.airmapsdk.clients.EvaluationRequest
 import com.airmap.airmapsdk.clients.FlightClient
 import com.airmap.airmapsdk.clients.PilotClient
 import com.airmap.airmapsdk.clients.RulesClient
@@ -48,7 +49,8 @@ object AirMap {
     private lateinit var config: Config
     // TODO: Remove
     var userId: String? = "auth0|5761a4279732f5844b1db844"
-    private var authToken: String = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2aWl1cHRkOUM3Z250NnF2SDhpYzFSQzJaWTROYnFLdF9fR3RjSU1pYzZJIn0.eyJqdGkiOiJjZDExYTBjOS0zYTRmLTQ2MzQtYjY3OC0wYWM3ZGUwZWQ1NzMiLCJleHAiOjE1ODQyNTM4NDgsIm5iZiI6MCwiaWF0IjoxNTg0MjM1ODQ4LCJpc3MiOiJodHRwczovL3N0YWdlLmF1dGguYWlybWFwLmNvbS9yZWFsbXMvYWlybWFwIiwiYXVkIjoiYW0tYXBpcyIsInN1YiI6ImF1dGgwfDU3NjFhNDI3OTczMmY1ODQ0YjFkYjg0NCIsInR5cCI6IkJlYXJlciIsImF6cCI6Iml6TmF4cDNmSkcxTTRQRjg1NlRpQUVpNTRBSU9xMndHIiwiYXV0aF90aW1lIjoxNTgzMzQzMjc5LCJzZXNzaW9uX3N0YXRlIjoiNTMyMDJjY2YtZWI0Ni00YTM4LWFkZmItNjRmMjdiNzdlZjlkIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyJodHRwczovL29yY2EuYXV0aC5haXJtYXAuY29tIiwiaHR0cHM6Ly9zdGFnZS5hdXRoLmFpcm1hcC5jb20iLCJodHRwczovL2xvY2FsaG9zdDo4MDgwIl0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJvZmZsaW5lX2FjY2VzcyJdfSwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBhbS1hcGkgZW1haWwgb2ZmbGluZV9hY2Nlc3MiLCJrY19pZCI6ImFhM2JmOTE5LTRmOTYtNGU5Yy04ZjA5LWM4OGRmZjM3NjIxNSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJhdXRoMHw1NzYxYTQyNzk3MzJmNTg0NGIxZGI4NDQiLCJlbWFpbCI6InZhbnNoQGFpcm1hcC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvNjNiMDliNDBhYzRhMDdhMTI3ZTc2NjM1YTMyMmE4NzM_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZ2YS5wbmcifQ.jy4dBDL_RQGmgMix9zsQTRy46cHRbayQ8omF9XczP6rXbUqWiE6WKVu_5xykjGJsRyCb4r45lQnbYR_gefijY8Ewfc1NvyH1GWf8dVavd5drv9Pr61fD30R4_ZlTBhjMGM1IVFBrqL07gvgty_lPdbW19wo__k7WqXnenlQLgL-W2mzYeUwfNEPPgJg0pWgP00hE6tW9q7DQPD_xrMv983ANsCht6xYM6cZ6IeZdGDDI0ckYOLk8e3BM9r1AK71snR6jOiBCQC30NBh5Pcq1mD_wG-lNX6l_6unwYX885B4JJijOu-hSoDxKF6wGFvMwg4tPsmh6CnUTr-d15tVBTA"
+    private var authToken: String =
+        "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2aWl1cHRkOUM3Z250NnF2SDhpYzFSQzJaWTROYnFLdF9fR3RjSU1pYzZJIn0.eyJqdGkiOiI3MzJmNWEwZS0yYTMxLTQ3ZmUtOTdlNC02MmJkODczNmI5MDAiLCJleHAiOjE1ODQ0MjU0MTgsIm5iZiI6MCwiaWF0IjoxNTg0NDA3NDE4LCJpc3MiOiJodHRwczovL3N0YWdlLmF1dGguYWlybWFwLmNvbS9yZWFsbXMvYWlybWFwIiwiYXVkIjoiaXpOYXhwM2ZKRzFNNFBGODU2VGlBRWk1NEFJT3Eyd0ciLCJzdWIiOiJhdXRoMHw1NzYxYTQyNzk3MzJmNTg0NGIxZGI4NDQiLCJ0eXAiOiJJRCIsImF6cCI6Iml6TmF4cDNmSkcxTTRQRjg1NlRpQUVpNTRBSU9xMndHIiwiYXV0aF90aW1lIjoxNTg0NDA3NDE3LCJzZXNzaW9uX3N0YXRlIjoiZjlmYjUzMTMtZmUxYy00YWQ4LWIxYWItOWI5NDUxYzM4YTQ1IiwiYWNyIjoiMSIsImtjX2lkIjoiYWEzYmY5MTktNGY5Ni00ZTljLThmMDktYzg4ZGZmMzc2MjE1IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInByZWZlcnJlZF91c2VybmFtZSI6ImF1dGgwfDU3NjFhNDI3OTczMmY1ODQ0YjFkYjg0NCIsImVtYWlsIjoidmFuc2hAYWlybWFwLmNvbSIsInBpY3R1cmUiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci82M2IwOWI0MGFjNGEwN2ExMjdlNzY2MzVhMzIyYTg3Mz9zPTQ4MCZyPXBnJmQ9aHR0cHMlM0ElMkYlMkZjZG4uYXV0aDAuY29tJTJGYXZhdGFycyUyRnZhLnBuZyJ9.UQMlR51QvfeKf8gAjiGq39hJdJ7FsSe3A9W_mwiAxPXtmh6c9lrhA_jlTHPi07A_mORkYzT2ciXZWB-gb83RI_t_ooplTe95LvMg3X8tFAEwqY0MNctSsIlnl8TEAvY9_ndTZ3eNY-Z95UC6Cawuw9wurT3U7kYDoiowwF01h0JM3efIE5ZYRFxRe7zwPOgJycAMfQ2GBRzo1GIzUHYXcfQRxqXtjt1LY8nFZVIV_BBpBxVjzFTbVitoeWOALuSVoQgqqksBvl0kxpjrYsvEw6vJZOQqErpFRRLwyludoLvNuMNJOCwNIF1Aex0sCr590ptdqSE78W5eD40pwSdEbg"
     private val certificatePinner: CertificatePinner
         get() {
             val host = "api.airmap.com"
@@ -123,8 +125,14 @@ object AirMap {
      * @param moshi Moshi instance used for JSON serialization and deserialization
      * @return
      */
-    private inline fun <reified T> getClient(serviceName: String, v: Int, client: OkHttpClient, moshi: Moshi): T {
-        val prefix = if (config.airmap.environment.isNullOrBlank()) "" else "${config.airmap.environment}."
+    private inline fun <reified T> getClient(
+        serviceName: String,
+        v: Int,
+        client: OkHttpClient,
+        moshi: Moshi
+    ): T {
+        val prefix =
+            if (config.airmap.environment.isNullOrBlank()) "" else "${config.airmap.environment}."
         val baseUrl = HttpUrl.Builder()
             .scheme("https")
             .host("${prefix}api.${config.airmap.domain}")
@@ -165,7 +173,11 @@ class AirMapClient(
     // TODO: Some form of automatic translation when the real method is annotated with some
     //  specially defined annoation (e.g. @CommaSeparated). Track the following issue:
     //  https://github.com/square/retrofit/issues/626
+
+    // AirspaceClient
     fun getAirspaces(ids: List<String>) = getAirspaces(ids.joinToString(","))
+
+    // PilotClient
     fun verifySMS(token: Int) = verifySMS(VerificationRequest(token))
     fun updatePilot(
         firstName: String? = null,
@@ -175,21 +187,29 @@ class AirMapClient(
         phone: String? = null,
         appMetadata: Map<String, Any>? = null,
         userMetadata: Map<String, Any>? = null
-    ) = updatePilot(UpdatePilotRequest(
-        firstName, lastName, username, email, phone, appMetadata, userMetadata
-    ))
-//    fun createFlight(flight: Flight) = when (flight.geometry) {
-//        is Point -> createFlightPoint(flight)
-//        is LineString -> createFlightPath(flight)
-//        is Polygon -> createFlightPolygon(flight)
-//        else -> throw Exception("Flight geometry was null or an unsupported type")
-//    }
+    ) = updatePilot(
+        UpdatePilotRequest(
+            firstName, lastName, username, email, phone, appMetadata, userMetadata
+        )
+    )
 
-    // getPublicFlights (make use of getFlights with custom parameters)
+    // FlightClient
+    fun getAuthorizations(flightPlanIds: List<String>) =
+        getAuthorizations(flightPlanIds.joinToString(","))
+    // TODO: fun getPublicFlights() (make use of getFlights with custom parameters)
+
+    // RulesClient
+    fun getRulesets(rulesetIds: List<String>) = getRulesets(rulesetIds.joinToString(","))
+    fun getEvaluation(geometry: Geometry, rulesetIds: List<String>) =
+        getEvaluation(EvaluationRequest(geometry, rulesetIds.joinToString(",")))
 }
 
 class GeometryJsonAdapterFactory : JsonAdapter.Factory {
-    override fun create(type: Type, annotations: MutableSet<out Annotation>, moshi: Moshi): JsonAdapter<*>? =
+    override fun create(
+        type: Type,
+        annotations: MutableSet<out Annotation>,
+        moshi: Moshi
+    ): JsonAdapter<*>? =
         when (type) {
             Geometry::class.java -> GeometryJsonAdapter(
                 moshi.adapter(Point::class.java),
@@ -232,9 +252,13 @@ class GeometryJsonAdapter(
                 GeometryType.MULIT_POINT -> multiPointJsonAdapter.fromJsonValue(jsonValue)
                 GeometryType.MULTI_LINE_STRING -> multiLineStringJsonAdapter.fromJsonValue(jsonValue)
                 GeometryType.MULTI_POLYGON -> multiPolygonJsonAdapter.fromJsonValue(jsonValue)
-                GeometryType.GEOMETRY_COLLECTION -> geometryCollectionJsonAdapter.fromJsonValue(jsonValue)
+                GeometryType.GEOMETRY_COLLECTION -> geometryCollectionJsonAdapter.fromJsonValue(
+                    jsonValue
+                )
                 GeometryType.FEATURE -> featureJsonAdapter.fromJsonValue(jsonValue)
-                GeometryType.FEATURE_COLLECTION -> featureCollectionJsonAdapter.fromJsonValue(jsonValue)
+                GeometryType.FEATURE_COLLECTION -> featureCollectionJsonAdapter.fromJsonValue(
+                    jsonValue
+                )
             }
         }
 

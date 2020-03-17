@@ -36,7 +36,7 @@ data class Rule(
         @Json(name = "not_conflicting") NotConflicting,
         @Json(name = "missing_info") MissingInfo,
         @Json(name = "informational") Informational,
-        @Json(name = "information_rules") InformationRules,
+        @Json(name = "unevaluated") Unevaluated,
     }
 }
 

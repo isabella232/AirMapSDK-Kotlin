@@ -36,26 +36,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun queue() {
-//            client.getAuthorizations().executeAndLogResponse()
-//            client.createFlight().executeAndLogResponse()// TODO: Test for Point, Path, and Polygon
-//            client.createFlightPoint().executeAndLogResponse()
-//            client.createFlightPath().executeAndLogResponse()
-//            client.createFlightPolygon().executeAndLogResponse()
-//            client.endFlight().executeAndLogResponse()
-//            client.deleteFlight().executeAndLogResponse()
-//            client.startComm().executeAndLogResponse()
-//            client.endComm().executeAndLogResponse()
-//            client.getFlightBriefing().executeAndLogResponse()
-//            client.getRuleset().executeAndLogResponse()
-//            client.getRulesets().executeAndLogResponse()
-//            client.getRulesets().executeAndLogResponse()
-//            client.getEvaluation().executeAndLogResponse()
-//            client.getJurisdictions().executeAndLogResponse()
-//            client.getJurisdictions().executeAndLogResponse()
-//            client.getAdvisories().executeAndLogResponse()
-//            client.getAdvisories().executeAndLogResponse()
-//            client.getAdvisories().executeAndLogResponse()
-//            client.getAdvisories().executeAndLogResponse()
+        // client.getAdvisories().executeAndLogResponse()
+        // client.getAdvisories().executeAndLogResponse()
+        // client.getAdvisories().executeAndLogResponse()
+        // client.getAdvisories().executeAndLogResponse()
     }
 
     private fun notWorking() {
@@ -84,8 +68,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun working() {
-        val flightPlanId = "flight_plan|B5Kv2qGB42Z3c3pRb5xwvg9Z4CpnZEK7a8QzRETQQyBzgM8DG3Q"
-        client.getFlightPlan(flightPlanId).executeAndLogResponse()
+        val someFlightPlanId = "flight_plan|B5Kv2qGB42Z3c3pRb5xwvg9Z4CpnZEK7a8QzRETQQyBzgM8DG3Q"
+        client.getFlightPlan(someFlightPlanId).executeAndLogResponse()
         val flightId = "flight|dwaDYDPGolYY4CQ0kxlGgJN8N7IdRJ8Ypw0LMbyFZn5aMMvJK0Jg"
         client.getFlight(flightId).executeAndLogResponse()
         client.getFlight(flightId, enhance = true).executeAndLogResponse()
@@ -120,7 +104,6 @@ class MainActivity : AppCompatActivity() {
             genericLogResponseHandler(aircraft, error)
             aircraft?.id?.let { client.deleteAircraft(it).executeAndLogResponse() }
         }
-
         // Fight creation process
         val geometry = Polygon(
             listOf(
@@ -160,22 +143,32 @@ class MainActivity : AppCompatActivity() {
             )
         ).execute { flightPlan, error ->
             genericLogResponseHandler(flightPlan, error)
-            client.getFlightPlanBriefing(flightPlan!!.id!!).executeAndLogResponse()
+            val flightPlanId = flightPlan!!.id!!
+            client.getFlightPlanBriefing(flightPlanId).executeAndLogResponse()
             client.updateFlightPlan(
-                flightPlan.id!!, flightPlan.copy(
+                flightPlanId, flightPlan.copy(
                     maxAltitudeAgl = 100.0,
                     flightFeatures = mapOf("test2" to "test2")
                 )
             ).execute { updatedFlightPlan, updatedError ->
                 genericLogResponseHandler(updatedFlightPlan, updatedError)
-                client.getFlightPlan(updatedFlightPlan!!.id!!).executeAndLogResponse()
-                client.submitFlightPlan(updatedFlightPlan.id!!)
-                    .execute { submittedFlightPlan, submittedError ->
-                        genericLogResponseHandler(submittedFlightPlan, submittedError)
-                        client.getFlight(submittedFlightPlan!!.flightId!!).executeAndLogResponse()
-                        client.getFlightPlanByFlight(submittedFlightPlan.flightId!!)
-                            .executeAndLogResponse()
+                client.getFlightPlan(flightPlanId).executeAndLogResponse()
+                client.submitFlightPlan(flightPlanId).execute { submittedFlightPlan, submitError ->
+                    genericLogResponseHandler(submittedFlightPlan, submitError)
+                    val flightId = submittedFlightPlan!!.flightId!!
+                    client.getFlight(flightId).executeAndLogResponse()
+                    client.getFlightPlanByFlight(flightId).executeAndLogResponse()
+                    client.startComm(flightId).execute { comm, commError ->
+                        genericLogResponseHandler(comm, commError)
+                        client.endComm(flightId).execute { unit, endCommError ->
+                            genericLogResponseHandler(unit, endCommError)
+                            client.endFlight(flightId).execute { endedFlight, endFlightError ->
+                                genericLogResponseHandler(endedFlight, endFlightError)
+                                client.deleteFlight(flightId).executeAndLogResponse()
+                            }
+                        }
                     }
+                }
             }
 
             client.getWeather(
@@ -185,6 +178,18 @@ class MainActivity : AppCompatActivity() {
                 "2020-03-15T04:10:52.021Z"
             ).executeAndLogResponse()
         }
+
+        val flightPlanIds = listOf(
+            "flight_plan|W3L7xWw2Z4qEacmd5pw72qXX42uzXddPKRleZyXtM0BkMpgPpxbA",
+            "flight_plan|B5Kv2qGB42Z3c3pRb5xwvg9Z4CpnZEK7a8QzRETQQyBzgM8DG3Q"
+        )
+        client.getAuthorizations(flightPlanIds).executeAndLogResponse()
+        val rulesets = "usa_ama,usa_national_park,usa_sec_91,usa_wilderness_area,usa_sec_336"
+            .split(',')
+        client.getRuleset(rulesets[0]).executeAndLogResponse()
+        client.getRulesets(rulesets).executeAndLogResponse()
+        client.getRulesets(geometry).executeAndLogResponse()
+        client.getEvaluation(geometry, rulesets).executeAndLogResponse()
     }
 
     private fun <T> genericLogResponseHandler(response: T?, error: Throwable?) {
