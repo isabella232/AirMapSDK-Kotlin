@@ -13,12 +13,13 @@ data class Flight(
     @Json(name = "pilot_id") val pilotId: String,
     @Json(name = "pilot") val pilot: Pilot?,
     @Json(name = "latitude") val latitude: Double,
-    @Json(name = "longitude") val longitude: Double, // TODO: Provide a MapBox LatLng getter
+    @Json(name = "longitude") val longitude: Double,
     @Json(name = "max_altitude") val maxAltitude: Double,
     @Json(name = "aircraft") val aircraft: Aircraft? = null,
     @Json(name = "aircraft_id") val aircraftId: String? = null,
     @Json(name = "created_at") val createdAt: Date,
-    @Json(name = "start_time") val startTime: Date, // TODO: Need to use "now" for start_time value if start_time is in the past/close to now during flight creation
+    // TODO: Need to use "now" for start_time value if start_time is in the past/close to now during flight creation
+    @Json(name = "start_time") val startTime: Date,
     @Json(name = "end_time") val endTime: Date,
     @Json(name = "city") val city: String?,
     @Json(name = "state") val state: String?,
@@ -62,7 +63,7 @@ data class FlightPlan(
     @Json(name = "max_altitude_agl") val maxAltitudeAgl: Double?,
     @Json(name = "rulesets") val rulesetIds: List<String>?,
     @Json(name = "flight_description") val flightDescription: String?,
-    @Json(name = "flight_features") val flightFeatures: Map<String, String> = mutableMapOf(), // TODO: Check how Flight Features are returned
+    @Json(name = "flight_features") val flightFeatures: Map<String, Any?> = mutableMapOf(),
     @Json(name = "public") val isPublic: Boolean = false,
     @Json(name = "notify") val shouldNotify: Boolean = false
 )
@@ -74,6 +75,5 @@ data class FlightBriefing(
     @Json(name = "created_at") val createdAt: Date?,
     @Json(name = "rulesets") val rulesets: List<Ruleset> = mutableListOf(),
     @Json(name = "airspace") val airspace: Airspace.Status?,
-    @Json(name = "validations") val validations: List<Validation> = mutableListOf(), // TODO: Remove? (see: https://github.com/airmap/AirMapSDK-Swift/commit/ddaa437cf0623367c21536ae030efc2d42bed903)
     @Json(name = "authorizations") val authorizations: List<Authorization> = mutableListOf()
 )

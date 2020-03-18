@@ -1,5 +1,6 @@
 package com.airmap.airmapsdk
 
+import com.airmap.airmapsdk.clients.AdvisoriesRequest
 import com.airmap.airmapsdk.clients.AdvisoryClient
 import com.airmap.airmapsdk.clients.AircraftClient
 import com.airmap.airmapsdk.clients.AirspaceClient
@@ -7,6 +8,7 @@ import com.airmap.airmapsdk.clients.EvaluationRequest
 import com.airmap.airmapsdk.clients.FlightClient
 import com.airmap.airmapsdk.clients.PilotClient
 import com.airmap.airmapsdk.clients.RulesClient
+import com.airmap.airmapsdk.models.AirspaceProperties
 import com.airmap.airmapsdk.models.Config
 import com.airmap.airmapsdk.models.UpdatePilotRequest
 import com.airmap.airmapsdk.models.VerificationRequest
@@ -23,6 +25,7 @@ import com.aungkyawpaing.geoshi.model.MultiPolygon
 import com.aungkyawpaing.geoshi.model.Point
 import com.aungkyawpaing.geoshi.model.Polygon
 import com.serjltt.moshi.adapters.DeserializeOnly
+import com.serjltt.moshi.adapters.FallbackEnum
 import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.JsonAdapter
@@ -47,10 +50,8 @@ import java.util.concurrent.TimeUnit
 object AirMap {
     lateinit var client: AirMapClient
     private lateinit var config: Config
-    // TODO: Remove
-    var userId: String? = "auth0|5761a4279732f5844b1db844"
-    private var authToken: String =
-        "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICI2aWl1cHRkOUM3Z250NnF2SDhpYzFSQzJaWTROYnFLdF9fR3RjSU1pYzZJIn0.eyJqdGkiOiI3MzJmNWEwZS0yYTMxLTQ3ZmUtOTdlNC02MmJkODczNmI5MDAiLCJleHAiOjE1ODQ0MjU0MTgsIm5iZiI6MCwiaWF0IjoxNTg0NDA3NDE4LCJpc3MiOiJodHRwczovL3N0YWdlLmF1dGguYWlybWFwLmNvbS9yZWFsbXMvYWlybWFwIiwiYXVkIjoiaXpOYXhwM2ZKRzFNNFBGODU2VGlBRWk1NEFJT3Eyd0ciLCJzdWIiOiJhdXRoMHw1NzYxYTQyNzk3MzJmNTg0NGIxZGI4NDQiLCJ0eXAiOiJJRCIsImF6cCI6Iml6TmF4cDNmSkcxTTRQRjg1NlRpQUVpNTRBSU9xMndHIiwiYXV0aF90aW1lIjoxNTg0NDA3NDE3LCJzZXNzaW9uX3N0YXRlIjoiZjlmYjUzMTMtZmUxYy00YWQ4LWIxYWItOWI5NDUxYzM4YTQ1IiwiYWNyIjoiMSIsImtjX2lkIjoiYWEzYmY5MTktNGY5Ni00ZTljLThmMDktYzg4ZGZmMzc2MjE1IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsInByZWZlcnJlZF91c2VybmFtZSI6ImF1dGgwfDU3NjFhNDI3OTczMmY1ODQ0YjFkYjg0NCIsImVtYWlsIjoidmFuc2hAYWlybWFwLmNvbSIsInBpY3R1cmUiOiJodHRwczovL3MuZ3JhdmF0YXIuY29tL2F2YXRhci82M2IwOWI0MGFjNGEwN2ExMjdlNzY2MzVhMzIyYTg3Mz9zPTQ4MCZyPXBnJmQ9aHR0cHMlM0ElMkYlMkZjZG4uYXV0aDAuY29tJTJGYXZhdGFycyUyRnZhLnBuZyJ9.UQMlR51QvfeKf8gAjiGq39hJdJ7FsSe3A9W_mwiAxPXtmh6c9lrhA_jlTHPi07A_mORkYzT2ciXZWB-gb83RI_t_ooplTe95LvMg3X8tFAEwqY0MNctSsIlnl8TEAvY9_ndTZ3eNY-Z95UC6Cawuw9wurT3U7kYDoiowwF01h0JM3efIE5ZYRFxRe7zwPOgJycAMfQ2GBRzo1GIzUHYXcfQRxqXtjt1LY8nFZVIV_BBpBxVjzFTbVitoeWOALuSVoQgqqksBvl0kxpjrYsvEw6vJZOQqErpFRRLwyludoLvNuMNJOCwNIF1Aex0sCr590ptdqSE78W5eD40pwSdEbg"
+    var userId: String? = null
+    private var authToken: String? = null
     private val certificatePinner: CertificatePinner
         get() {
             val host = "api.airmap.com"
@@ -74,9 +75,10 @@ object AirMap {
         val moshi = Moshi.Builder()
             .add(Wrapped.ADAPTER_FACTORY) // This needs to be the first adapter added to Moshi
             .add(DeserializeOnly.ADAPTER_FACTORY)
+            .add(FallbackEnum.ADAPTER_FACTORY)
             .add(GeoshiJsonAdapterFactory())
             .add(GeometryJsonAdapterFactory())
-            // .add(AdvisoryJsonAdapterFactory())
+            .add(AirspaceProperties.jsonAdapterFactory)
             .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
             .build()
 
@@ -173,6 +175,16 @@ class AirMapClient(
     // TODO: Some form of automatic translation when the real method is annotated with some
     //  specially defined annoation (e.g. @CommaSeparated). Track the following issue:
     //  https://github.com/square/retrofit/issues/626
+
+    // AdvisoryClient
+    fun getAdvisories(
+        rulesetIds: List<String>,
+        geometry: Geometry,
+        start: Date? = null,
+        end: Date? = null
+    ) = getAdvisories(
+        AdvisoriesRequest(rulesetIds.joinToString(","), geometry, start, end)
+    )
 
     // AirspaceClient
     fun getAirspaces(ids: List<String>) = getAirspaces(ids.joinToString(","))

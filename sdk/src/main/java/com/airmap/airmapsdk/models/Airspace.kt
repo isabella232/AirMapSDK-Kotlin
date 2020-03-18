@@ -1,15 +1,10 @@
 package com.airmap.airmapsdk.models
 
 import com.aungkyawpaing.geoshi.model.Geometry
+import com.serjltt.moshi.adapters.FallbackEnum
 import com.serjltt.moshi.adapters.Wrapped
 import com.squareup.moshi.Json
-import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonClass
-import com.squareup.moshi.JsonReader
-import com.squareup.moshi.JsonWriter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
-import java.lang.reflect.Type
 import java.util.Date
 
 @JsonClass(generateAdapter = true)
@@ -27,22 +22,27 @@ data class Airspace(
     val propertyBoundary: Geometry?
 ) {
     // Not every Airspace Type has properties
-    enum class Type(val propertiesClass: Class<out AirspaceProperties>? = null) {
-        @Json(name = "airport") Airport(AirportProperties::class.java),
+    @FallbackEnum(name = "Unknown")
+    enum class Type {
+        @Json(name = "airport") Airport,
+
+        // Academy of Model Aeronautics (AMA) Field
         @Json(name = "ama_field") AMAField,
         @Json(name = "city") City,
-        @Json(name = "controlled_airspace") ControlledAirspace(ControlledAirspaceProperties::class.java),
+        @Json(name = "controlled_airspace") ControlledAirspace,
         @Json(name = "country") Country,
         @Json(name = "county") County,
         @Json(name = "custom") Custom,
         @Json(name = "embassy") Embassy,
-        @Json(name = "emergency") Emergency(EmergencyProperties::class.java),
+        @Json(name = "emergency") Emergency,
         @Json(name = "federal_building") FederalBuilding,
+
+        // Flight Information Region
         @Json(name = "fir") FIR,
-        @Json(name = "fire") Fire(FireProperties::class.java),
+        @Json(name = "fire") Fire,
         @Json(name = "gliderport") Gliderport,
         @Json(name = "hazard_area") HazardArea,
-        @Json(name = "heliport") Heliport(HeliportProperties::class.java),
+        @Json(name = "heliport") Heliport,
         @Json(name = "highway") Highway,
         @Json(name = "hospital") Hospital,
         @Json(name = "industrial_property") IndustrialProperty,
@@ -50,29 +50,42 @@ data class Airspace(
         @Json(name = "laanc") LAANC,
         @Json(name = "landing_site") LandingSite,
         @Json(name = "military_property") MilitaryProperty,
-        @Json(name = "notam") NOTAM(NOTAMProperties::class.java),
-        @Json(name = "notification") Notification(NotificationProperties::class.java),
+
+        // Notice to Airmen
+        @Json(name = "notam") NOTAM,
+        @Json(name = "notification") Notification,
         @Json(name = "obstacle") Obstacle,
-        @Json(name = "park") Park(ParkProperties::class.java),
+        @Json(name = "park") Park,
         @Json(name = "police_station") PoliceStation,
-        @Json(name = "power_plant") PowerPlant(PowerPlantProperties::class.java),
+        @Json(name = "power_plant") PowerPlant,
         @Json(name = "powerline") Powerline,
         @Json(name = "prison") Prison,
         @Json(name = "railway") Railway,
         @Json(name = "recreational_area") RecreationalArea,
         @Json(name = "residential_property") ResidentialProperty,
-        @Json(name = "school") School(SchoolProperties::class.java),
+        @Json(name = "school") School,
         @Json(name = "seaplane_base") SeaplaneBase,
-        @Json(name = "special_use_airspace") SpecialUse(SpecialUseProperties::class.java),
+        @Json(name = "special_use_airspace") SpecialUse,
         @Json(name = "stadium") Stadium,
         @Json(name = "state") State,
         @Json(name = "subprefecture") Subprefecture,
         @Json(name = "supercity") Supercity,
-        @Json(name = "tfr") TFR(TFRProperties::class.java),
+
+        // Temporary Flight Restriction
+        @Json(name = "tfr") TFR,
+
+        // Terminal Maneuvering Area
+        @Json(name = "tma") TMA,
         @Json(name = "ulm_field") UltralightField,
         @Json(name = "university") University,
         @Json(name = "waterway") Waterway,
-        @Json(name = "wildfire") Wildfire(FireProperties::class.java),
+        @Json(name = "wildfire") Wildfire,
+
+        // Fallback for new airspace types not yet supported
+        Unknown;
+
+        val apiName: String
+            get() = this::class.java.getField(name).getAnnotation(Json::class.java).name
     }
 
     @JsonClass(generateAdapter = true)
@@ -93,45 +106,20 @@ data class Airspace(
 data class Advisory(
     @Json(name = "id") val id: String,
     @Json(name = "name") val name: String,
-    @Json(name = "organization_id") val organizationId: String,
     @Json(name = "type") val type: Airspace.Type,
-    @Json(name = "country") val country: String,
-    @Json(name = "state") val state: String,
-    @Json(name = "city") val city: String,
-    @Json(name = "last_updated") val lastUpdated: Date,
     @Json(name = "color") val color: Airspace.Status.Color,
-    @Json(name = "distance") val distance: Int,
     @Json(name = "latitude") val latitude: Double,
     @Json(name = "longitude") val longitude: Double,
-    @Json(name = "geometry") val geometry: Geometry,
+    @Json(name = "rule_id") val ruleId: Int?,
+    @Json(name = "ruleset_id") val rulesetId: String?,
+    @Json(name = "country") val country: String,
+    @Json(name = "state") val state: String?,
+    @Json(name = "city") val city: String?,
+    @Json(name = "last_updated") val lastUpdated: Date?,
+    @Json(name = "distance") val distance: Int?,
     @Json(name = "requirements") val requirements: Requirements,
     @Transient val properties: AirspaceProperties? = null
 )
-
-class AdvisoryJsonAdapterFactory : JsonAdapter.Factory {
-    override fun create(type: Type, annotations: Set<Annotation>, moshi: Moshi): JsonAdapter<Advisory>? {
-        if (!Types.getRawType(type).isAssignableFrom(Advisory::class.java)) {
-            return null
-        }
-
-        val adapter = moshi.nextAdapter<Advisory>(this, type, annotations)
-
-        return object : JsonAdapter<Advisory>() {
-            override fun toJson(writer: JsonWriter, value: Advisory?) = adapter.toJson(writer, value)
-            override fun fromJson(reader: JsonReader): Advisory? {
-                val peekedJson = reader.peekJson()
-                val advisory = adapter.fromJson(peekedJson)
-
-                @Suppress("UNCHECKED_CAST")
-                val value = reader.readJsonValue() as Map<String, Any>? ?: return advisory
-                val propertiesClass = advisory?.type?.propertiesClass
-                return advisory?.copy(
-                    properties = moshi.adapter(propertiesClass).nullSafe().fromJsonValue(value["properties"])
-                )
-            }
-        }
-    }
-}
 
 @JsonClass(generateAdapter = true)
 data class Requirements(
@@ -141,5 +129,5 @@ data class Requirements(
 @JsonClass(generateAdapter = true)
 data class Notice(
     @Json(name = "digital") val digital: Boolean,
-    @Json(name = "phone") val phone: String
+    @Json(name = "phone") val phone: String?
 )

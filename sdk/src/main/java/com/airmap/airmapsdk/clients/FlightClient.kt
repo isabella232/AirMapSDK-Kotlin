@@ -17,8 +17,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 import java.util.Date
 
-typealias FlightFeatureValue = Any // TODO
-
 interface FlightClient {
     /**
      * TODO: Copy description from https://developers.airmap.com/reference
@@ -96,7 +94,7 @@ interface FlightClient {
     ): Response<FlightPlan>
 
     @POST("plan/{id}/submit")
-    @FormUrlEncoded // TODO: test if this works (not sure if API accepts form url encoded format)
+    @FormUrlEncoded
     @Wrapped(path = ["data"])
     fun submitFlightPlan(
         @Path("id") flightPlanId: String,

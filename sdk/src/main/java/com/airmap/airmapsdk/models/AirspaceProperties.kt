@@ -1,12 +1,36 @@
 package com.airmap.airmapsdk.models
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonClass
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import java.util.Date
 
 // TODO: Verify all these fields, Swift SDK has different fields...
-// TODO: Create custom sealed class deserializer
-sealed class AirspaceProperties
+sealed class AirspaceProperties {
+    companion object {
+        val jsonAdapterFactory: JsonAdapter.Factory =
+            PolymorphicJsonAdapterFactory.of(AirspaceProperties::class.java, "type")
+                .withSubtype(AirportProperties::class.java, Airspace.Type.Airport.apiName)
+                .withSubtype(AMAFieldProperties::class.java, Airspace.Type.AMAField.apiName)
+                .withSubtype(
+                    ControlledAirspaceProperties::class.java,
+                    Airspace.Type.ControlledAirspace.apiName
+                )
+                .withSubtype(EmergencyProperties::class.java, Airspace.Type.Emergency.apiName)
+                .withSubtype(FireProperties::class.java, Airspace.Type.Fire.apiName)
+                .withSubtype(HeliportProperties::class.java, Airspace.Type.Heliport.apiName)
+                .withSubtype(NOTAMProperties::class.java, Airspace.Type.NOTAM.apiName)
+                .withSubtype(NotificationProperties::class.java, Airspace.Type.Notification.apiName)
+                .withSubtype(ParkProperties::class.java, Airspace.Type.Park.apiName)
+                .withSubtype(PowerPlantProperties::class.java, Airspace.Type.PowerPlant.apiName)
+                .withSubtype(SchoolProperties::class.java, Airspace.Type.School.apiName)
+                .withSubtype(SpecialUseProperties::class.java, Airspace.Type.SpecialUse.apiName)
+                .withSubtype(TFRProperties::class.java, Airspace.Type.TFR.apiName)
+                .withSubtype(FireProperties::class.java, Airspace.Type.Wildfire.apiName)
+                .withDefaultValue(null)
+    }
+}
 
 @JsonClass(generateAdapter = true)
 data class AirportProperties(
@@ -33,6 +57,13 @@ data class AirportProperties(
 }
 
 @JsonClass(generateAdapter = true)
+data class AMAFieldProperties(
+    @Json(name = "authorization") val authorization: Boolean,
+    @Json(name = "laanc") val laanc: Boolean,
+    @Json(name = "url") val url: String?
+) : AirspaceProperties()
+
+@JsonClass(generateAdapter = true)
 data class ControlledAirspaceProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "icao") val icao: String?,
@@ -42,7 +73,8 @@ data class ControlledAirspaceProperties(
     @Json(name = "airport_name") val airportName: String?,
     @Json(name = "lowest_limit") val lowestLimit: Int?,
     @Json(name = "authorization") val authorization: Boolean = false,
-    @Json(name = "last_edit_date") val lastEditDate: String?, // TODO: This does not come back as ISO 8601 (comes back as 10/10/2020). How to parse this into a Date?
+    // TODO: This does not come back as ISO 8601 (comes back as 10/10/2020). How to parse this into a Date?
+    @Json(name = "last_edit_date") val lastEditDate: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "airspace_class") val airspaceClass: String?,
     @Json(name = "airspace_classification") val airspaceClassification: String?,

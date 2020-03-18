@@ -1,6 +1,6 @@
 package com.airmap.airmapsdk.models
 
-import com.airmap.airmapsdk.clients.FlightFeatureValue
+import com.serjltt.moshi.adapters.FallbackEnum
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -24,12 +24,16 @@ data class Ruleset(
 }
 
 @JsonClass(generateAdapter = true)
-data class Rule(
-    @Json(name = "short_text") val shortText: String?,
-    @Json(name = "description") val description: String?,
+data class FlightFeature(
+    @Json(name = "flight_feature") val flightFeatureName: String?,
     @Json(name = "status") val status: Status?,
-    @Json(name = "display_order") val displayOrder: Int?,
-    @Json(name = "flight_features") val flightFeatures: List<FlightFeatureValue> = mutableListOf()
+    @Json(name = "description") val description: String?,
+    @Json(name = "input_type") val inputType: InputType?,
+    @Json(name = "measurement_type") val measurementType: MeasurementType?,
+    @Json(name = "measurement_unit") val measurementUnit: MeasurementUnit?,
+    @Json(name = "code") val code: String?,
+    @Json(name = "airspace_ids") val airspaceIds: List<Int> = listOf(),
+    @Json(name = "is_calculated") val isCalculated: Boolean?
 ) {
     enum class Status {
         @Json(name = "conflicting") Conflicting,
@@ -38,7 +42,41 @@ data class Rule(
         @Json(name = "informational") Informational,
         @Json(name = "unevaluated") Unevaluated,
     }
+
+    @FallbackEnum(name = "Unknown")
+    enum class InputType {
+        @Json(name = "bool") Bool,
+        @Json(name = "float") Float,
+        @Json(name = "string") String,
+        Unknown,
+    }
+
+    @FallbackEnum(name = "Unknown")
+    enum class MeasurementType {
+        @Json(name = "speed") Speed,
+        @Json(name = "weight") Weight,
+        @Json(name = "distance") Distance,
+        Unknown,
+    }
+
+    @FallbackEnum(name = "Unknown")
+    enum class MeasurementUnit {
+        @Json(name = "meters") Meters,
+        @Json(name = "kilograms") Kilograms,
+        @Json(name = "boolean") Boolean,
+        @Json(name = "meters_per_sec") MetersPerSecond,
+        Unknown,
+    }
 }
+
+@JsonClass(generateAdapter = true)
+data class Rule(
+    @Json(name = "short_text") val shortText: String?,
+    @Json(name = "description") val description: String?,
+    @Json(name = "status") val status: FlightFeature.Status?,
+    @Json(name = "display_order") val displayOrder: Int?,
+    @Json(name = "flight_features") val flightFeatures: List<FlightFeature> = listOf()
+)
 
 @JsonClass(generateAdapter = true)
 data class Authority(
@@ -74,7 +112,6 @@ data class Jurisdiction(
     @Json(name = "rulesets") val rulesets: List<Ruleset> = mutableListOf()
 )
 
-// TODO: Verify how to serialize/deserialize
 enum class Region {
     @Json(name = "national") National,
     @Json(name = "federal") Federal,
@@ -82,22 +119,6 @@ enum class Region {
     @Json(name = "county") County,
     @Json(name = "city") City,
     @Json(name = "local") Local,
-}
-
-// TODO: Remove? (see: https://github.com/airmap/AirMapSDK-Swift/commit/ddaa437cf0623367c21536ae030efc2d42bed903)
-@JsonClass(generateAdapter = true)
-data class Validation(
-    @Json(name = "data") val data: String?,
-    @Json(name = "status") val status: Status?,
-    @Json(name = "message") val message: String?,
-    @Json(name = "feature") val feature: Feature?,
-    @Json(name = "authority") val authority: Authority?
-) {
-    enum class Status {
-        @Json(name = "valid") Valid,
-        @Json(name = "invalid") Invalid,
-        @Json(name = "unknown") Unknown,
-    }
 }
 
 @JsonClass(generateAdapter = true)
