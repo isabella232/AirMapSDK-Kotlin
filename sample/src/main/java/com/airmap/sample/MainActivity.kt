@@ -178,8 +178,7 @@ class MainActivity : AppCompatActivity() {
         moshi.adapter(Config::class.java)
             .fromJson(
                 context.resources.assets.open("airmap.config.json")
-                    .reader()
-                    .use(Reader::readText)
+                    .reader().use(Reader::readText)
             )!!
     } catch (e: Exception) {
         throw RuntimeException("Please ensure airmap.config.json is in your /assets directory")

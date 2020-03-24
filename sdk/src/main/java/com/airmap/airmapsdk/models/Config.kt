@@ -3,6 +3,7 @@ package com.airmap.airmapsdk.models
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
+// TODO: Represent this as a Map instead so that it is extensible from the app?
 @JsonClass(generateAdapter = true)
 data class Config(
     @Json(name = "airmap") val airmap: AirMapConfig,

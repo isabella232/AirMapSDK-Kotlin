@@ -48,24 +48,15 @@ import java.util.Date
 import java.util.concurrent.TimeUnit
 
 object AirMap {
-    lateinit var client: AirMapClient
+    @JvmStatic lateinit var client: AirMapClient
+        private set
+    @JvmStatic var userId: String? = null
+        private set
     private lateinit var config: Config
-    var userId: String? = null
     private var authToken: String? = null
-    private val certificatePinner: CertificatePinner
-        get() {
-            val host = "api.airmap.com"
-            val hostJP = "api.airmap.jp"
-            // TODO: Add other hosts?
-            return CertificatePinner.Builder()
-                .add(host, "sha256/47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=")
-                .add(host, "sha256/CJlvFGiErgX6zPm0H+oO/TRbKOERdQOAYOs2nUlvIQ0=")
-                .add(host, "sha256/8Rw90Ej3Ttt8RRkrg+WYDS9n7IS03bk5bjP/UXPtaY8=")
-                .add(host, "sha256/Ko8tivDrEjiY90yGasP6ZpBU4jwXvHqVvQI0GS3GNdA=")
-                .add(hostJP, "sha256/W5rhIQ2ZbJKFkRvsGDwQVS/H/NSixP33+Z/fpJ0O25Q=")
-                .build()
-        }
 
+    @JvmOverloads
+    @JvmStatic
     fun init(
         config: Config,
         enableCertificatePinning: Boolean = false,
@@ -83,7 +74,20 @@ object AirMap {
             .build()
 
         val okHttpClient = okHttpClientBuilder.apply {
-            if (enableCertificatePinning) certificatePinner(certificatePinner)
+            if (enableCertificatePinning) {
+                // TODO: Add other hosts
+                val host = "api.airmap.com"
+                val hostJP = "api.airmap.jp"
+                certificatePinner(
+                    CertificatePinner.Builder()
+                        .add(host, "sha256/47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=")
+                        .add(host, "sha256/CJlvFGiErgX6zPm0H+oO/TRbKOERdQOAYOs2nUlvIQ0=")
+                        .add(host, "sha256/8Rw90Ej3Ttt8RRkrg+WYDS9n7IS03bk5bjP/UXPtaY8=")
+                        .add(host, "sha256/Ko8tivDrEjiY90yGasP6ZpBU4jwXvHqVvQI0GS3GNdA=")
+                        .add(hostJP, "sha256/W5rhIQ2ZbJKFkRvsGDwQVS/H/NSixP33+Z/fpJ0O25Q=")
+                        .build()
+                )
+            }
             connectTimeout(15, TimeUnit.SECONDS)
             readTimeout(15, TimeUnit.SECONDS)
             // API Key Interceptor
