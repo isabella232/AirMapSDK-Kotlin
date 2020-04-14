@@ -8,7 +8,6 @@ import com.airmap.airmapsdk.clients.EvaluationRequest
 import com.airmap.airmapsdk.clients.FlightClient
 import com.airmap.airmapsdk.clients.PilotClient
 import com.airmap.airmapsdk.clients.RulesClient
-import com.airmap.airmapsdk.models.AirspaceProperties
 import com.airmap.airmapsdk.models.Config
 import com.airmap.airmapsdk.models.UpdatePilotRequest
 import com.airmap.airmapsdk.models.VerificationRequest
@@ -69,7 +68,6 @@ object AirMap {
             .add(FallbackEnum.ADAPTER_FACTORY)
             .add(GeoshiJsonAdapterFactory())
             .add(GeometryJsonAdapterFactory())
-            .add(AirspaceProperties.jsonAdapterFactory)
             .add(Date::class.java, Rfc3339DateJsonAdapter().nullSafe())
             .build()
 

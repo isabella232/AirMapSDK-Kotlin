@@ -60,6 +60,7 @@ interface PilotClient {
     fun createAircraft(
         @Field("nickname") nickname: String,
         @Field("model_id") modelId: String,
+        @Field("serial_number") serialNumber: String? = null,
         @Path("id") pilotId: String = AirMap.userId.orEmpty()
     ): Response<Aircraft>
 

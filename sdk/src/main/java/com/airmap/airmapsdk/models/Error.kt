@@ -1,11 +1,11 @@
 package com.airmap.airmapsdk.models
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+// TODO: Make Retrofit use these classes
 
 /*
-TODO: Make data classes for all the Error response types
-Encountered Error Responses:
-
 (Code 400)
 {
   "status": "fail",
@@ -18,7 +18,25 @@ Encountered Error Responses:
     ]
   }
 }
+ */
+@JsonClass(generateAdapter = true)
+data class Error_400_1(
+    @Json(name = "status") val status: String = "",
+    @Json(name = "data") val data: Data = Data()
+) {
+    @JsonClass(generateAdapter = true)
+    data class Data(
+        @Json(name = "errors") val errors: List<Error> = listOf()
+    )
 
+    @JsonClass(generateAdapter = true)
+    data class Error(
+        @Json(name = "name") val name: String = "",
+        @Json(name = "message") val message: String = ""
+    )
+}
+
+/*
 (Code 400)
 {
 	"status": "fail",
@@ -26,19 +44,50 @@ Encountered Error Responses:
 		"message": "failed to create flight plan"
 	}
 }
+ */
+@JsonClass(generateAdapter = true)
+data class Error_400_2(
+    @Json(name = "status") val status: String = "",
+    @Json(name = "data") val data: Data = Data()
+) {
+    @JsonClass(generateAdapter = true)
+    data class Data(
+        @Json(name = "message") val message: String = ""
+    )
+}
 
+/*
 (Code 401)
 {
 	"msg": "authentication failed"
 }
+ */
+@JsonClass(generateAdapter = true)
+data class Error_401(
+    @Json(name = "msg") val msg: String = ""
+)
 
+/*
 (Status 500)
 (Status 403)
 {
 	"status": "error",
 	"message": "failed to create flight plan"
 }
+ */
+@JsonClass(generateAdapter = true)
+data class Error_403_500(
+    @Json(name = "status") val status: String = "",
+    @Json(name = "message") val message: String = ""
+)
 
+/*
+(Code 405)
+<Empty Response>
+ */
+typealias Error_405 = Unit
+
+/*
 (Code 404)
 <!DOCTYPE html>
 <html lang="en">
@@ -50,15 +99,11 @@ Encountered Error Responses:
 <pre>Cannot GET /</pre>
 </body>
 </html>
+ */
+typealias Error_404 = String
 
-(Code 405)
-<Empty Response>
-
+/*
 (Code 504)
 upstream request timeout
  */
-
-data class Error(
-    @Json(name = "name") val name: String?,
-    @Json(name = "message") val message: String?
-)
+typealias Error_504 = String

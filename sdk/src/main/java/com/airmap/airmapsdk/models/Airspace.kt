@@ -55,6 +55,9 @@ data class Airspace(
         @Json(name = "notam") NOTAM,
         @Json(name = "notification") Notification,
         @Json(name = "obstacle") Obstacle,
+
+        // National Security UAS Flight Restriction
+        @Json(name = "nsufr") NSUFR,
         @Json(name = "park") Park,
         @Json(name = "police_station") PoliceStation,
         @Json(name = "power_plant") PowerPlant,
@@ -83,9 +86,6 @@ data class Airspace(
 
         // Fallback for new airspace types not yet supported
         Unknown;
-
-        val apiName: String
-            get() = this::class.java.getField(name).getAnnotation(Json::class.java).name
     }
 
     @JsonClass(generateAdapter = true)
