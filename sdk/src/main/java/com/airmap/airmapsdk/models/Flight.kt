@@ -29,13 +29,13 @@ data class Flight(
     @Json(name = "public") val isPublic: Boolean,
     @Json(name = "permits") val permits: List<String> = mutableListOf(),
     @Json(name = "statuses") val statuses: List<Status> = mutableListOf(),
-    @Json(name = "geometry") val geometry: Geometry?
+    @Json(name = "geometry") val geometry: Geometry?,
 ) {
     @JsonClass(generateAdapter = true)
     data class Status(
         @Json(name = "id") val id: String,
         @Json(name = "manager_id") val managerId: String,
-        @Json(name = "status") val status: Type
+        @Json(name = "status") val status: Type,
     ) {
         enum class Type {
             @Json(name = "accepted") Accepted,
@@ -65,7 +65,7 @@ data class FlightPlan(
     @Json(name = "flight_description") val flightDescription: String?,
     @Json(name = "flight_features") val flightFeatures: Map<String, Any?> = mutableMapOf(),
     @Json(name = "public") val isPublic: Boolean = false,
-    @Json(name = "notify") val shouldNotify: Boolean = false
+    @Json(name = "notify") val shouldNotify: Boolean = false,
 )
 
 @JsonClass(generateAdapter = true)
@@ -75,5 +75,5 @@ data class FlightBriefing(
     @Json(name = "created_at") val createdAt: Date?,
     @Json(name = "rulesets") val rulesets: List<Ruleset> = mutableListOf(),
     @Json(name = "airspace") val airspace: Airspace.Status?,
-    @Json(name = "authorizations") val authorizations: List<Authorization> = mutableListOf()
+    @Json(name = "authorizations") val authorizations: List<Authorization> = mutableListOf(),
 )

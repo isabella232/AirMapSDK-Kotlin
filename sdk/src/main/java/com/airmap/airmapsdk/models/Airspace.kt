@@ -19,7 +19,7 @@ data class Airspace(
     @Json(name = "geometry") val geometry: Geometry,
     // TODO: dot notation!
     @Wrapped(path = ["related_geometry", "property_boundary", "geometry"])
-    val propertyBoundary: Geometry?
+    val propertyBoundary: Geometry?,
 ) {
     // Not every Airspace Type has properties
     @FallbackEnum(name = "Unknown")
@@ -85,13 +85,13 @@ data class Airspace(
         @Json(name = "wildfire") Wildfire,
 
         // Fallback for new airspace types not yet supported
-        Unknown;
+        Unknown,
     }
 
     @JsonClass(generateAdapter = true)
     data class Status(
         @Json(name = "color") val color: Color,
-        @Json(name = "advisories") val advisories: List<Advisory> = mutableListOf()
+        @Json(name = "advisories") val advisories: List<Advisory> = mutableListOf(),
     ) {
         enum class Color {
             @Json(name = "red") Red,
@@ -118,16 +118,16 @@ data class Advisory(
     @Json(name = "last_updated") val lastUpdated: Date?,
     @Json(name = "distance") val distance: Int?,
     @Json(name = "requirements") val requirements: Requirements,
-    @Transient val properties: AirspaceProperties? = null
+    @Transient val properties: AirspaceProperties? = null,
 )
 
 @JsonClass(generateAdapter = true)
 data class Requirements(
-    @Json(name = "notice") val notice: Notice
+    @Json(name = "notice") val notice: Notice,
 )
 
 @JsonClass(generateAdapter = true)
 data class Notice(
     @Json(name = "digital") val digital: Boolean,
-    @Json(name = "phone") val phone: String?
+    @Json(name = "phone") val phone: String?,
 )

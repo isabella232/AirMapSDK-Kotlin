@@ -1,12 +1,12 @@
 package com.airmap.airmapsdk.clients
 
 import com.airmap.airmapsdk.AirMap
-import com.airmap.airmapsdk.Response
 import com.airmap.airmapsdk.models.Aircraft
 import com.airmap.airmapsdk.models.Pilot
 import com.airmap.airmapsdk.models.UpdatePilotRequest
 import com.airmap.airmapsdk.models.VerificationRequest
 import com.airmap.airmapsdk.models.VerificationResult
+import com.airmap.airmapsdk.networking.AirMapCall
 import com.serjltt.moshi.adapters.Wrapped
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -20,39 +20,41 @@ import retrofit2.http.Path
 interface PilotClient {
     @GET("{id}")
     @Wrapped(path = ["data"])
-    fun getPilot(@Path("id") id: String = AirMap.userId.orEmpty()): Response<Pilot>
+    fun getPilot(
+        @Path("id") id: String = AirMap.userId.orEmpty(),
+    ): AirMapCall<Pilot>
 
     @PATCH("{id}")
     @Wrapped(path = ["data"])
     fun updatePilot(
         @Body pilot: UpdatePilotRequest,
-        @Path("id") id: String = AirMap.userId.orEmpty()
-    ): Response<Pilot>
+        @Path("id") id: String = AirMap.userId.orEmpty(),
+    ): AirMapCall<Pilot>
 
     @POST("{id}/phone/send_token")
     fun sendVerificationToken(
-        @Path("id") pilotId: String = AirMap.userId.orEmpty()
-    ): Response<Unit>
+        @Path("id") pilotId: String = AirMap.userId.orEmpty(),
+    ): AirMapCall<Unit>
 
     @POST("{id}/phone/verify_token")
     @Wrapped(path = ["data"])
     fun verifySMS(
         @Body verificationRequest: VerificationRequest,
-        @Path("id") pilotId: String = AirMap.userId.orEmpty()
-    ): Response<VerificationResult>
+        @Path("id") pilotId: String = AirMap.userId.orEmpty(),
+    ): AirMapCall<VerificationResult>
 
     @GET("{id}/aircraft")
     @Wrapped(path = ["data"])
     fun getAllAircraft(
-        @Path("id") pilotId: String = AirMap.userId.orEmpty()
-    ): Response<List<Aircraft>>
+        @Path("id") pilotId: String = AirMap.userId.orEmpty(),
+    ): AirMapCall<List<Aircraft>>
 
     @GET("{id}/aircraft/{aircraft_id}")
     @Wrapped(path = ["data"])
     fun getAircraft(
         @Path("aircraft_id") aircraftId: String,
-        @Path("id") pilotId: String = AirMap.userId.orEmpty()
-    ): Response<Aircraft>
+        @Path("id") pilotId: String = AirMap.userId.orEmpty(),
+    ): AirMapCall<Aircraft>
 
     @POST("{id}/aircraft")
     @FormUrlEncoded
@@ -61,8 +63,8 @@ interface PilotClient {
         @Field("nickname") nickname: String,
         @Field("model_id") modelId: String,
         @Field("serial_number") serialNumber: String? = null,
-        @Path("id") pilotId: String = AirMap.userId.orEmpty()
-    ): Response<Aircraft>
+        @Path("id") pilotId: String = AirMap.userId.orEmpty(),
+    ): AirMapCall<Aircraft>
 
     @PATCH("{id}/aircraft/{aircraft_id}")
     @FormUrlEncoded
@@ -70,13 +72,13 @@ interface PilotClient {
     fun updateAircraftNickname(
         @Path("aircraft_id") aircraftId: String,
         @Field("nickname") nickname: String,
-        @Path("id") pilotId: String = AirMap.userId.orEmpty()
-    ): Response<Aircraft>
+        @Path("id") pilotId: String = AirMap.userId.orEmpty(),
+    ): AirMapCall<Aircraft>
 
     @DELETE("{id}/aircraft/{aircraft_id}")
     @Wrapped(path = ["data"])
     fun deleteAircraft(
         @Path("aircraft_id") aircraftId: String,
-        @Path("id") pilotId: String = AirMap.userId.orEmpty()
-    ): Response<Unit>
+        @Path("id") pilotId: String = AirMap.userId.orEmpty(),
+    ): AirMapCall<Unit>
 }

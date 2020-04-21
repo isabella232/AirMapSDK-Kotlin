@@ -5,7 +5,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.airmap.airmapsdk.AirMap
 import com.airmap.airmapsdk.AirMap.client
-import com.airmap.airmapsdk.Response
+import com.airmap.airmapsdk.networking.AirMapCall
 import com.airmap.airmapsdk.models.Config
 import com.airmap.airmapsdk.models.FlightPlan
 import com.aungkyawpaing.geoshi.model.Polygon
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         Timber.plant(Timber.DebugTree())
         val okHttpClientBuilder = OkHttpClient.Builder().addInterceptor(ChuckInterceptor(this))
-        AirMap.init(getConfig(this, Moshi.Builder().build()), false, okHttpClientBuilder)
+        AirMap.init(getConfig(this), false, okHttpClientBuilder)
         try {
             examples()
         } catch (e: Exception) {
@@ -83,9 +83,10 @@ class MainActivity : AppCompatActivity() {
         client.getAircraft(aircraftId).executeAndLogResponse()
         client.updateAircraftNickname(aircraftId, updateNickname).executeAndLogResponse()
         // TODO: Look into how we can remove the need for ".execute"
-        client.createAircraft(newNickname, mavicProModelId).execute { aircraft, error ->
-            genericLogResponseHandler(aircraft, error)
-            aircraft?.id?.let { client.deleteAircraft(it).executeAndLogResponse() }
+
+        client.createAircraft(newNickname, mavicProModelId).enqueue { result ->
+            genericLogResponseHandler(result)
+            result.onSuccess { client.deleteAircraft(it.id!!).executeAndLogResponse() }
         }
         // Fight creation process
         client.getRulesets(geometry).executeAndLogResponse()
@@ -113,29 +114,31 @@ class MainActivity : AppCompatActivity() {
                 isPublic = false,
                 shouldNotify = false
             )
-        ).execute { flightPlan, error ->
-            genericLogResponseHandler(flightPlan, error)
-            val fpId = flightPlan!!.id!!
+        ).enqueue { flightPlanResult ->
+            val flightPlan = flightPlanResult.getOrThrow()
+            genericLogResponseHandler(flightPlanResult)
+            val fpId = flightPlan.id!!
             client.getFlightPlanBriefing(fpId).executeAndLogResponse()
             client.updateFlightPlan(
                 fpId, flightPlan.copy(
                     maxAltitudeAgl = 100.0,
                     flightFeatures = mapOf("test2" to true)
                 )
-            ).execute { updatedFlightPlan, updatedError ->
-                genericLogResponseHandler(updatedFlightPlan, updatedError)
+            ).enqueue { updatedFlightPlanResult ->
+                genericLogResponseHandler(updatedFlightPlanResult)
                 client.getFlightPlan(fpId).executeAndLogResponse()
-                client.submitFlightPlan(fpId).execute { submittedFlightPlan, submitError ->
-                    genericLogResponseHandler(submittedFlightPlan, submitError)
-                    val fId = submittedFlightPlan!!.flightId!!
+                client.submitFlightPlan(fpId).enqueue { submittedFlightPlanResult ->
+                    genericLogResponseHandler(submittedFlightPlanResult)
+                    val submittedFlightPlan = submittedFlightPlanResult.getOrThrow()
+                    val fId = submittedFlightPlan.flightId!!
                     client.getFlight(fId).executeAndLogResponse()
                     client.getFlightPlanByFlight(fId).executeAndLogResponse()
-                    client.startComm(fId).execute { comm, commError ->
-                        genericLogResponseHandler(comm, commError)
-                        client.endComm(fId).execute { unit, endCommError ->
-                            genericLogResponseHandler(unit, endCommError)
-                            client.endFlight(fId).execute { endedFlight, endFlightError ->
-                                genericLogResponseHandler(endedFlight, endFlightError)
+                    client.startComm(fId).enqueue { commResult ->
+                        genericLogResponseHandler(commResult)
+                        client.endComm(fId).enqueue { endCommResult ->
+                            genericLogResponseHandler(endCommResult)
+                            client.endFlight(fId).enqueue { endedFlightResult ->
+                                genericLogResponseHandler(endedFlightResult)
                                 client.deleteFlight(fId).executeAndLogResponse()
                             }
                         }
@@ -158,29 +161,33 @@ class MainActivity : AppCompatActivity() {
         client.getEvaluation(geometry, rulesets).executeAndLogResponse()
         // This should be working, but when testing there were internal errors, so revisit
         // (update was succeeding but not returning the full Pilot object)
-        client.getPilot().execute { pilot, error ->
-            genericLogResponseHandler(pilot, error)
+        client.getPilot().enqueue { result ->
+            genericLogResponseHandler(result)
             val newLastName = "Update ${System.currentTimeMillis()}"
-            pilot?.let { client.updatePilot(lastName = newLastName).executeAndLogResponse() }
+            result.onSuccess { client.updatePilot(lastName = newLastName).executeAndLogResponse() }
         }
     }
 
-    private fun <T> genericLogResponseHandler(response: T?, error: Throwable?) {
-        response?.let { Timber.v(it.toString()) }
-        error?.let { Timber.e(it) }
+    private fun <T> genericLogResponseHandler(response: Result<T>) {
+        response.onSuccess { Timber.v(it.toString()) }
+        response.onFailure { Timber.e(it) }
     }
 
-    private fun <T> Response<T>.executeAndLogResponse() {
-        execute(::genericLogResponseHandler)
+    private fun <T> AirMapCall<T>.executeAndLogResponse() {
+        enqueue(::genericLogResponseHandler)
     }
 
-    private fun getConfig(context: Context, moshi: Moshi) = try {
-        moshi.adapter(Config::class.java)
-            .fromJson(
-                context.resources.assets.open("airmap.config.json")
-                    .reader().use(Reader::readText)
-            )!!
-    } catch (e: Exception) {
-        throw RuntimeException("Please ensure airmap.config.json is in your /assets directory")
+    companion object {
+        @JvmOverloads
+        @JvmStatic
+        fun getConfig(context: Context, moshi: Moshi = Moshi.Builder().build()) = try {
+            moshi.adapter(Config::class.java)
+                .fromJson(
+                    context.resources.assets.open("airmap.config.json")
+                        .reader().use(Reader::readText)
+                )!!
+        } catch (e: Exception) {
+            throw RuntimeException("Please ensure airmap.config.json is in your /assets directory")
+        }
     }
 }

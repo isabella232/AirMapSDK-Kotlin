@@ -8,24 +8,24 @@ import java.util.Date
 @JsonClass(generateAdapter = true)
 data class VerificationStatus(
     @Json(name = "phone") val phone: Boolean,
-    @Json(name = "email") val email: Boolean
+    @Json(name = "email") val email: Boolean,
 )
 
 @JsonClass(generateAdapter = true)
 data class FlightStatistics(
     @Json(name = "total") val total: Int,
-    @Json(name = "last_flight_time") val lastFlightTime: Date
+    @Json(name = "last_flight_time") val lastFlightTime: Date,
 )
 
 @JsonClass(generateAdapter = true)
 data class AircraftStatistics(
-    @Json(name = "total") val total: Int
+    @Json(name = "total") val total: Int,
 )
 
 @JsonClass(generateAdapter = true)
 data class Statistics(
     @Json(name = "flight") val flight: FlightStatistics,
-    @Json(name = "aircraft") val aircraft: AircraftStatistics
+    @Json(name = "aircraft") val aircraft: AircraftStatistics,
 )
 
 @JsonClass(generateAdapter = true)
@@ -43,17 +43,17 @@ data class Pilot(
     val verificationStatus: VerificationStatus?,
     @Json(name = "statistics") @DeserializeOnly val statistics: Statistics?,
     @Json(name = "user_metadata") val userMetadata: Map<String, Any?> = mutableMapOf(),
-    @Json(name = "app_metadata") val appMetadata: Map<String, Any?> = mutableMapOf()
+    @Json(name = "app_metadata") val appMetadata: Map<String, Any?> = mutableMapOf(),
 )
 
 @JsonClass(generateAdapter = true)
 data class VerificationRequest(
-    @Json(name = "token") val token: Int
+    @Json(name = "token") val token: Int,
 )
 
 @JsonClass(generateAdapter = true)
 data class VerificationResult(
-    @Json(name = "verified") val verified: Boolean
+    @Json(name = "verified") val verified: Boolean,
 )
 
 @JsonClass(generateAdapter = true)
@@ -64,5 +64,5 @@ data class UpdatePilotRequest(
     @Json(name = "email") val email: String? = null,
     @Json(name = "phone") val phone: String? = null,
     @Json(name = "app_metadata") val appMetadata: Map<String, Any>? = null,
-    @Json(name = "user_metadata") val userMetadata: Map<String, Any>? = null
+    @Json(name = "user_metadata") val userMetadata: Map<String, Any>? = null,
 )

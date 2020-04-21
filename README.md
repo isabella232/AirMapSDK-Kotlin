@@ -35,7 +35,6 @@
 - Separate Mapping modules?
   - MapBox Extensions to convert individual lat+lon into LatLng class
   - GMaps Extensions to convert individual lat+lon into LatLng class
-- Add+Require trailing commas once Kotlin 1.4 is released
 - Add Bintray upload logic
 - Polish README and update for customer consumption
 - Add R8/Proguard rules (esp retrofit and moshi) + README instructions

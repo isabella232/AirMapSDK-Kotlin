@@ -1,0 +1,34 @@
+package com.airmap.airmapsdk.networking
+
+import com.airmap.airmapsdk.models.ServerError
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+
+class AirMapCall<R>(private val call: Call<R>): Call<R> by call {
+
+    fun enqueue(callback: AirMapCallback<R>) {
+        enqueue(object: Callback<R> {
+            override fun onFailure(call: Call<R>, t: Throwable) = callback.onResult(Result.failure(t))
+
+            override fun onResponse(call: Call<R>, response: Response<R>) {
+                if (response.isSuccessful) {
+                    callback.onResult(Result.success(response.body()!!))
+                } else {
+                    val error =
+                        ServerError(response.errorBody()
+                            ?.string().orEmpty())
+                    callback.onResult(Result.failure(error))
+                }
+            }
+        })
+    }
+
+    // suspend fun executeCoroutine(coroutineScope: CoroutineScope = GlobalScope): R {
+        // TODO()
+        // coroutineScope.launch {  }
+        // GlobalScope.launch {  }
+    // }
+
+    // TODO: Add other conversions here (e.g. LiveData, Rx)
+}

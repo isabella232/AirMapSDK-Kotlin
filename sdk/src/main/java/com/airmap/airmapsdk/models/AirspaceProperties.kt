@@ -25,13 +25,13 @@ data class AirportProperties(
     @Json(name = "runways") val runways: List<Runway> = mutableListOf(),
     @Json(name = "elevation") val elevation: Int?,
     @Json(name = "icao_country") val icaoCountry: String?,
-    @Json(name = "longest_runway") val longestRunway: Int?
+    @Json(name = "longest_runway") val longestRunway: Int?,
 ) : AirspaceProperties() {
     @JsonClass(generateAdapter = true)
     data class Runway(
         @Json(name = "name") val name: String,
         @Json(name = "length") val length: Int,
-        @Json(name = "bearing") val bearing: Int
+        @Json(name = "bearing") val bearing: Int,
     )
 }
 
@@ -40,7 +40,7 @@ data class AirportProperties(
 data class AMAFieldProperties(
     @Json(name = "authorization") val authorization: Boolean,
     @Json(name = "laanc") val laanc: Boolean,
-    @Json(name = "url") val url: String?
+    @Json(name = "url") val url: String?,
 ) : AirspaceProperties()
 
 @TypeLabel("controlled_airspace")
@@ -58,9 +58,9 @@ data class ControlledAirspaceProperties(
     @Json(name = "last_edit_date") val lastEditDate: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "airspace_classification") val airspaceClassification: String?,
-    @Json(name = "facility_id") val facilityId: String?
+    @Json(name = "facility_id") val facilityId: String?,
 
-) : AirspaceProperties()
+    ) : AirspaceProperties()
 
 @TypeLabel("emergency")
 @JsonClass(generateAdapter = true)
@@ -68,7 +68,7 @@ data class EmergencyProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "agency_id") val agencyId: String?,
-    @Json(name = "date_effective") val dateEffective: Date?
+    @Json(name = "date_effective") val dateEffective: Date?,
 ) : AirspaceProperties()
 
 @TypeLabel("fire")
@@ -77,7 +77,7 @@ data class FireProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "size") val size: Int?,
-    @Json(name = "date_effective") val dateEffective: Date?
+    @Json(name = "date_effective") val dateEffective: Date?,
 ) : AirspaceProperties()
 
 @TypeLabel("heliport")
@@ -86,7 +86,7 @@ data class HeliportProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "phone") val phone: String?,
-    @Json(name = "use") val use: String?
+    @Json(name = "use") val use: String?,
 ) : AirspaceProperties()
 
 @TypeLabel("notam")
@@ -95,14 +95,14 @@ data class NOTAMProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "effective_start") val effectiveStart: Date?,
-    @Json(name = "effective_end") val effectiveEnd: Date?
+    @Json(name = "effective_end") val effectiveEnd: Date?,
 ) : AirspaceProperties()
 
 @TypeLabel("notification")
 @JsonClass(generateAdapter = true)
 data class NotificationProperties(
     @Json(name = "url") val url: String?,
-    @Json(name = "description") val description: String?
+    @Json(name = "description") val description: String?,
 ) : AirspaceProperties()
 
 @TypeLabel("park")
@@ -111,7 +111,7 @@ data class ParkProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "size") val size: Int?,
-    @Json(name = "type") val type: String?
+    @Json(name = "type") val type: String?,
 ) : AirspaceProperties()
 
 @TypeLabel("power_plant")
@@ -120,7 +120,7 @@ data class PowerPlantProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "tech") val tech: String?,
-    @Json(name = "plant_code") val plantCode: Int?
+    @Json(name = "plant_code") val plantCode: Int?,
 ) : AirspaceProperties()
 
 @TypeLabel("school")
@@ -130,7 +130,7 @@ data class SchoolProperties(
     @Json(name = "description") val description: String?,
     @Json(name = "type") val type: String?,
     @Json(name = "building") val building: Boolean?,
-    @Json(name = "way_area") val wayArea: Double?
+    @Json(name = "way_area") val wayArea: Double?,
 ) : AirspaceProperties()
 
 @TypeLabel("special_use_airspace")
@@ -138,7 +138,7 @@ data class SchoolProperties(
 data class SpecialUseProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
-    @Json(name = "currently_active") val currentlyActive: Boolean?
+    @Json(name = "currently_active") val currentlyActive: Boolean?,
 ) : AirspaceProperties()
 
 @TypeLabel("tfr")
@@ -148,7 +148,7 @@ data class TFRProperties(
     @Json(name = "body") val body: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "effective_start") val effectiveStart: Date?,
-    @Json(name = "effective_end") val effectiveEnd: Date?
+    @Json(name = "effective_end") val effectiveEnd: Date?,
 ) : AirspaceProperties()
 
 @TypeLabel("wildfire")
@@ -157,5 +157,5 @@ data class WildFireProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "size") val size: Int?,
-    @Json(name = "date_effective") val dateEffective: Date?
+    @Json(name = "date_effective") val dateEffective: Date?,
 ) : AirspaceProperties()

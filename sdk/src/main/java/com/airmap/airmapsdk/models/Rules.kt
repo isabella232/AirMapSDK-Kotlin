@@ -14,7 +14,7 @@ data class Ruleset(
     @Json(name = "jurisdiction") val jurisdiction: Jurisdiction?,
     @Json(name = "default") val isDefault: Boolean = false,
     @Json(name = "description") val description: String?,
-    @Json(name = "rules") val rules: List<Rule> = mutableListOf()
+    @Json(name = "rules") val rules: List<Rule> = mutableListOf(),
 ) {
     enum class SelectionType {
         @Json(name = "pick1") PickOne,
@@ -33,7 +33,7 @@ data class FlightFeature(
     @Json(name = "measurement_unit") val measurementUnit: MeasurementUnit?,
     @Json(name = "code") val code: String?,
     @Json(name = "airspace_ids") val airspaceIds: List<Int> = listOf(),
-    @Json(name = "is_calculated") val isCalculated: Boolean?
+    @Json(name = "is_calculated") val isCalculated: Boolean?,
 ) {
     enum class Status {
         @Json(name = "conflicting") Conflicting,
@@ -75,13 +75,13 @@ data class Rule(
     @Json(name = "description") val description: String?,
     @Json(name = "status") val status: FlightFeature.Status?,
     @Json(name = "display_order") val displayOrder: Int?,
-    @Json(name = "flight_features") val flightFeatures: List<FlightFeature> = listOf()
+    @Json(name = "flight_features") val flightFeatures: List<FlightFeature> = listOf(),
 )
 
 @JsonClass(generateAdapter = true)
 data class Authority(
     @Json(name = "id") val id: String,
-    @Json(name = "name") val name: String
+    @Json(name = "name") val name: String,
 )
 
 @JsonClass(generateAdapter = true)
@@ -90,7 +90,7 @@ data class Authorization(
     @Json(name = "authority") val authority: Authority?,
     @Json(name = "description") val description: String?,
     @Json(name = "message") val message: String?,
-    @Json(name = "reference_number") val referenceNumber: String?
+    @Json(name = "reference_number") val referenceNumber: String?,
 ) {
     enum class Status {
         @Json(name = "not_requested") NotRequested,
@@ -109,7 +109,7 @@ data class Jurisdiction(
     @Json(name = "id") val id: Int,
     @Json(name = "name") val name: String,
     @Json(name = "region") val region: Region,
-    @Json(name = "rulesets") val rulesets: List<Ruleset> = mutableListOf()
+    @Json(name = "rulesets") val rulesets: List<Ruleset> = mutableListOf(),
 )
 
 enum class Region {
@@ -124,5 +124,5 @@ enum class Region {
 @JsonClass(generateAdapter = true)
 data class Feature(
     @Json(name = "code") val code: String,
-    @Json(name = "description") val description: String
+    @Json(name = "description") val description: String,
 )

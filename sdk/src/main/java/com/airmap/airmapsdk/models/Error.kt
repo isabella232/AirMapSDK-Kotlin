@@ -3,7 +3,11 @@ package com.airmap.airmapsdk.models
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-// TODO: Make Retrofit use these classes
+// TODO: Parse the actual error string according to the models below
+class ServerError(error: String) : Exception(error)
+sealed class Error // TODO
+
+// TODO: Make Retrofit use this
 
 /*
 (Code 400)
@@ -22,17 +26,17 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class Error_400_1(
     @Json(name = "status") val status: String = "",
-    @Json(name = "data") val data: Data = Data()
+    @Json(name = "data") val data: Data = Data(),
 ) {
     @JsonClass(generateAdapter = true)
     data class Data(
-        @Json(name = "errors") val errors: List<Error> = listOf()
+        @Json(name = "errors") val errors: List<Error> = listOf(),
     )
 
     @JsonClass(generateAdapter = true)
     data class Error(
         @Json(name = "name") val name: String = "",
-        @Json(name = "message") val message: String = ""
+        @Json(name = "message") val message: String = "",
     )
 }
 
@@ -48,11 +52,11 @@ data class Error_400_1(
 @JsonClass(generateAdapter = true)
 data class Error_400_2(
     @Json(name = "status") val status: String = "",
-    @Json(name = "data") val data: Data = Data()
+    @Json(name = "data") val data: Data = Data(),
 ) {
     @JsonClass(generateAdapter = true)
     data class Data(
-        @Json(name = "message") val message: String = ""
+        @Json(name = "message") val message: String = "",
     )
 }
 
@@ -64,7 +68,7 @@ data class Error_400_2(
  */
 @JsonClass(generateAdapter = true)
 data class Error_401(
-    @Json(name = "msg") val msg: String = ""
+    @Json(name = "msg") val msg: String = "",
 )
 
 /*
@@ -78,7 +82,7 @@ data class Error_401(
 @JsonClass(generateAdapter = true)
 data class Error_403_500(
     @Json(name = "status") val status: String = "",
-    @Json(name = "message") val message: String = ""
+    @Json(name = "message") val message: String = "",
 )
 
 /*

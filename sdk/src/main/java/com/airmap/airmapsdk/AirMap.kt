@@ -11,6 +11,7 @@ import com.airmap.airmapsdk.clients.RulesClient
 import com.airmap.airmapsdk.models.Config
 import com.airmap.airmapsdk.models.UpdatePilotRequest
 import com.airmap.airmapsdk.models.VerificationRequest
+import com.airmap.airmapsdk.networking.AirMapCallAdapterFactory
 import com.aungkyawpaing.geoshi.adapter.GeoshiJsonAdapterFactory
 import com.aungkyawpaing.geoshi.model.Feature
 import com.aungkyawpaing.geoshi.model.FeatureCollection
@@ -146,7 +147,7 @@ object AirMap {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
-            .addCallAdapterFactory(AirMapResponseCallAdapterFactory())
+            .addCallAdapterFactory(AirMapCallAdapterFactory())
             .client(client)
             .build()
             .create()
