@@ -131,3 +131,13 @@ data class Notice(
     @Json(name = "digital") val digital: Boolean,
     @Json(name = "phone") val phone: String?,
 )
+
+/// Network Request Models
+
+@JsonClass(generateAdapter = true)
+data class AdvisoriesRequest(
+    @Json(name = "rulesets") val rulesetIds: String,
+    @Json(name = "geometry") val geometry: Geometry,
+    @Json(name = "start") val start: Date? = null,
+    @Json(name = "end") val end: Date? = null,
+)

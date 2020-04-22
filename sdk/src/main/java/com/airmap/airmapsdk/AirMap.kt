@@ -1,14 +1,14 @@
 package com.airmap.airmapsdk
 
-import com.airmap.airmapsdk.clients.AdvisoriesRequest
 import com.airmap.airmapsdk.clients.AdvisoryClient
 import com.airmap.airmapsdk.clients.AircraftClient
 import com.airmap.airmapsdk.clients.AirspaceClient
-import com.airmap.airmapsdk.clients.EvaluationRequest
 import com.airmap.airmapsdk.clients.FlightClient
 import com.airmap.airmapsdk.clients.PilotClient
 import com.airmap.airmapsdk.clients.RulesClient
+import com.airmap.airmapsdk.models.AdvisoriesRequest
 import com.airmap.airmapsdk.models.Config
+import com.airmap.airmapsdk.models.EvaluationRequest
 import com.airmap.airmapsdk.models.UpdatePilotRequest
 import com.airmap.airmapsdk.models.VerificationRequest
 import com.airmap.airmapsdk.networking.AirMapCallAdapterFactory
@@ -60,7 +60,7 @@ object AirMap {
     fun init(
         config: Config,
         enableCertificatePinning: Boolean = false,
-        okHttpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder()
+        okHttpClientBuilder: OkHttpClient.Builder = OkHttpClient.Builder(),
     ) {
         this.config = config
         val moshi = Moshi.Builder()
@@ -109,7 +109,7 @@ object AirMap {
             getClient("flight", 2, okHttpClient, moshi),
             getClient("airspace", 2, okHttpClient, moshi),
             getClient("rules", 1, okHttpClient, moshi),
-            getClient("advisory", 1, okHttpClient, moshi)
+            getClient("advisory", 1, okHttpClient, moshi),
         )
     }
 
@@ -134,7 +134,7 @@ object AirMap {
         serviceName: String,
         v: Int,
         client: OkHttpClient,
-        moshi: Moshi
+        moshi: Moshi,
     ): T {
         val prefix =
             if (config.airmap.environment.isNullOrBlank()) "" else "${config.airmap.environment}."
@@ -161,7 +161,7 @@ class AirMapClient(
     private val flightClient: FlightClient,
     private val airspaceClient: AirspaceClient,
     private val rulesClient: RulesClient,
-    private val advisoryClient: AdvisoryClient
+    private val advisoryClient: AdvisoryClient,
 ) : AircraftClient by aircraftClient,
     PilotClient by pilotClient,
     FlightClient by flightClient,
@@ -184,10 +184,9 @@ class AirMapClient(
         rulesetIds: List<String>,
         geometry: Geometry,
         start: Date? = null,
-        end: Date? = null
+        end: Date? = null,
     ) = getAdvisories(
-        AdvisoriesRequest(rulesetIds.joinToString(","), geometry, start, end)
-    )
+        AdvisoriesRequest(rulesetIds.joinToString(","), geometry, start, end))
 
     // AirspaceClient
     fun getAirspaces(ids: List<String>) = getAirspaces(ids.joinToString(","))
@@ -201,7 +200,7 @@ class AirMapClient(
         email: String? = null,
         phone: String? = null,
         appMetadata: Map<String, Any>? = null,
-        userMetadata: Map<String, Any>? = null
+        userMetadata: Map<String, Any>? = null,
     ) = updatePilot(
         UpdatePilotRequest(
             firstName, lastName, username, email, phone, appMetadata, userMetadata
@@ -216,14 +215,15 @@ class AirMapClient(
     // RulesClient
     fun getRulesets(rulesetIds: List<String>) = getRulesets(rulesetIds.joinToString(","))
     fun getEvaluation(geometry: Geometry, rulesetIds: List<String>) =
-        getEvaluation(EvaluationRequest(geometry, rulesetIds.joinToString(",")))
+        getEvaluation(EvaluationRequest(geometry,
+            rulesetIds.joinToString(",")))
 }
 
 class GeometryJsonAdapterFactory : JsonAdapter.Factory {
     override fun create(
         type: Type,
         annotations: MutableSet<out Annotation>,
-        moshi: Moshi
+        moshi: Moshi,
     ): JsonAdapter<*>? =
         when (type) {
             Geometry::class.java -> GeometryJsonAdapter(
@@ -235,7 +235,7 @@ class GeometryJsonAdapterFactory : JsonAdapter.Factory {
                 moshi.adapter(MultiPolygon::class.java),
                 moshi.adapter(GeometryCollection::class.java),
                 moshi.adapter(Feature::class.java),
-                moshi.adapter(FeatureCollection::class.java)
+                moshi.adapter(FeatureCollection::class.java),
             )
             else -> null
         }
@@ -250,7 +250,7 @@ class GeometryJsonAdapter(
     private val multiPolygonJsonAdapter: JsonAdapter<MultiPolygon>,
     private val geometryCollectionJsonAdapter: JsonAdapter<GeometryCollection>,
     private val featureJsonAdapter: JsonAdapter<Feature>,
-    private val featureCollectionJsonAdapter: JsonAdapter<FeatureCollection>
+    private val featureCollectionJsonAdapter: JsonAdapter<FeatureCollection>,
 ) : JsonAdapter<Geometry>() {
     companion object {
         private const val KEY_TYPE = "type"

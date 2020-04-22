@@ -1,5 +1,6 @@
 package com.airmap.airmapsdk.models
 
+import com.aungkyawpaing.geoshi.model.Geometry
 import com.serjltt.moshi.adapters.FallbackEnum
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -125,4 +126,12 @@ enum class Region {
 data class Feature(
     @Json(name = "code") val code: String,
     @Json(name = "description") val description: String,
+)
+
+/// Network Request Models
+
+@JsonClass(generateAdapter = true)
+data class EvaluationRequest(
+    @Json(name = "geometry") val geometry: Geometry,
+    @Json(name = "rulesets") val rulesets: String,
 )

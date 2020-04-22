@@ -1,17 +1,14 @@
 package com.airmap.airmapsdk.clients
 
+import com.airmap.airmapsdk.models.AdvisoriesRequest
 import com.airmap.airmapsdk.models.Airspace
 import com.airmap.airmapsdk.models.Forecast
 import com.airmap.airmapsdk.networking.AirMapCall
-import com.aungkyawpaing.geoshi.model.Geometry
 import com.serjltt.moshi.adapters.Wrapped
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
-import java.util.Date
 
 interface AdvisoryClient {
     @POST("airspace")
@@ -31,11 +28,3 @@ interface AdvisoryClient {
         @Query("end") end: String,
     ): AirMapCall<Forecast>
 }
-
-@JsonClass(generateAdapter = true)
-data class AdvisoriesRequest(
-    @Json(name = "rulesets") val rulesetIds: String,
-    @Json(name = "geometry") val geometry: Geometry,
-    @Json(name = "start") val start: Date? = null,
-    @Json(name = "end") val end: Date? = null,
-)

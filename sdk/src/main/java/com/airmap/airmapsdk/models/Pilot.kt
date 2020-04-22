@@ -46,6 +46,8 @@ data class Pilot(
     @Json(name = "app_metadata") val appMetadata: Map<String, Any?> = mutableMapOf(),
 )
 
+/// Network Request Models
+
 @JsonClass(generateAdapter = true)
 data class VerificationRequest(
     @Json(name = "token") val token: Int,
