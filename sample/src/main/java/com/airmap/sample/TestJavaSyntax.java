@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.airmap.sdk.AirMap;
-import com.airmap.sdk.AirMapClient;
+import com.airmap.sdk.clients.AirMapClient;
 
 /**
  * This class is to test/ensure syntax in Java works as expected
