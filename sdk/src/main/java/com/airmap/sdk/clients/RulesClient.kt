@@ -1,9 +1,9 @@
-package com.airmap.airmapsdk.clients
+package com.airmap.sdk.clients
 
-import com.airmap.airmapsdk.models.EvaluationRequest
-import com.airmap.airmapsdk.models.FlightBriefing
-import com.airmap.airmapsdk.models.Ruleset
-import com.airmap.airmapsdk.networking.AirMapCall
+import com.airmap.sdk.models.EvaluationRequest
+import com.airmap.sdk.models.FlightBriefing
+import com.airmap.sdk.models.Ruleset
+import com.airmap.sdk.networking.AirMapCall
 import com.aungkyawpaing.geoshi.model.Geometry
 import com.serjltt.moshi.adapters.Wrapped
 import retrofit2.http.Body

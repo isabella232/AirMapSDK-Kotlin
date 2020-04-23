@@ -1,12 +1,12 @@
-package com.airmap.airmapsdk.clients
+package com.airmap.sdk.clients
 
-import com.airmap.airmapsdk.AirMap
-import com.airmap.airmapsdk.models.Aircraft
-import com.airmap.airmapsdk.models.Pilot
-import com.airmap.airmapsdk.models.UpdatePilotRequest
-import com.airmap.airmapsdk.models.VerificationRequest
-import com.airmap.airmapsdk.models.VerificationResult
-import com.airmap.airmapsdk.networking.AirMapCall
+import com.airmap.sdk.AirMap
+import com.airmap.sdk.models.Aircraft
+import com.airmap.sdk.models.Pilot
+import com.airmap.sdk.models.UpdatePilotRequest
+import com.airmap.sdk.models.VerificationRequest
+import com.airmap.sdk.models.VerificationResult
+import com.airmap.sdk.networking.AirMapCall
 import com.serjltt.moshi.adapters.Wrapped
 import retrofit2.http.Body
 import retrofit2.http.DELETE

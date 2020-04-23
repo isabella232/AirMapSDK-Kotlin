@@ -1,8 +1,8 @@
-package com.airmap.airmapsdk.clients
+package com.airmap.sdk.clients
 
-import com.airmap.airmapsdk.models.Manufacturer
-import com.airmap.airmapsdk.models.Model
-import com.airmap.airmapsdk.networking.AirMapCall
+import com.airmap.sdk.models.Manufacturer
+import com.airmap.sdk.models.Model
+import com.airmap.sdk.networking.AirMapCall
 import com.serjltt.moshi.adapters.Wrapped
 import retrofit2.http.GET
 import retrofit2.http.Path

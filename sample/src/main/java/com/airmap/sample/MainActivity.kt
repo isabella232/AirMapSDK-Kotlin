@@ -3,11 +3,11 @@ package com.airmap.sample
 import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.airmap.airmapsdk.AirMap
-import com.airmap.airmapsdk.AirMap.client
-import com.airmap.airmapsdk.networking.AirMapCall
-import com.airmap.airmapsdk.models.Config
-import com.airmap.airmapsdk.models.FlightPlan
+import com.airmap.sdk.AirMap
+import com.airmap.sdk.AirMap.client
+import com.airmap.sdk.networking.AirMapCall
+import com.airmap.sdk.models.Config
+import com.airmap.sdk.models.FlightPlan
 import com.aungkyawpaing.geoshi.model.Polygon
 import com.aungkyawpaing.geoshi.model.Position
 import com.readystatesoftware.chuck.ChuckInterceptor

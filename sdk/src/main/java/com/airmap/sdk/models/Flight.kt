@@ -1,6 +1,6 @@
-package com.airmap.airmapsdk.models
+package com.airmap.sdk.models
 
-import com.airmap.airmapsdk.AirMap
+import com.airmap.sdk.AirMap
 import com.aungkyawpaing.geoshi.model.Geometry
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

@@ -5,8 +5,8 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.airmap.airmapsdk.AirMap;
-import com.airmap.airmapsdk.AirMapClient;
+import com.airmap.sdk.AirMap;
+import com.airmap.sdk.AirMapClient;
 
 /**
  * This class is to test/ensure syntax in Java works as expected

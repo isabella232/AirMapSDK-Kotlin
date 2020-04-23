@@ -1,4 +1,4 @@
-package com.airmap.airmapsdk.models
+package com.airmap.sdk.models
 
 import com.serjltt.moshi.adapters.DeserializeOnly
 import com.squareup.moshi.Json

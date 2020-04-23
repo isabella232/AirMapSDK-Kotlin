@@ -1,9 +1,9 @@
-package com.airmap.airmapsdk.clients
+package com.airmap.sdk.clients
 
-import com.airmap.airmapsdk.models.AdvisoriesRequest
-import com.airmap.airmapsdk.models.Airspace
-import com.airmap.airmapsdk.models.Forecast
-import com.airmap.airmapsdk.networking.AirMapCall
+import com.airmap.sdk.models.AdvisoriesRequest
+import com.airmap.sdk.models.Airspace
+import com.airmap.sdk.models.Forecast
+import com.airmap.sdk.networking.AirMapCall
 import com.serjltt.moshi.adapters.Wrapped
 import retrofit2.http.Body
 import retrofit2.http.GET

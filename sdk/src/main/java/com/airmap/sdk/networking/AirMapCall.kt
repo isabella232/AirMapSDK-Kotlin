@@ -1,6 +1,6 @@
-package com.airmap.airmapsdk.networking
+package com.airmap.sdk.networking
 
-import com.airmap.airmapsdk.models.ServerError
+import com.airmap.sdk.models.ServerError
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

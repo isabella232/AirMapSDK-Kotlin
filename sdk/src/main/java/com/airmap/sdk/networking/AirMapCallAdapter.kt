@@ -1,4 +1,4 @@
-package com.airmap.airmapsdk.networking
+package com.airmap.sdk.networking
 
 import retrofit2.Call
 import retrofit2.CallAdapter

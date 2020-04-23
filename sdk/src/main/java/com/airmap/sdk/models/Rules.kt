@@ -1,4 +1,4 @@
-package com.airmap.airmapsdk.models
+package com.airmap.sdk.models
 
 import com.aungkyawpaing.geoshi.model.Geometry
 import com.serjltt.moshi.adapters.FallbackEnum
