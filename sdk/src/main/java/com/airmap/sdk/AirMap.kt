@@ -19,15 +19,16 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import java.util.Date
-import java.util.concurrent.TimeUnit
 
 object AirMap {
     @JvmStatic lateinit var client: AirMapClient
         private set
     @JvmStatic var userId: String? = null
         private set
-    private lateinit var config: Config
-    private var authToken: String? = null
+    @JvmStatic lateinit var config: Config
+        private set
+    @JvmStatic var authToken: String? = null
+        private set
 
     @JvmOverloads
     @JvmStatic
@@ -61,16 +62,15 @@ object AirMap {
                         .build()
                 )
             }
-            connectTimeout(15, TimeUnit.SECONDS)
-            readTimeout(15, TimeUnit.SECONDS)
             // API Key Interceptor
             addInterceptor { it.addHeaderToRequest("X-API-Key", config.airmap.apiKey) }
 
-            // Auth Token Interceptor - We always add the interceptor regardless of if the token has a value yet. We
-            // check inside the Interceptor for a token value since the Interceptor itself is persistent
+            // Auth Token Interceptor - This needs to be added even if the token doesn't have a
+            // value yet (because the authToken will get set when the user logs in)
             addInterceptor {
                 when {
-                    // TODO: Login logic (Add a listener when auth token is blank for apps to be able to consume?)
+                    // TODO: Login logic (Add a listener when auth token is blank for apps to be
+                    //  able to consume?)
                     authToken.isNullOrBlank() -> it.proceed(it.request())
                     else -> it.addHeaderToRequest("Authorization", "Bearer $authToken")
                 }
@@ -97,25 +97,27 @@ object AirMap {
     /**
      * Instantiate a client for the given service name and version
      *
-     * @param T The Client abstract class to instantiate
+     * @param T The Client interface to instantiate
      * @param serviceName The service name as used in the API URL
-     * @param v The API version to access
+     * @param serviceVersion The API version to access
      * @param client OkHttpClient instance used to create the client
      * @param moshi Moshi instance used for JSON serialization and deserialization
      * @return
      */
     private inline fun <reified T> getClient(
         serviceName: String,
-        v: Int,
+        serviceVersion: Int,
         client: OkHttpClient,
         moshi: Moshi,
     ): T {
-        val prefix =
-            if (config.airmap.environment.isNullOrBlank()) "" else "${config.airmap.environment}."
+        var host = "api.${config.airmap.domain}"
+        if (!config.airmap.environment.isNullOrBlank()) {
+            host = "${config.airmap.environment}.${host}"
+        }
         val baseUrl = HttpUrl.Builder()
             .scheme("https")
-            .host("${prefix}api.${config.airmap.domain}")
-            .addPathSegments("$serviceName/v$v/")
+            .host(host)
+            .addPathSegments("$serviceName/v$serviceVersion/")
             .toString()
 
         return Retrofit.Builder()
