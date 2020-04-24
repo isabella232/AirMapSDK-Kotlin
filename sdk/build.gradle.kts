@@ -9,10 +9,11 @@ ktlint {
 
 dependencies {
     implementation(kotlin("stdlib"))
+    implementation(kotlin("stdlib-jdk7"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.5")
 
     // Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.8.1")
+    api("com.squareup.retrofit2:retrofit:2.8.1")
     implementation("com.squareup.retrofit2:converter-moshi:2.8.1")
 
     // Moshi

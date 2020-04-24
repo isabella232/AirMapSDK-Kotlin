@@ -4,7 +4,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 // TODO: Parse the actual error string according to the models below
-class ServerError(error: String) : Exception(error)
+class ServerError(rawError: String) : Exception(rawError)
 sealed class Error // TODO
 
 // TODO: Make Retrofit use this
