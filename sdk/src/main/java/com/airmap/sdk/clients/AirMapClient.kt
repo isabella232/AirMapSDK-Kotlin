@@ -67,6 +67,9 @@ class AirMapClient(
         getEvaluation(EvaluationRequest(geometry, rulesetIds.joinToString(",")))
 
     // AuthClient
-    fun getToken(grantType: String, clientId: String, username: String, password: String) =
-        getToken(AirMap.urlPrefix, grantType, clientId, username, password)
+    fun getToken(clientId: String, username: String, password: String) =
+        getToken(AirMap.urlPrefix, "password", clientId, username, password)
+
+    fun refreshToken(clientId: String, refreshToken: String) =
+        refreshToken(AirMap.urlPrefix, "refresh_token", clientId, refreshToken)
 }

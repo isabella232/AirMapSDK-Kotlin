@@ -26,4 +26,13 @@ interface AuthClient {
         @Field("username") username: String,
         @Field("password") password: String,
     ): AirMapCall<Token>
+
+    @POST("https://{prefix}auth.airmap.com/realms/airmap/protocol/openid-connect/token")
+    @FormUrlEncoded
+    fun refreshToken(
+        @Path("prefix") urlPrefix: String,
+        @Field("grant_type") grantType: String,
+        @Field("client_id") clientId: String,
+        @Field("refresh_token") refreshToken: String,
+    ): AirMapCall<Token>
 }
