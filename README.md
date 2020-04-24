@@ -1,16 +1,17 @@
-# AirMap SDK for Kotlin
+# AirMap SDK for Kotlin **(Work In Progress)**
 
 ## Setup
-- ~Enable `ktlint` pre-commit git hook~ (*Currently not working as `ktlint` does not yet support Kotlin 1.4 syntax (e.g. trailing commas and `fun interface`s)
+- ~Enable `ktlint` pre-commit git hook~ (**Currently not working as `ktlint` does not yet support Kotlin 1.4 syntax (e.g. trailing commas and `fun interface`s**))
 
 ### TODO
 - Error handling
 - Paging for some requests
-- Tests
 - Automatically refresh token
+- Tests
 - KDoc comments
-  - copy descriptions from https://developers.airmap.com/reference
+  - Descriptions from https://developers.airmap.com/reference
   - https://kotlinlang.org/docs/reference/kotlin-doc.html
+  - Public-facing SDK methods
 - Add new Scheduled Airspace endpoints and models
 - Verify Java compatibility
 - Standardize the use of optionals and default values
