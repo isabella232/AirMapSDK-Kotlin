@@ -15,12 +15,14 @@ class AirMapClient(
     private val airspaceClient: AirspaceClient,
     private val rulesClient: RulesClient,
     private val advisoryClient: AdvisoryClient,
+    private val authClient: AuthClient,
 ) : AircraftClient by aircraftClient,
     PilotClient by pilotClient,
     FlightClient by flightClient,
     AirspaceClient by airspaceClient,
     RulesClient by rulesClient,
-    AdvisoryClient by advisoryClient {
+    AdvisoryClient by advisoryClient,
+    AuthClient by authClient {
     // TODO: look into implications of moving this into the respective clients themselves
     //  Answer: Need to use @JvmDefault annotation and compile with Java 8
     //  This is specific Java 8 supported by all Android versions

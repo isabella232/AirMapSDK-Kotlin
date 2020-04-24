@@ -84,6 +84,7 @@ object AirMap {
             getClient("airspace", 2, okHttpClient, moshi),
             getClient("rules", 1, okHttpClient, moshi),
             getClient("advisory", 1, okHttpClient, moshi),
+            getClient("auth", 1, okHttpClient, moshi),
         )
     }
 
