@@ -18,8 +18,6 @@
 - Create specific types for the IDs
   - Inline Class
   - TypeAlias
-- Create annotation+adapter for automatically converting list to csv
-  - https://github.com/highthunder/kotlr/blob/3ceb15caf7cbcec63b6794d1e82e1d7aa3fbf997/src/main/kotlin/com.highthunder.kotlr/json/qualifier/CommaSeparatedStringJsonAdapter.kt
 - KDoc comments
   - copy descriptions from https://developers.airmap.com/reference
   - https://kotlinlang.org/docs/reference/kotlin-doc.html

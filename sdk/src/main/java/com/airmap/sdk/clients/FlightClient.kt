@@ -5,6 +5,7 @@ import com.airmap.sdk.models.Flight
 import com.airmap.sdk.models.FlightBriefing
 import com.airmap.sdk.models.FlightPlan
 import com.airmap.sdk.networking.AirMapCall
+import com.airmap.sdk.networking.CommaSeparated
 import com.aungkyawpaing.geoshi.model.Geometry
 import com.serjltt.moshi.adapters.Wrapped
 import retrofit2.http.Body
@@ -125,6 +126,6 @@ interface FlightClient {
     @GET("plan/batch/authorizations")
     @Wrapped(path = ["data"])
     fun getAuthorizations(
-        @Query("flight_plan_ids") flightPlanIds: String,
+        @CommaSeparated @Query("flight_plan_ids") flightPlanIds: List<String>,
     ): AirMapCall<List<FlightBriefing>>
 }

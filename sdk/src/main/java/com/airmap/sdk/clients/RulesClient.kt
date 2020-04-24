@@ -4,6 +4,7 @@ import com.airmap.sdk.models.EvaluationRequest
 import com.airmap.sdk.models.FlightBriefing
 import com.airmap.sdk.models.Ruleset
 import com.airmap.sdk.networking.AirMapCall
+import com.airmap.sdk.networking.CommaSeparated
 import com.aungkyawpaing.geoshi.model.Geometry
 import com.serjltt.moshi.adapters.Wrapped
 import retrofit2.http.Body
@@ -22,7 +23,7 @@ interface RulesClient {
     @GET("rule")
     @Wrapped(path = ["data"])
     fun getRulesets(
-        @Query("rulesets") rulesetIds: String,
+        @CommaSeparated @Query("rulesets") rulesetIds: List<String>,
     ): AirMapCall<List<Ruleset>>
 
     @POST(".")

@@ -2,6 +2,7 @@ package com.airmap.sdk.clients
 
 import com.airmap.sdk.models.Airspace
 import com.airmap.sdk.networking.AirMapCall
+import com.airmap.sdk.networking.CommaSeparated
 import com.serjltt.moshi.adapters.Wrapped
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -17,6 +18,6 @@ interface AirspaceClient {
     @GET("list")
     @Wrapped(path = ["data"])
     fun getAirspaces(
-        @Query("ids", encoded = true) ids: String,
+        @CommaSeparated @Query("ids", encoded = true) ids: List<String>,
     ): AirMapCall<List<Airspace>>
 }

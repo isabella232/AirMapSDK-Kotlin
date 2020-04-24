@@ -44,9 +44,6 @@ class AirMapClient(
         )
     )
 
-    // AirspaceClient
-    fun getAirspaces(ids: List<String>) = getAirspaces(ids.joinToString(","))
-
     // PilotClient
     fun verifySMS(token: Int) = verifySMS(VerificationRequest(token))
     fun updatePilot(
@@ -64,12 +61,9 @@ class AirMapClient(
     )
 
     // FlightClient
-    fun getAuthorizations(flightPlanIds: List<String>) =
-        getAuthorizations(flightPlanIds.joinToString(","))
     // TODO: fun getPublicFlights() (make use of getFlights with custom parameters)
 
     // RulesClient
-    fun getRulesets(rulesetIds: List<String>) = getRulesets(rulesetIds.joinToString(","))
     fun getEvaluation(geometry: Geometry, rulesetIds: List<String>) = getEvaluation(
         EvaluationRequest(geometry, rulesetIds.joinToString(","))
     )

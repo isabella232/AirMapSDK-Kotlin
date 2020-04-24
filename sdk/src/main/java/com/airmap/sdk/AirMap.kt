@@ -4,6 +4,7 @@ import com.airmap.sdk.clients.AirMapClient
 import com.airmap.sdk.models.Config
 import com.airmap.sdk.models.GeometryJsonAdapterFactory
 import com.airmap.sdk.networking.AirMapCallAdapterFactory
+import com.airmap.sdk.networking.CommaSeparatedConverterFactory
 import com.aungkyawpaing.geoshi.adapter.GeoshiJsonAdapterFactory
 import com.serjltt.moshi.adapters.DeserializeOnly
 import com.serjltt.moshi.adapters.FallbackEnum
@@ -122,6 +123,7 @@ object AirMap {
 
         return Retrofit.Builder()
             .baseUrl(baseUrl)
+            .addConverterFactory(CommaSeparatedConverterFactory())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .addCallAdapterFactory(AirMapCallAdapterFactory())
             .client(client)
