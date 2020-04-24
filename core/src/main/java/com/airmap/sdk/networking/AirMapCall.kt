@@ -23,11 +23,5 @@ class AirMapCall<R>(private val call: Call<R>) : Call<R> by call {
         })
     }
 
-    // suspend fun executeCoroutine(coroutineScope: CoroutineScope = GlobalScope): R {
-        // TODO()
-        // coroutineScope.launch {  }
-        // GlobalScope.launch {  }
-    // }
-
-    // TODO: Add other conversions here (e.g. LiveData, Rx)
+    // TODO: Add conversions here (e.g. coroutines, LiveData, Rx)
 }
