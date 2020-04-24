@@ -1,5 +1,6 @@
 package com.airmap.sdk.clients
 
+import com.airmap.sdk.AirMap
 import com.airmap.sdk.models.AdvisoriesRequest
 import com.airmap.sdk.models.EvaluationRequest
 import com.airmap.sdk.models.UpdatePilotRequest
@@ -41,9 +42,7 @@ class AirMapClient(
         start: Date? = null,
         end: Date? = null,
     ) = getAdvisories(
-        AdvisoriesRequest(
-            rulesetIds.joinToString(","), geometry, start, end
-        )
+        AdvisoriesRequest(rulesetIds.joinToString(","), geometry, start, end)
     )
 
     // PilotClient
@@ -57,16 +56,17 @@ class AirMapClient(
         appMetadata: Map<String, Any>? = null,
         userMetadata: Map<String, Any>? = null,
     ) = updatePilot(
-        UpdatePilotRequest(
-            firstName, lastName, username, email, phone, appMetadata, userMetadata
-        )
+        UpdatePilotRequest(firstName, lastName, username, email, phone, appMetadata, userMetadata)
     )
 
     // FlightClient
     // TODO: fun getPublicFlights() (make use of getFlights with custom parameters)
 
     // RulesClient
-    fun getEvaluation(geometry: Geometry, rulesetIds: List<String>) = getEvaluation(
-        EvaluationRequest(geometry, rulesetIds.joinToString(","))
-    )
+    fun getEvaluation(geometry: Geometry, rulesetIds: List<String>) =
+        getEvaluation(EvaluationRequest(geometry, rulesetIds.joinToString(",")))
+
+    // AuthClient
+    fun getToken(grantType: String, clientId: String, username: String, password: String) =
+        getToken(AirMap.urlPrefix, grantType, clientId, username, password)
 }

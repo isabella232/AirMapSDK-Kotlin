@@ -29,6 +29,13 @@ object AirMap {
     @JvmStatic lateinit var config: Config
         private set
     @JvmStatic var authToken: String? = null
+    internal val urlPrefix by lazy {
+        if (config.airmap.environment.isNullOrBlank()) {
+            ""
+        } else {
+            "${config.airmap.environment}."
+        }
+    }
 
     @JvmOverloads
     @JvmStatic
@@ -111,13 +118,9 @@ object AirMap {
         client: OkHttpClient,
         moshi: Moshi,
     ): T {
-        var host = "api.${config.airmap.domain}"
-        if (!config.airmap.environment.isNullOrBlank()) {
-            host = "${config.airmap.environment}.${host}"
-        }
         val baseUrl = HttpUrl.Builder()
             .scheme("https")
-            .host(host)
+            .host("${urlPrefix}api.${config.airmap.domain}")
             .addPathSegments("$serviceName/v$serviceVersion/")
             .toString()
 
