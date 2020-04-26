@@ -10,6 +10,10 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface AuthClient {
+    /**
+     * Create an anonymous token that has permission to create flights. The token is identified by
+     * [userId], which can be any unique identifier for the user (UUID, username, email, etc)
+     */
     @POST("anonymous/token")
     @FormUrlEncoded
     @Wrapped(path = ["data"])
@@ -17,6 +21,10 @@ interface AuthClient {
         @Field("user_id") userId: String,
     ): AirMapCall<AnonymousToken>
 
+    /**
+     * Log in and authenticate a user by [username] and [password]. You must also provide your
+     * application's [clientId]. The [grantType] here should always be "password"
+     */
     @POST("https://{prefix}auth.airmap.com/realms/airmap/protocol/openid-connect/token")
     @FormUrlEncoded
     fun getToken(
@@ -27,6 +35,11 @@ interface AuthClient {
         @Field("password") password: String,
     ): AirMapCall<Token>
 
+    /**
+     * Refresh a user's expiring auth token and get a new one by providing a [refreshToken]. You
+     * must also provide your application's [clientId]. The [grantType] here should always be
+     * "refresh_token". [urlPrefix] is used to access separate auth environments for testing
+     */
     @POST("https://{prefix}auth.airmap.com/realms/airmap/protocol/openid-connect/token")
     @FormUrlEncoded
     fun refreshToken(

@@ -14,24 +14,37 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface RulesClient {
+    /**
+     * Get ruleset identified by [id]
+     */
     @GET("{id}")
     @Wrapped(path = ["data"])
     fun getRuleset(
         @Path("id") id: String,
     ): AirMapCall<Ruleset>
 
+    /**
+     * Get rulesets identified by [rulesetIds]
+     */
     @GET("rule")
     @Wrapped(path = ["data"])
     fun getRulesets(
         @CommaSeparated @Query("rulesets") rulesetIds: List<String>,
     ): AirMapCall<List<Ruleset>>
 
+    /**
+     * Get rulesets applicable in [geometry]
+     */
     @POST(".")
     @Wrapped(path = ["data"])
     fun getRulesets(
         @Body @Wrapped(path = ["geometry"]) geometry: Geometry,
     ): AirMapCall<List<Ruleset>>
 
+    /**
+     * Get an evaluated [FlightBriefing] for the given [EvaluationRequest.geometry] and
+     * [EvaluationRequest.rulesets]
+     */
     @POST("evaluation")
     @Wrapped(path = ["data"])
     fun getEvaluation(

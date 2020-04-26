@@ -8,7 +8,11 @@ import com.airmap.sdk.models.VerificationRequest
 import com.aungkyawpaing.geoshi.model.Geometry
 import java.util.Date
 
-// The clients represent the raw REST API. Any extra methods defined in AirMapClient are convenience
+/**
+ * This class is a delegate for the individual clients, which each represent a raw REST service. Any
+ * methods defined in this file are for convenience only and serve as a wrapper around the raw REST
+ * call made by the respective client
+ */
 class AirMapClient(
     private val aircraftClient: AircraftClient,
     private val pilotClient: PilotClient,
@@ -35,7 +39,13 @@ class AirMapClient(
     //  specially defined annoation (e.g. @CommaSeparated). Track the following issue:
     //  https://github.com/square/retrofit/issues/626
 
+    // We cannot use extension functions as this would be very ugly for Java syntax compatibility
+
     // AdvisoryClient
+    /**
+     * Get advisories for [geometry] and [rulesetIds] at a start
+     * time of [start] and end time of [end]
+     */
     fun getAdvisories(
         rulesetIds: List<String>,
         geometry: Geometry,
@@ -46,7 +56,19 @@ class AirMapClient(
     )
 
     // PilotClient
+    /**
+     * Verify the logged in user's account with the [token] they received via SMS from a preceding
+     * call to [sendVerificationToken]
+     */
     fun verifySMS(token: Int) = verifySMS(VerificationRequest(token))
+
+    /**
+     * Update a pilot's profile. All fields are optional. Only the fields being updated will be
+     * returned in the response. To get the full [com.airmap.sdk.models.Pilot], call [getPilot].
+     * [appMetadata] can be used to store miscellaneous metadata for your specific application.
+     * [userMetadata] can be used to store miscellaneous metadata about the user. [phone] should be
+     * verified with a subsequent call to [sendVerificationToken] and [verifySMS]
+     */
     fun updatePilot(
         firstName: String? = null,
         lastName: String? = null,
@@ -60,16 +82,31 @@ class AirMapClient(
     )
 
     // FlightClient
-    // TODO: fun getPublicFlights() (make use of getFlights with custom parameters)
+    /**
+     * Convenience method to get currently ongoing flights that are publicly visible
+     */
+    fun getCurrentPublicFlights() = getFlights(startBefore = Date(), endAfter = Date())
 
     // RulesClient
+    /**
+     * Get an evaluated [com.airmap.sdk.models.FlightBriefing] for the given [geometry] and
+     * [rulesetIds]
+     */
     fun getEvaluation(geometry: Geometry, rulesetIds: List<String>) =
         getEvaluation(EvaluationRequest(geometry, rulesetIds.joinToString(",")))
 
     // AuthClient
+    /**
+     * Log in and authenticate a user by [username] and [password]. You must also provide your
+     * application's [clientId]
+     */
     fun getToken(clientId: String, username: String, password: String) =
         getToken(AirMap.urlPrefix, "password", clientId, username, password)
 
+    /**
+     * Refresh a user's expiring auth token and get a new one by providing a [refreshToken]. You
+     * must also provide your application's [clientId]
+     */
     fun refreshToken(clientId: String, refreshToken: String) =
         refreshToken(AirMap.urlPrefix, "refresh_token", clientId, refreshToken)
 }

@@ -9,15 +9,27 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface AirspaceClient {
+    /**
+     * Get an [Airspace] by [id]
+     */
     @GET("{id}")
     @Wrapped(path = ["data"])
     fun getAirspace(
         @Path("id") id: String,
     ): AirMapCall<Airspace>
 
+    /**
+     * Get [Airspace]s specified by [ids]
+     */
     @GET("list")
     @Wrapped(path = ["data"])
     fun getAirspaces(
         @CommaSeparated @Query("ids", encoded = true) ids: List<String>,
     ): AirMapCall<List<Airspace>>
+
+    // TODO
+    //  @GET("search")
+    //  @Wrapped(path = ["data"])
+    //  fun searchAirspace(
+    //  ): AirMapCall<List<Airspace>>
 }

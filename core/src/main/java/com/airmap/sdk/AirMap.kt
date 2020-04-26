@@ -22,6 +22,12 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
 import java.util.Date
 
+/**
+ * The AirMap API gives you access to a wide range of airspace services to use in your app or device
+ * Before you can use the AirMap API you will need to create a free AirMap account and apply to
+ * become a developer. If approved you will be given an API key which is required for most API calls
+ * and to use the SDK.
+ */
 object AirMap {
     @JvmStatic lateinit var client: AirMapClient
         private set
@@ -37,6 +43,13 @@ object AirMap {
         }
     }
 
+    /**
+     * Initialize the SDK with the given [config]. This must be called first, before any other
+     * functionality can be used. Optionally, [enableCertificatePinning] for a secure connection
+     * or provide a custom [okHttpClientBuilder] to handle network connections in a special way.
+     *
+     * Once initialized, [client] can be used to make HTTP calls
+     */
     @JvmOverloads
     @JvmStatic
     fun init(
@@ -97,20 +110,16 @@ object AirMap {
 
     /**
      * Convenience method to simplify the verbose syntax of using an Interceptor to add a Header
+     * Sets the header [name] to [value]
      */
     private fun Interceptor.Chain.addHeaderToRequest(name: String, value: String): Response {
         return this.proceed(this.request().newBuilder().addHeader(name, value).build())
     }
 
     /**
-     * Instantiate a client for the given service name and version
-     *
-     * @param T The Client interface to instantiate
-     * @param serviceName The service name as used in the API URL
-     * @param serviceVersion The API version to access
-     * @param client OkHttpClient instance used to create the client
-     * @param moshi Moshi instance used for JSON serialization and deserialization
-     * @return
+     * Returns a client of interface [T] for the given [serviceName] and [serviceVersion]. The
+     * client will be backed by [client] for network requests and [moshi] for Object-JSON
+     * serialization and deserialization
      */
     private inline fun <reified T> getClient(
         serviceName: String,

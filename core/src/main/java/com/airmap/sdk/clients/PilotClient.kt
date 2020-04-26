@@ -18,12 +18,23 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface PilotClient {
+    /**
+     * Get [Pilot] identified by [id]
+     */
     @GET("{id}")
     @Wrapped(path = ["data"])
     fun getPilot(
         @Path("id") id: String = AirMap.userId.orEmpty(),
     ): AirMapCall<Pilot>
 
+    /**
+     * Update a pilot's profile. All fields are optional. Only the fields being updated will be
+     * returned in the response. To get the full [Pilot], call [getPilot].
+     * [UpdatePilotRequest.appMetadata] can be used to store miscellaneous metadata for your
+     * specific application. [UpdatePilotRequest.userMetadata] can be used to store miscellaneous
+     * metadata about the user. [UpdatePilotRequest.phone] should be verified with a subsequent
+     * call to [sendVerificationToken] and [verifySMS]
+     */
     @PATCH("{id}")
     @Wrapped(path = ["data"])
     fun updatePilot(
@@ -31,11 +42,19 @@ interface PilotClient {
         @Path("id") id: String = AirMap.userId.orEmpty(),
     ): AirMapCall<Pilot>
 
+    /**
+     * Send an SMS containing a verification token to the phone number the user has on file. This
+     * token should be confirmed by a subsequent call to [verifySMS]
+     */
     @POST("{id}/phone/send_token")
     fun sendVerificationToken(
         @Path("id") pilotId: String = AirMap.userId.orEmpty(),
     ): AirMapCall<Unit>
 
+    /**
+     * Verify the logged in user's account with the [VerificationRequest.token] they received via
+     * SMS from a preceding call to [sendVerificationToken]
+     */
     @POST("{id}/phone/verify_token")
     @Wrapped(path = ["data"])
     fun verifySMS(
@@ -43,12 +62,22 @@ interface PilotClient {
         @Path("id") pilotId: String = AirMap.userId.orEmpty(),
     ): AirMapCall<VerificationResult>
 
+    /**
+     * Get all the user's aircraft
+     */
     @GET("{id}/aircraft")
     @Wrapped(path = ["data"])
     fun getAllAircraft(
         @Path("id") pilotId: String = AirMap.userId.orEmpty(),
     ): AirMapCall<List<Aircraft>>
 
+    /**
+     * Get details about a user's aircraft identified by [aircraftId]
+     *
+     * @param aircraftId
+     * @param pilotId
+     * @return
+     */
     @GET("{id}/aircraft/{aircraft_id}")
     @Wrapped(path = ["data"])
     fun getAircraft(
@@ -56,6 +85,11 @@ interface PilotClient {
         @Path("id") pilotId: String = AirMap.userId.orEmpty(),
     ): AirMapCall<Aircraft>
 
+    /**
+     * Create a new aircraft for the user, with a [nickname] and the model of the aircraft
+     * (identified by [modelId]). Optionally, the [serialNumber] of the aircraft can also be
+     * specified
+     */
     @POST("{id}/aircraft")
     @FormUrlEncoded
     @Wrapped(path = ["data"])
@@ -66,6 +100,9 @@ interface PilotClient {
         @Path("id") pilotId: String = AirMap.userId.orEmpty(),
     ): AirMapCall<Aircraft>
 
+    /**
+     * Set an updated [nickname] for the aircraft identified by [aircraftId]
+     */
     @PATCH("{id}/aircraft/{aircraft_id}")
     @FormUrlEncoded
     @Wrapped(path = ["data"])
@@ -75,6 +112,9 @@ interface PilotClient {
         @Path("id") pilotId: String = AirMap.userId.orEmpty(),
     ): AirMapCall<Aircraft>
 
+    /**
+     * Delete user's aircraft identified by [aircraftId]
+     */
     @DELETE("{id}/aircraft/{aircraft_id}")
     @Wrapped(path = ["data"])
     fun deleteAircraft(
