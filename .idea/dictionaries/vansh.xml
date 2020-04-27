@@ -3,12 +3,14 @@
     <words>
       <w>airmap</w>
       <w>airspaces</w>
+      <w>anonymized</w>
       <w>bintray</w>
       <w>bitrise</w>
       <w>coroutine</w>
       <w>coroutines</w>
       <w>functionalities</w>
       <w>gliderport</w>
+      <w>icao</w>
       <w>kotlinlang</w>
       <w>ktlint</w>
       <w>laanc</w>
@@ -21,6 +23,7 @@
       <w>ruleset</w>
       <w>rulesets</w>
       <w>subprefecture</w>
+      <w>timesheets</w>
     </words>
   </dictionary>
 </component>

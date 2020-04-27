@@ -17,7 +17,7 @@ data class Model(
     @Json(name = "id") val id: String,
     @Json(name = "name") val name: String,
     @Json(name = "manufacturer") val manufacturer: Manufacturer,
-    @Json(name = "metadata") val metadata: Map<String, Any?> = mutableMapOf(),
+    @Json(name = "metadata") val metadata: Map<String, Any?>?,
 )
 
 @JsonClass(generateAdapter = true)

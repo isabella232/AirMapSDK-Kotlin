@@ -11,11 +11,11 @@ data class Ruleset(
     @Json(name = "name") val name: String?,
     @Json(name = "short_name") val shortName: String?,
     @Json(name = "selection_type") val selectionType: SelectionType?,
-    @Json(name = "airspace_types") val airspaceTypes: List<Airspace.Type> = mutableListOf(),
+    @Json(name = "airspace_types") val airspaceTypes: List<Airspace.Type> = listOf(),
     @Json(name = "jurisdiction") val jurisdiction: Jurisdiction?,
     @Json(name = "default") val isDefault: Boolean = false,
     @Json(name = "description") val description: String?,
-    @Json(name = "rules") val rules: List<Rule> = mutableListOf(),
+    @Json(name = "rules") val rules: List<Rule> = listOf(),
 ) {
     enum class SelectionType {
         @Json(name = "pick1") PickOne,
@@ -93,6 +93,7 @@ data class Authorization(
     @Json(name = "message") val message: String?,
     @Json(name = "reference_number") val referenceNumber: String?,
 ) {
+    @FallbackEnum(name = "Unknown")
     enum class Status {
         @Json(name = "not_requested") NotRequested,
         @Json(name = "rejected_upon_submission") RejectedUponSubmission,
@@ -102,6 +103,7 @@ data class Authorization(
         @Json(name = "accepted") Accepted,
         @Json(name = "rejected") Rejected,
         @Json(name = "cancelled") Cancelled,
+        Unknown
     }
 }
 
@@ -109,10 +111,11 @@ data class Authorization(
 data class Jurisdiction(
     @Json(name = "id") val id: Int,
     @Json(name = "name") val name: String,
-    @Json(name = "region") val region: Region,
-    @Json(name = "rulesets") val rulesets: List<Ruleset> = mutableListOf(),
+    @Json(name = "region") val region: Region?,
+    @Json(name = "rulesets") val rulesets: List<Ruleset> = listOf(),
 )
 
+@FallbackEnum(name = "Unknown")
 enum class Region {
     @Json(name = "national") National,
     @Json(name = "federal") Federal,
@@ -120,12 +123,13 @@ enum class Region {
     @Json(name = "county") County,
     @Json(name = "city") City,
     @Json(name = "local") Local,
+    Unknown
 }
 
 @JsonClass(generateAdapter = true)
 data class Feature(
-    @Json(name = "code") val code: String,
-    @Json(name = "description") val description: String,
+    @Json(name = "code") val code: String?,
+    @Json(name = "description") val description: String?,
 )
 
 /// Network Request Models

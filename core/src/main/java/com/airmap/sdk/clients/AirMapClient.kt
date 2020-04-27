@@ -1,9 +1,7 @@
 package com.airmap.sdk.clients
 
-import com.airmap.sdk.AirMap
 import com.airmap.sdk.models.AdvisoriesRequest
 import com.airmap.sdk.models.EvaluationRequest
-import com.airmap.sdk.models.UpdatePilotRequest
 import com.airmap.sdk.models.VerificationRequest
 import com.aungkyawpaing.geoshi.model.Geometry
 import java.util.Date
@@ -13,6 +11,7 @@ import java.util.Date
  * methods defined in this file are for convenience only and serve as a wrapper around the raw REST
  * call made by the respective client
  */
+@Suppress("MemberVisibilityCanBePrivate")
 class AirMapClient(
     private val aircraftClient: AircraftClient,
     private val pilotClient: PilotClient,
@@ -62,25 +61,6 @@ class AirMapClient(
      */
     fun verifySMS(token: Int) = verifySMS(VerificationRequest(token))
 
-    /**
-     * Update a pilot's profile. All fields are optional. Only the fields being updated will be
-     * returned in the response. To get the full [com.airmap.sdk.models.Pilot], call [getPilot].
-     * [appMetadata] can be used to store miscellaneous metadata for your specific application.
-     * [userMetadata] can be used to store miscellaneous metadata about the user. [phone] should be
-     * verified with a subsequent call to [sendVerificationToken] and [verifySMS]
-     */
-    fun updatePilot(
-        firstName: String? = null,
-        lastName: String? = null,
-        username: String? = null,
-        email: String? = null,
-        phone: String? = null,
-        appMetadata: Map<String, Any>? = null,
-        userMetadata: Map<String, Any>? = null,
-    ) = updatePilot(
-        UpdatePilotRequest(firstName, lastName, username, email, phone, appMetadata, userMetadata)
-    )
-
     // FlightClient
     /**
      * Convenience method to get currently ongoing flights that are publicly visible
@@ -94,19 +74,4 @@ class AirMapClient(
      */
     fun getEvaluation(geometry: Geometry, rulesetIds: List<String>) =
         getEvaluation(EvaluationRequest(geometry, rulesetIds.joinToString(",")))
-
-    // AuthClient
-    /**
-     * Log in and authenticate a user by [username] and [password]. You must also provide your
-     * application's [clientId]
-     */
-    fun getToken(clientId: String, username: String, password: String) =
-        getToken(AirMap.urlPrefix, "password", clientId, username, password)
-
-    /**
-     * Refresh a user's expiring auth token and get a new one by providing a [refreshToken]. You
-     * must also provide your application's [clientId]
-     */
-    fun refreshToken(clientId: String, refreshToken: String) =
-        refreshToken(AirMap.urlPrefix, "refresh_token", clientId, refreshToken)
 }

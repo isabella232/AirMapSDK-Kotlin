@@ -3,7 +3,6 @@ package com.airmap.sdk.clients
 import com.airmap.sdk.AirMap
 import com.airmap.sdk.models.Aircraft
 import com.airmap.sdk.models.Pilot
-import com.airmap.sdk.models.UpdatePilotRequest
 import com.airmap.sdk.models.VerificationRequest
 import com.airmap.sdk.models.VerificationResult
 import com.airmap.sdk.networking.AirMapCall
@@ -29,16 +28,15 @@ interface PilotClient {
 
     /**
      * Update a pilot's profile. All fields are optional. Only the fields being updated will be
-     * returned in the response. To get the full [Pilot], call [getPilot].
-     * [UpdatePilotRequest.appMetadata] can be used to store miscellaneous metadata for your
-     * specific application. [UpdatePilotRequest.userMetadata] can be used to store miscellaneous
-     * metadata about the user. [UpdatePilotRequest.phone] should be verified with a subsequent
-     * call to [sendVerificationToken] and [verifySMS]
+     * returned in the response. To get the full [Pilot], call [getPilot]. [Pilot.appMetadata] can
+     * be used to store miscellaneous metadata for your specific application. [Pilot.userMetadata]
+     * can be used to store miscellaneous metadata about the user. [Pilot.phone] should be verified
+     * with a subsequent call to [sendVerificationToken] and [verifySMS]
      */
     @PATCH("{id}")
     @Wrapped(path = ["data"])
     fun updatePilot(
-        @Body pilot: UpdatePilotRequest,
+        @Body pilot: Pilot,
         @Path("id") id: String = AirMap.userId.orEmpty(),
     ): AirMapCall<Pilot>
 

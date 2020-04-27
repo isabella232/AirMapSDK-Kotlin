@@ -8,20 +8,13 @@
 - Paging for some requests
 - Automatically refresh token
 - Tests
-- KDoc comments
-  - Descriptions from https://developers.airmap.com/reference
-  - https://kotlinlang.org/docs/reference/kotlin-doc.html
-  - Public-facing SDK methods
+- Tile API
 - Add new Scheduled Airspace endpoints and models
+- Add System Status
+- Add units to types of fields in Models (e.g. meters)
+- Telemetry
+- Traffic
 - Verify Java compatibility
-- Standardize the use of optionals and default values
-  - Should all values be `Optional`/`null`able?
-    - Argument for Yes: to prevent breakage if anything is not working
-    - Argument for No: when we know a certain field *must* be populated
-  - Default value of "" for `String`s?
-  - Default value of false for `Boolean`s?
-  - Default value of `listOf()` for `List`s? Or `mutableListOf()`?
-  - Default value of `mapOf()` for `Map`s? Or `mutableMapOf()`?
 - Create specific types for the IDs
   - `inline class`
   - `TypeAlias`

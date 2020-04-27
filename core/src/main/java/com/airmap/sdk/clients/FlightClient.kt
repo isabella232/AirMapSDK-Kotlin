@@ -53,32 +53,32 @@ interface FlightClient {
     ): AirMapCall<List<Flight>>
 
     /**
-     * Get a [Flight] identified by [flightId]. Set [enhance] to include detailed flight,
+     * Get a [Flight] identified by [id]. Set [enhance] to include detailed flight,
      * [Flight.pilot], and [Flight.aircraft] information in the response
      */
     @GET("{id}")
     @Wrapped(path = ["data"])
     fun getFlight(
-        @Path("id") flightId: String,
+        @Path("id") id: String,
         @Query("enhance") enhance: Boolean? = null,
     ): AirMapCall<Flight>
 
     /**
-     * End the in-progress [Flight] identified by [flightId]
+     * End the in-progress [Flight] identified by [id]
      */
     @POST("{id}/end")
     @Wrapped(path = ["data"])
     fun endFlight(
-        @Path("id") flightId: String,
+        @Path("id") id: String,
     ): AirMapCall<Flight>
 
     /**
-     * Delete the [Flight] identified by [flightId]
+     * Delete the [Flight] identified by [id]
      */
     @DELETE("{id}")
     @Wrapped(path = ["data"])
     fun deleteFlight(
-        @Path("id") flightId: String,
+        @Path("id") id: String,
     ): AirMapCall<Unit>
 
     /**

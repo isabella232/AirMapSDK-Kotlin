@@ -22,7 +22,7 @@ data class AirportProperties(
     @Json(name = "iata") val iata: String?,
     @Json(name = "paved") val paved: Boolean?,
     @Json(name = "tower") val tower: Boolean?,
-    @Json(name = "runways") val runways: List<Runway> = mutableListOf(),
+    @Json(name = "runways") val runways: List<Runway>?,
     @Json(name = "elevation") val elevation: Int?,
     @Json(name = "icao_country") val icaoCountry: String?,
     @Json(name = "longest_runway") val longestRunway: Int?,
@@ -41,6 +41,9 @@ data class AMAFieldProperties(
     @Json(name = "authorization") val authorization: Boolean,
     @Json(name = "laanc") val laanc: Boolean,
     @Json(name = "url") val url: String?,
+    @Json(name = "contact_name") val contactName: String?,
+    @Json(name = "contact_phone") val contactPhone: String?,
+    @Json(name = "contact_email") val contactEmail: String?,
 ) : AirspaceProperties()
 
 @TypeLabel("controlled_airspace")
@@ -54,7 +57,7 @@ data class ControlledAirspaceProperties(
     @Json(name = "airport_name") val airportName: String?,
     @Json(name = "lowest_limit") val lowestLimit: Int?,
     @Json(name = "authorization") val authorization: Boolean = false,
-    // TODO: This does not come back as ISO 8601 (comes back as 10/10/2020). How to parse this into a Date?
+    // TODO: This does not come back as ISO 8601 (comes back as 10/10/2020). Parse into Date
     @Json(name = "last_edit_date") val lastEditDate: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "airspace_classification") val airspaceClassification: String?,
@@ -120,6 +123,7 @@ data class PowerPlantProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "tech") val tech: String?,
+    @Json(name = "generator_type") val generatorType: String?,
     @Json(name = "plant_code") val plantCode: Int?,
 ) : AirspaceProperties()
 
@@ -131,6 +135,7 @@ data class SchoolProperties(
     @Json(name = "type") val type: String?,
     @Json(name = "building") val building: Boolean?,
     @Json(name = "way_area") val wayArea: Double?,
+    @Json(name = "students") val numStudents: Int?,
 ) : AirspaceProperties()
 
 @TypeLabel("special_use_airspace")
@@ -149,6 +154,9 @@ data class TFRProperties(
     @Json(name = "description") val description: String?,
     @Json(name = "effective_start") val effectiveStart: Date?,
     @Json(name = "effective_end") val effectiveEnd: Date?,
+    @Json(name = "sport") val sport: String?,
+    @Json(name = "venue") val venue: String?,
+    @Json(name = "type") val type: String?,
 ) : AirspaceProperties()
 
 @TypeLabel("wildfire")

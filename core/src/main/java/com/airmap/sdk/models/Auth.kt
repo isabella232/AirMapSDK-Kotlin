@@ -17,5 +17,6 @@ data class Token(
     @Json(name = "refresh_token") val refreshToken: String,
     @Json(name = "scope") val scope: String,
     @Json(name = "session_state") val sessionState: String,
-    @Json(name = "token_type") val tokenType: String
+    @Json(name = "token_type") val tokenType: String,
+    @Json(name = "id_token") val idToken: String?,
 )

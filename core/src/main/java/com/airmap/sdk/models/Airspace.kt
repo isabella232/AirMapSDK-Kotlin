@@ -14,8 +14,8 @@ data class Airspace(
     @Json(name = "name") val name: String,
     @Json(name = "type") val type: Type,
     @Json(name = "country") val country: String,
-    @Json(name = "state") val state: String,
-    @Json(name = "city") val city: String,
+    @Json(name = "state") val state: String?,
+    @Json(name = "city") val city: String?,
     @Json(name = "geometry") val geometry: Geometry,
     // TODO: dot notation!
     @Wrapped(path = ["related_geometry", "property_boundary", "geometry"])
@@ -91,7 +91,7 @@ data class Airspace(
     @JsonClass(generateAdapter = true)
     data class Status(
         @Json(name = "color") val color: Color,
-        @Json(name = "advisories") val advisories: List<Advisory> = mutableListOf(),
+        @Json(name = "advisories") val advisories: List<Advisory> = listOf(),
     ) {
         enum class Color {
             @Json(name = "red") Red,
@@ -117,8 +117,9 @@ data class Advisory(
     @Json(name = "city") val city: String?,
     @Json(name = "last_updated") val lastUpdated: Date?,
     @Json(name = "distance") val distance: Int?,
-    @Json(name = "requirements") val requirements: Requirements,
-    @Transient val properties: AirspaceProperties? = null,
+    @Json(name = "requirements") val requirements: Requirements?,
+    @Json(name = "properties") val properties: AirspaceProperties?,
+    // @Json(name = "timesheets") val timeSheets: List<TimeSheet>?,
 )
 
 @JsonClass(generateAdapter = true)

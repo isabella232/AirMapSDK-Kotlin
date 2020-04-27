@@ -14,7 +14,7 @@ data class VerificationStatus(
 @JsonClass(generateAdapter = true)
 data class FlightStatistics(
     @Json(name = "total") val total: Int,
-    @Json(name = "last_flight_time") val lastFlightTime: Date,
+    @Json(name = "last_flight_time") val lastFlightTime: Date?,
 )
 
 @JsonClass(generateAdapter = true)
@@ -42,15 +42,8 @@ data class Pilot(
     @Json(name = "verification_status") @DeserializeOnly
     val verificationStatus: VerificationStatus?,
     @Json(name = "statistics") @DeserializeOnly val statistics: Statistics?,
-    @Json(name = "user_metadata") val userMetadata: Map<String, Any?> = mutableMapOf(),
-    @Json(name = "app_metadata") val appMetadata: Map<String, Any?> = mutableMapOf(),
-)
-
-/// Network Request Models
-
-@JsonClass(generateAdapter = true)
-data class VerificationRequest(
-    @Json(name = "token") val token: Int,
+    @Json(name = "user_metadata") val userMetadata: Map<String, Any?>?,
+    @Json(name = "app_metadata") val appMetadata: Map<String, Any?>?,
 )
 
 @JsonClass(generateAdapter = true)
@@ -58,13 +51,9 @@ data class VerificationResult(
     @Json(name = "verified") val verified: Boolean,
 )
 
+/// Network Request Models
+
 @JsonClass(generateAdapter = true)
-data class UpdatePilotRequest(
-    @Json(name = "first_name") val firstName: String? = null,
-    @Json(name = "last_name") val lastName: String? = null,
-    @Json(name = "username") val username: String? = null,
-    @Json(name = "email") val email: String? = null,
-    @Json(name = "phone") val phone: String? = null,
-    @Json(name = "app_metadata") val appMetadata: Map<String, Any>? = null,
-    @Json(name = "user_metadata") val userMetadata: Map<String, Any>? = null,
+data class VerificationRequest(
+    @Json(name = "token") val token: Int,
 )

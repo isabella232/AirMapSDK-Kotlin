@@ -1,5 +1,6 @@
 package com.airmap.sdk.clients
 
+import com.airmap.sdk.AirMap
 import com.airmap.sdk.models.AnonymousToken
 import com.airmap.sdk.models.Token
 import com.airmap.sdk.networking.AirMapCall
@@ -28,11 +29,12 @@ interface AuthClient {
     @POST("https://{prefix}auth.airmap.com/realms/airmap/protocol/openid-connect/token")
     @FormUrlEncoded
     fun getToken(
-        @Path("prefix") urlPrefix: String,
-        @Field("grant_type") grantType: String,
         @Field("client_id") clientId: String,
         @Field("username") username: String,
         @Field("password") password: String,
+        @Field("scope") scope: String = "openid email profile offline_access am-api",
+        @Field("grant_type") grantType: String = "password",
+        @Path("prefix") urlPrefix: String = AirMap.urlPrefix,
     ): AirMapCall<Token>
 
     /**
@@ -43,9 +45,9 @@ interface AuthClient {
     @POST("https://{prefix}auth.airmap.com/realms/airmap/protocol/openid-connect/token")
     @FormUrlEncoded
     fun refreshToken(
-        @Path("prefix") urlPrefix: String,
-        @Field("grant_type") grantType: String,
         @Field("client_id") clientId: String,
         @Field("refresh_token") refreshToken: String,
+        @Field("grant_type") grantType: String = "refresh_token",
+        @Path("prefix") urlPrefix: String = AirMap.urlPrefix,
     ): AirMapCall<Token>
 }
