@@ -116,7 +116,7 @@ data class Advisory(
     @Json(name = "state") val state: String?,
     @Json(name = "city") val city: String?,
     @Json(name = "last_updated") val lastUpdated: Date?,
-    @Json(name = "distance") val distance: Int?,
+    @Json(name = "distance") val distance: Int?, // TODO: What is the unit of this?
     @Json(name = "requirements") val requirements: Requirements?,
     @Json(name = "properties") val properties: AirspaceProperties?,
     // @Json(name = "timesheets") val timeSheets: List<TimeSheet>?,

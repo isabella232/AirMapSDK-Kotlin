@@ -1,6 +1,7 @@
 package com.airmap.sdk.clients
 
 import com.airmap.sdk.models.Airspace
+import com.airmap.sdk.models.Meters
 import com.airmap.sdk.networking.AirMapCall
 import com.airmap.sdk.networking.CommaSeparated
 import com.aungkyawpaing.geoshi.model.Geometry
@@ -49,7 +50,7 @@ interface AirspaceClient {
         @Query("ignored_types") @CommaSeparated ignoredTypes: List<Airspace.Type>?,
         @Query("full") full: Boolean?,
         @Query("geometry") geometry: Geometry?,
-        @Query("buffer") buffer: Double?,
+        @Query("buffer") buffer: Meters?,
         @Query("limit") limit: Int?,
         @Query("offset") offset: Int?,
         @Query("datetime") datetime: Date?,

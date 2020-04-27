@@ -23,15 +23,15 @@ data class AirportProperties(
     @Json(name = "paved") val paved: Boolean?,
     @Json(name = "tower") val tower: Boolean?,
     @Json(name = "runways") val runways: List<Runway>?,
-    @Json(name = "elevation") val elevation: Int?,
+    @Json(name = "elevation") val elevation: Feet?,
     @Json(name = "icao_country") val icaoCountry: String?,
-    @Json(name = "longest_runway") val longestRunway: Int?,
+    @Json(name = "longest_runway") val longestRunway: Meters?,
 ) : AirspaceProperties() {
     @JsonClass(generateAdapter = true)
     data class Runway(
         @Json(name = "name") val name: String,
-        @Json(name = "length") val length: Int,
-        @Json(name = "bearing") val bearing: Int,
+        @Json(name = "length") val length: Meters,
+        @Json(name = "bearing") val bearing: Degrees,
     )
 }
 
@@ -52,18 +52,16 @@ data class ControlledAirspaceProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "icao") val icao: String?,
     @Json(name = "laanc") val laanc: Boolean = false,
-    @Json(name = "ceiling") val ceiling: Int?,
+    @Json(name = "ceiling") val ceiling: Feet?,
+    @Json(name = "floor") val floor: Feet?,
     @Json(name = "airport_id") val airportId: String?,
     @Json(name = "airport_name") val airportName: String?,
-    @Json(name = "lowest_limit") val lowestLimit: Int?,
     @Json(name = "authorization") val authorization: Boolean = false,
-    // TODO: This does not come back as ISO 8601 (comes back as 10/10/2020). Parse into Date
     @Json(name = "last_edit_date") val lastEditDate: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "airspace_classification") val airspaceClassification: String?,
     @Json(name = "facility_id") val facilityId: String?,
-
-    ) : AirspaceProperties()
+) : AirspaceProperties()
 
 @TypeLabel("emergency")
 @JsonClass(generateAdapter = true)
@@ -79,7 +77,7 @@ data class EmergencyProperties(
 data class FireProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
-    @Json(name = "size") val size: Int?,
+    @Json(name = "size") val size: Hectares?,
     @Json(name = "date_effective") val dateEffective: Date?,
 ) : AirspaceProperties()
 
@@ -113,7 +111,7 @@ data class NotificationProperties(
 data class ParkProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
-    @Json(name = "size") val size: Int?,
+    @Json(name = "size") val size: Double?,
     @Json(name = "type") val type: String?,
 ) : AirspaceProperties()
 
@@ -164,6 +162,6 @@ data class TFRProperties(
 data class WildFireProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
-    @Json(name = "size") val size: Int?,
+    @Json(name = "size") val size: Hectares?,
     @Json(name = "date_effective") val dateEffective: Date?,
 ) : AirspaceProperties()
