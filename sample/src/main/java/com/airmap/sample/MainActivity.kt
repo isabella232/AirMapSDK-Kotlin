@@ -52,13 +52,13 @@ class MainActivity : AppCompatActivity() {
             )
         )
         val flightPlanIds = listOf(
-            "flight_plan|W3L7xWw2Z4qEacmd5pw72qXX42uzXddPKRleZyXtM0BkMpgPpxbA",
-            "flight_plan|B5Kv2qGB42Z3c3pRb5xwvg9Z4CpnZEK7a8QzRETQQyBzgM8DG3Q"
+            "flight_plan|xb5qDL9CDbDz5QuxkdnKJSoAG2LP",
+            "flight_plan|qvn5k9RsEyLNewuGOgRbOf08eRRB"
         )
         val rulesets = "usa_ama,usa_national_park,usa_sec_91,usa_wilderness_area,usa_sec_336"
             .split(',')
-        val flightPlanId = "flight_plan|B5Kv2qGB42Z3c3pRb5xwvg9Z4CpnZEK7a8QzRETQQyBzgM8DG3Q"
-        val flightId = "flight|dwaDYDPGolYY4CQ0kxlGgJN8N7IdRJ8Ypw0LMbyFZn5aMMvJK0Jg"
+        val flightPlanId = "flight_plan|xb5qDL9CDbDz5QuxkdnKJSoAG2LP"
+        val flightId = "flight|A5nRM8qTvKmNKwUGJNdR6Sz0An2z"
         val modelId = "c7ed05c7-cbe1-43a4-b2a8-500d5607e994"
         val manufacturerId = "63280fbf-3c7f-47f4-9168-5763899048cd"
         val pilotId = "auth0|5761a4279732f5844b1db844"
@@ -68,6 +68,8 @@ class MainActivity : AppCompatActivity() {
         val mavicProModelId = "18546c9b-c032-4bfd-9741-4cd24e368618"
         val updateNickname = "Update ${System.currentTimeMillis()}"
         val newNickname = "New ${System.currentTimeMillis()}"
+        client.getFlights(AirMap.userId, enhance = true).executeAndLogResponse()
+        client.getFlights(AirMap.userId, enhance = false).executeAndLogResponse()
         client.getFlightPlan(flightPlanId).executeAndLogResponse()
         client.getFlight(flightId).executeAndLogResponse()
         client.getFlight(flightId, enhance = true).executeAndLogResponse()

@@ -173,6 +173,6 @@ interface FlightClient {
     @GET("plan/batch/authorizations")
     @Wrapped(path = ["data"])
     fun getAuthorizations(
-        @CommaSeparated @Query("flight_plan_ids") flightPlanIds: List<String>,
+        @CommaSeparated @Query("flight_plan_ids") flightPlanIds: String,
     ): AirMapCall<List<FlightBriefing>>
 }

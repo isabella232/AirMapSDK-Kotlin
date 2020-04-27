@@ -1,7 +1,9 @@
 package com.airmap.sdk.clients
 
 import com.airmap.sdk.models.AdvisoriesRequest
+import com.airmap.sdk.models.Airspace
 import com.airmap.sdk.models.EvaluationRequest
+import com.airmap.sdk.models.FlightBriefing
 import com.airmap.sdk.models.VerificationRequest
 import com.aungkyawpaing.geoshi.model.Geometry
 import java.util.Date
@@ -54,6 +56,12 @@ class AirMapClient(
         AdvisoriesRequest(rulesetIds.joinToString(","), geometry, start, end)
     )
 
+    // AirspaceClient
+    /**
+     * Get [Airspace]s specified by [ids]
+     */
+    fun getAirspaces(ids: List<String>) = getAirspaces(ids.joinToString(","))
+
     // PilotClient
     /**
      * Verify the logged in user's account with the [token] they received via SMS from a preceding
@@ -63,11 +71,23 @@ class AirMapClient(
 
     // FlightClient
     /**
+     * Get [FlightBriefing]s for all the [flightPlanIds]. The response [FlightBriefing] will only
+     * have [FlightBriefing.flightPlanId] and [FlightBriefing.authorizations] populated
+     */
+    fun getAuthorizations(flightPlanIds: List<String>) =
+        getAuthorizations(flightPlanIds.joinToString(","))
+
+    /**
      * Convenience method to get currently ongoing flights that are publicly visible
      */
     fun getCurrentPublicFlights() = getFlights(startBefore = Date(), endAfter = Date())
 
     // RulesClient
+    /**
+     * Get rulesets identified by [rulesetIds]
+     */
+    fun getRulesets(rulesetIds: List<String>) = getRulesets(rulesetIds.joinToString(","))
+
     /**
      * Get an evaluated [com.airmap.sdk.models.FlightBriefing] for the given [geometry] and
      * [rulesetIds]

@@ -29,7 +29,7 @@ interface RulesClient {
     @GET("rule")
     @Wrapped(path = ["data"])
     fun getRulesets(
-        @CommaSeparated @Query("rulesets") rulesetIds: List<String>,
+        @CommaSeparated @Query("rulesets") rulesetIds: String,
     ): AirMapCall<List<Ruleset>>
 
     /**

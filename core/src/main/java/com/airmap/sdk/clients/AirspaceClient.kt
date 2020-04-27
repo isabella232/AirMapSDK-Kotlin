@@ -27,7 +27,7 @@ interface AirspaceClient {
     @GET("list")
     @Wrapped(path = ["data"])
     fun getAirspaces(
-        @CommaSeparated @Query("ids", encoded = true) ids: List<String>,
+        @CommaSeparated @Query("ids", encoded = true) ids: String,
     ): AirMapCall<List<Airspace>>
 
     /**
