@@ -17,6 +17,10 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface PilotClient {
+    @GET("profile")
+    @Wrapped(path = ["data"])
+    fun getAuthenticatedPilot(): AirMapCall<Pilot>
+
     /**
      * Get [Pilot] identified by [id]
      */

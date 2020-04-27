@@ -5,9 +5,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.airmap.sdk.AirMap
 import com.airmap.sdk.AirMap.client
-import com.airmap.sdk.networking.AirMapCall
 import com.airmap.sdk.models.Config
 import com.airmap.sdk.models.FlightPlan
+import com.airmap.sdk.networking.AirMapCall
 import com.aungkyawpaing.geoshi.model.Polygon
 import com.aungkyawpaing.geoshi.model.Position
 import com.readystatesoftware.chuck.ChuckInterceptor
@@ -25,10 +25,17 @@ class MainActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
         val okHttpClientBuilder = OkHttpClient.Builder().addInterceptor(ChuckInterceptor(this))
         AirMap.init(getConfig(this), false, okHttpClientBuilder)
-        try {
-            examples()
-        } catch (e: Exception) {
-            Timber.e(e)
+        client.getToken(cid, un, pw).enqueue {
+            val token = it.getOrThrow()
+            AirMap.authToken = token.accessToken
+            client.getAuthenticatedPilot().enqueue { pilot ->
+                AirMap.userId = pilot.getOrThrow().id
+                try {
+                    examples()
+                } catch (e: Exception) {
+                    Timber.e(e)
+                }
+            }
         }
     }
 
@@ -149,8 +156,7 @@ class MainActivity : AppCompatActivity() {
             client.getWeather(
                 flightPlan.takeoffLatitude!!,
                 flightPlan.takeoffLongitude!!,
-                "2020-03-15T03:54:12.021Z",
-                "2020-03-15T04:10:52.021Z"
+                Date(), null
             ).executeAndLogResponse()
         }
 
@@ -164,7 +170,9 @@ class MainActivity : AppCompatActivity() {
         client.getPilot().enqueue { result ->
             genericLogResponseHandler(result)
             val newLastName = "Update ${System.currentTimeMillis()}"
-            result.onSuccess { client.updatePilot(lastName = newLastName).executeAndLogResponse() }
+            result.onSuccess {
+                client.updatePilot(it.copy(lastName = newLastName)).executeAndLogResponse()
+            }
         }
     }
 

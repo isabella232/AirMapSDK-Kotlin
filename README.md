@@ -11,7 +11,6 @@
 - Tile API
 - Add new Scheduled Airspace endpoints and models
 - Add System Status
-- Add units to types of fields in Models (e.g. meters)
 - Telemetry
 - Traffic
 - Verify Java compatibility

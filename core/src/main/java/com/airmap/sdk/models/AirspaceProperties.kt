@@ -8,7 +8,10 @@ import java.util.Date
 
 @DefaultNull
 @JsonClass(generateAdapter = true, generator = "sealed:type")
-sealed class AirspaceProperties
+sealed class AirspaceProperties {
+    // @DefaultObject
+    // object Unknown
+}
 
 @TypeLabel("airport")
 @JsonClass(generateAdapter = true)
@@ -51,12 +54,17 @@ data class AMAFieldProperties(
 data class ControlledAirspaceProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "icao") val icao: String?,
-    @Json(name = "laanc") val laanc: Boolean = false,
+    @Json(name = "laanc") val laanc: Boolean?,
     @Json(name = "ceiling") val ceiling: Feet?,
+    @Json(name = "ceiling_ref") val ceilingRef: String?,
+    @Json(name = "ceiling_unit") val ceilingUnit: String?,
     @Json(name = "floor") val floor: Feet?,
+    @Json(name = "floor_ref") val floorRef: String?,
+    @Json(name = "floor_unit") val floorUnit: String?,
+    @Json(name = "lowest_limit") val lowestLimit: Feet?,
     @Json(name = "airport_id") val airportId: String?,
     @Json(name = "airport_name") val airportName: String?,
-    @Json(name = "authorization") val authorization: Boolean = false,
+    @Json(name = "authorization") val authorization: Boolean?,
     @Json(name = "last_edit_date") val lastEditDate: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "airspace_classification") val airspaceClassification: String?,
@@ -142,6 +150,14 @@ data class SpecialUseProperties(
     @Json(name = "url") val url: String?,
     @Json(name = "description") val description: String?,
     @Json(name = "currently_active") val currentlyActive: Boolean?,
+    @Json(name = "ceiling") val ceiling: Feet?,
+    @Json(name = "ceiling_ref") val ceilingRef: String?,
+    @Json(name = "ceiling_unit") val ceilingUnit: String?,
+    @Json(name = "floor") val floor: Feet?,
+    @Json(name = "floor_ref") val floorRef: String?,
+    @Json(name = "floor_unit") val floorUnit: String?,
+    @Json(name = "lowest_limit") val lowestLimit: Feet?,
+    @Json(name = "type") val type: String?,
 ) : AirspaceProperties()
 
 @TypeLabel("tfr")
