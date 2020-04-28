@@ -5,7 +5,6 @@
 
 ### TODO
 - Error handling
-- Paging for some requests
 - Automatically refresh token
 - Tests
 - Tile API

@@ -35,7 +35,6 @@ interface FlightClient {
      * @param enhance Whether to return pilot and aircraft info in response
      * @param limit Maximum number of flights to return
      */
-    // TODO: This method returns a paged response. Create a class to wrap+expose the paged response
     @GET(".")
     @Wrapped(path = ["data", "results"])
     fun getFlights(
