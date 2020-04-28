@@ -15,20 +15,22 @@ import java.util.Date
  */
 @Suppress("MemberVisibilityCanBePrivate")
 class AirMapClient(
+    private val authClient: AuthClient,
     private val aircraftClient: AircraftClient,
     private val pilotClient: PilotClient,
     private val flightClient: FlightClient,
     private val airspaceClient: AirspaceClient,
     private val rulesClient: RulesClient,
     private val advisoryClient: AdvisoryClient,
-    private val authClient: AuthClient,
-) : AircraftClient by aircraftClient,
+    private val systemClient: SystemClient,
+) : AuthClient by authClient,
+    AircraftClient by aircraftClient,
     PilotClient by pilotClient,
     FlightClient by flightClient,
     AirspaceClient by airspaceClient,
     RulesClient by rulesClient,
     AdvisoryClient by advisoryClient,
-    AuthClient by authClient {
+    SystemClient by systemClient {
     // TODO: look into implications of moving this into the respective clients themselves
     //  Answer: Need to use @JvmDefault annotation and compile with Java 8
     //  This is specific Java 8 supported by all Android versions

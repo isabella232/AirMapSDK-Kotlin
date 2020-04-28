@@ -98,13 +98,14 @@ object AirMap {
         }.build()
 
         client = AirMapClient(
+            getClient("auth", 1, okHttpClient, moshi),
             getClient("aircraft", 2, okHttpClient, moshi),
             getClient("pilot", 2, okHttpClient, moshi),
             getClient("flight", 2, okHttpClient, moshi),
             getClient("airspace", 2, okHttpClient, moshi),
             getClient("rules", 1, okHttpClient, moshi),
             getClient("advisory", 1, okHttpClient, moshi),
-            getClient("auth", 1, okHttpClient, moshi),
+            getClient("system", 1, okHttpClient, moshi),
         )
     }
 

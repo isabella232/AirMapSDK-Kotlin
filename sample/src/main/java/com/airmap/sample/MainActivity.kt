@@ -176,6 +176,7 @@ class MainActivity : AppCompatActivity() {
                 client.updatePilot(it.copy(lastName = newLastName)).executeAndLogResponse()
             }
         }
+        client.getSystemStatus().executeAndLogResponse()
     }
 
     private fun <T> genericLogResponseHandler(response: Result<T>) {

@@ -9,9 +9,9 @@
 - Tests
 - Tile API
 - Add new Scheduled Airspace endpoints and models
-- Add System Status
+- System Status real time
+- Traffic real time
 - Telemetry
-- Traffic
 - Verify Java compatibility
 - Create specific types for the IDs
   - `inline class`
