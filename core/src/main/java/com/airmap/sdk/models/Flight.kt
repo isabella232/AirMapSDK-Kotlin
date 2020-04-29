@@ -7,9 +7,9 @@ import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class Flight(
-    @Json(name = "id") val id: String,
-    @Json(name = "flight_plan_id") val flightPlanId: String? = null,
-    @Json(name = "pilot_id") val pilotId: String,
+    @Json(name = "id") val id: FlightId,
+    @Json(name = "flight_plan_id") val flightPlanId: FlightPlanId? = null,
+    @Json(name = "pilot_id") val pilotId: PilotId,
     @Json(name = "pilot") val pilot: Pilot?,
     @Json(name = "latitude") val latitude: Double,
     @Json(name = "longitude") val longitude: Double,
@@ -32,7 +32,7 @@ data class Flight(
 ) {
     @JsonClass(generateAdapter = true)
     data class Status(
-        @Json(name = "id") val id: String,
+        @Json(name = "id") val id: FlightStatusId,
         @Json(name = "manager_id") val managerId: String,
         @Json(name = "status") val status: Type,
     ) {
@@ -46,10 +46,10 @@ data class Flight(
 
 @JsonClass(generateAdapter = true)
 data class FlightPlan(
-    @Json(name = "id") val id: String? = null,
-    @Json(name = "pilot_id") val pilotId: String? = null,
-    @Json(name = "flight_id") val flightId: String? = null,
-    @Json(name = "aircraft_id") val aircraftId: String? = null,
+    @Json(name = "id") val id: FlightPlanId? = null,
+    @Json(name = "pilot_id") val pilotId: PilotId? = null,
+    @Json(name = "flight_id") val flightId: FlightId? = null,
+    @Json(name = "aircraft_id") val aircraftId: AircraftId? = null,
     @Json(name = "start_time") val startTime: Date? = null,
     @Json(name = "end_time") val endTime: Date? = null,
     @Json(name = "created_at") val createdAt: Date? = null,

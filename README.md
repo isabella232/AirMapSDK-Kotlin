@@ -13,9 +13,6 @@
 - Traffic real time
 - Telemetry
 - Verify Java compatibility
-- Create specific types for the IDs
-  - `inline class`
-  - `TypeAlias`
 - Integrate with CI/CD (Bitrise)
 - Android Module
   - Fetch config from assets

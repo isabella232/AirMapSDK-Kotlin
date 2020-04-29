@@ -9,7 +9,7 @@ import java.util.Date
 
 @JsonClass(generateAdapter = true)
 data class Airspace(
-    @Json(name = "id") val id: String,
+    @Json(name = "id") val id: AirspaceId,
     @Json(name = "airspace_uuid") val uuid: String?,
     @Json(name = "name") val name: String,
     @Json(name = "type") val type: Type,
@@ -17,7 +17,6 @@ data class Airspace(
     @Json(name = "state") val state: String?,
     @Json(name = "city") val city: String?,
     @Json(name = "geometry") val geometry: Geometry,
-    // TODO: dot notation!
     @Wrapped(path = ["related_geometry", "property_boundary", "geometry"])
     val propertyBoundary: Geometry?,
 ) {
@@ -104,7 +103,7 @@ data class Airspace(
 
 @JsonClass(generateAdapter = true)
 data class Advisory(
-    @Json(name = "id") val id: String,
+    @Json(name = "id") val id: AdvisoryId,
     @Json(name = "name") val name: String,
     @Json(name = "type") val type: Airspace.Type,
     @Json(name = "color") val color: Airspace.Status.Color,

@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Ruleset(
-    @Json(name = "id") val id: String,
+    @Json(name = "id") val id: RulesetId,
     @Json(name = "name") val name: String?,
     @Json(name = "short_name") val shortName: String?,
     @Json(name = "selection_type") val selectionType: SelectionType?,
@@ -81,7 +81,7 @@ data class Rule(
 
 @JsonClass(generateAdapter = true)
 data class Authority(
-    @Json(name = "id") val id: String,
+    @Json(name = "id") val id: AuthorityId,
     @Json(name = "name") val name: String,
 )
 
@@ -109,7 +109,7 @@ data class Authorization(
 
 @JsonClass(generateAdapter = true)
 data class Jurisdiction(
-    @Json(name = "id") val id: Int,
+    @Json(name = "id") val id: JurisdictionId,
     @Json(name = "name") val name: String,
     @Json(name = "region") val region: Region?,
     @Json(name = "rulesets") val rulesets: List<Ruleset> = listOf(),

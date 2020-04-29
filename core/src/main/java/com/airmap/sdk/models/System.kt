@@ -12,7 +12,7 @@ data class Status(
 ) {
     @JsonClass(generateAdapter = true)
     data class Component(
-        @Json(name = "id") val id: String,
+        @Json(name = "id") val id: ComponentId,
         @Json(name = "name") val name: String?,
         @Json(name = "level") val level: Level?,
         @Json(name = "children") val children: List<Component>?,
