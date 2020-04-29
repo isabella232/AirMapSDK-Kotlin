@@ -1,6 +1,8 @@
 package com.airmap.sdk.networking
 
+import com.airmap.sdk.models.ErrorDetails
 import com.airmap.sdk.models.ServerError
+import com.squareup.moshi.Moshi
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,10 +25,36 @@ class AirMapCall<R>(private val call: Call<R>) : Call<R> by call {
 
             override fun onResponse(call: Call<R>, response: Response<R>) {
                 if (response.isSuccessful) {
-                    callback.onResult(Result.success(response.body()!!))
+                    val result = try {
+                        Result.success(response.body()!!)
+                    } catch (e: Exception) {
+                        // Most likely a Moshi deserialization error. This was in all other senses
+                        // a successful operation, so no point of passing back the response code
+                        Result.failure(e)
+                    }
+                    // We don't want to wrap the callback in a try, because we shouldn't be catching
+                    // the consumer's exception
+                    callback.onResult(result)
                 } else {
-                    val error = ServerError(response.errorBody()?.string().orEmpty())
-                    callback.onResult(Result.failure(error))
+                    val raw = response.errorBody()?.string().orEmpty()
+                    val result: Result<R> = try {
+                        val details = Moshi.Builder().build()
+                            .adapter(ErrorDetails::class.java)
+                            .nullSafe()
+                            .lenient()
+                            .fromJson(raw)!!
+                        Result.failure(ServerError(response.code(), details))
+                    } catch (e: Exception) {
+                        // Most likely a Moshi deserialization error. We have 2 errors now:
+                        // ServerError and e. The more important one to the consumer will be
+                        // the ServerError, but we lose track of e, then. Let's leave some form
+                        // of breadcrumbs for this error by at least printing a stack trace
+                        e.printStackTrace()
+                        Result.failure(ServerError(response.code(), ErrorDetails(raw = raw)))
+                    }
+                    // We don't want to wrap the callback in a try, because we shouldn't be catching
+                    // the consumer's exception
+                    callback.onResult(result)
                 }
             }
         })

@@ -4,14 +4,16 @@
 - ~Enable `ktlint` pre-commit git hook~ (**Currently not working as `ktlint` does not yet support Kotlin 1.4 syntax (e.g. trailing commas and `fun interface`s**))
 
 ### TODO
-- Error handling
 - Automatically refresh token
 - Tests
 - Tile API
-- Add new Scheduled Airspace endpoints and models
 - System Status real time
+  - https://github.com/Tinder/Scarlet/
 - Traffic real time
-- Telemetry
+  - https://github.com/Tinder/Scarlet/tree/0.2.x (b/c MQTT)
+- Telemetry (once gRPC version of API is complete)
+  - https://github.com/square/wire
+  - https://square.github.io/wire/wire_grpc/
 - Verify Java compatibility
 - Integrate with CI/CD (Bitrise)
 - Android Module

@@ -3,12 +3,7 @@ package com.airmap.sdk.models
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-// TODO: Parse the actual error string according to the models below
-class ServerError(rawError: String) : Exception(rawError)
-sealed class Error // TODO
-
-// TODO: Make Retrofit use this
-
+// Various examples of error response formats we've seen from the API
 /*
 (Code 400)
 {
@@ -22,23 +17,7 @@ sealed class Error // TODO
     ]
   }
 }
- */
-@JsonClass(generateAdapter = true)
-data class Error_400_1(
-    @Json(name = "status") val status: String = "",
-    @Json(name = "data") val data: Data = Data(),
-) {
-    @JsonClass(generateAdapter = true)
-    data class Data(
-        @Json(name = "errors") val errors: List<Error> = listOf(),
-    )
-
-    @JsonClass(generateAdapter = true)
-    data class Error(
-        @Json(name = "name") val name: String = "",
-        @Json(name = "message") val message: String = "",
-    )
-}
+*/
 
 /*
 (Code 400)
@@ -49,16 +28,6 @@ data class Error_400_1(
 	}
 }
  */
-@JsonClass(generateAdapter = true)
-data class Error_400_2(
-    @Json(name = "status") val status: String = "",
-    @Json(name = "data") val data: Data = Data(),
-) {
-    @JsonClass(generateAdapter = true)
-    data class Data(
-        @Json(name = "message") val message: String = "",
-    )
-}
 
 /*
 (Code 401)
@@ -66,10 +35,6 @@ data class Error_400_2(
 	"msg": "authentication failed"
 }
  */
-@JsonClass(generateAdapter = true)
-data class Error_401(
-    @Json(name = "msg") val msg: String = "",
-)
 
 /*
 (Status 500)
@@ -79,17 +44,11 @@ data class Error_401(
 	"message": "failed to create flight plan"
 }
  */
-@JsonClass(generateAdapter = true)
-data class Error_403_500(
-    @Json(name = "status") val status: String = "",
-    @Json(name = "message") val message: String = "",
-)
 
 /*
 (Code 405)
 <Empty Response>
  */
-typealias Error_405 = Unit
 
 /*
 (Code 404)
@@ -104,10 +63,60 @@ typealias Error_405 = Unit
 </body>
 </html>
  */
-typealias Error_404 = String
 
 /*
 (Code 504)
 upstream request timeout
  */
-typealias Error_504 = String
+
+/*
+TODO: How to handle the below response with the ErrorDetails class? "data" here is a string instead
+  of an object :(
+  Potential solution: Have multiple data classes and greedily attempt to parse as each one until
+  it succeds (and make them part of a sealed class?)
+  (see: https://github.com/airmap/AirMapSDK-Kotlin/blob/caab5d/core/src/main/java/com/airmap/sdk/models/Error.kt)
+(Code 404)
+{"status":"fail","data":"No airspace found."}
+ */
+
+/**
+ * This class will wrap an error returned by the server. It will contain the response [code] and
+ * some [details] around what may have gone wrong
+ */
+@Suppress("MemberVisibilityCanBePrivate")
+class ServerError(val code: Int, val details: ErrorDetails) :
+    Exception("($code) ${details.displayMessage}")
+
+/**
+ * We attempt to consolidate all the different error formats into one class. Not all of the fields
+ * here will have meaning. Use [displayMessage] for something more tangible. The raw response is
+ * contained in [raw]. Warning: sometimes the API returns raw HTML, which can lead to a long [raw]
+ * response body. When accessing [raw], be sure to check its size before usage
+ */
+@JsonClass(generateAdapter = true)
+data class ErrorDetails(
+    @Json(name = "status") val status: String = "",
+    @Json(name = "data") val data: Data = Data(),
+    @Json(name = "msg") val msg: String = "",
+    @Json(name = "message") val message: String = "",
+    @Transient val raw: String = "",
+) {
+    @JsonClass(generateAdapter = true)
+    data class Data(
+        @Json(name = "message") val message: String = "",
+        @Json(name = "errors") val errors: List<Error> = listOf(),
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class Error(
+        @Json(name = "name") val name: String = "",
+        @Json(name = "message") val message: String = "",
+    )
+
+    val displayMessage = (listOf(status, msg, message, data.message) +
+        data.errors.map { "${it.name}: ${it.message}" })
+        .map { it.trim(',', ':', '.', ' ') }
+        .filter { it.isNotEmpty() }
+        .ifEmpty { if (raw.isNotBlank()) listOf(raw) else listOf("Unknown error") }
+        .joinToString(". ")
+}
