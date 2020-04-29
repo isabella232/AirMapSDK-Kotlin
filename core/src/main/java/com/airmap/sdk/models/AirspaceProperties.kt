@@ -2,15 +2,13 @@ package com.airmap.sdk.models
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import dev.zacsweers.moshisealed.annotations.DefaultNull
+import dev.zacsweers.moshisealed.annotations.DefaultObject
 import dev.zacsweers.moshisealed.annotations.TypeLabel
 import java.util.Date
 
-@DefaultNull
 @JsonClass(generateAdapter = true, generator = "sealed:type")
 sealed class AirspaceProperties {
-    // @DefaultObject
-    // object Unknown
+    @DefaultObject object Unknown
 }
 
 @TypeLabel("airport")

@@ -118,7 +118,7 @@ data class Advisory(
     @Json(name = "distance") val distance: Int?, // TODO: What is the unit of this?
     @Json(name = "requirements") val requirements: Requirements?,
     @Json(name = "properties") val properties: AirspaceProperties?,
-    // @Json(name = "timesheets") val timeSheets: List<TimeSheet>?,
+    @Json(name = "schedule") val schedule: List<TimeSheet>?,
 )
 
 @JsonClass(generateAdapter = true)

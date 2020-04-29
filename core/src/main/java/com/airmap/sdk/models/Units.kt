@@ -7,6 +7,7 @@ typealias Feet = Double
 typealias Hectares = Double
 typealias Degrees = Double
 typealias Seconds = Int
+typealias Hours = Int
 typealias Celsius = Double
 typealias HPa = Double
 typealias Percent = Double
