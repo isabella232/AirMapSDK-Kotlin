@@ -2,6 +2,7 @@ package com.airmap.sdk.clients
 
 import com.airmap.sdk.models.AdvisoriesRequest
 import com.airmap.sdk.models.Airspace
+import com.airmap.sdk.models.Degrees
 import com.airmap.sdk.models.Forecast
 import com.airmap.sdk.networking.AirMapCall
 import com.serjltt.moshi.adapters.Wrapped
@@ -39,8 +40,8 @@ interface AdvisoryClient {
     @GET("weather")
     @Wrapped(path = ["data"])
     fun getWeather(
-        @Query("latitude") latitude: Double,
-        @Query("longitude") longitude: Double,
+        @Query("latitude") latitude: Degrees,
+        @Query("longitude") longitude: Degrees,
         @Query("start") start: Date?,
         @Query("end") end: Date?,
     ): AirMapCall<Forecast>
