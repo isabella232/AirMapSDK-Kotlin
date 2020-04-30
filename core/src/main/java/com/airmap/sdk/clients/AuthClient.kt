@@ -29,9 +29,9 @@ interface AuthClient {
     @POST("https://{prefix}auth.airmap.com/realms/airmap/protocol/openid-connect/token")
     @FormUrlEncoded
     fun getToken(
-        @Field("client_id") clientId: String,
         @Field("username") username: String,
         @Field("password") password: String,
+        @Field("client_id") clientId: String = AirMap.config.airmap.clientId,
         @Field("scope") scope: String = "openid email profile offline_access am-api",
         @Field("grant_type") grantType: String = "password",
         @Path("prefix") urlPrefix: String = AirMap.urlPrefix,

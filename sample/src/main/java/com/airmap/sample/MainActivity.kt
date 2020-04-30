@@ -25,9 +25,9 @@ class MainActivity : AppCompatActivity() {
         Timber.plant(Timber.DebugTree())
         val okHttpClientBuilder = OkHttpClient.Builder().addInterceptor(ChuckInterceptor(this))
         AirMap.init(getConfig(this), false, okHttpClientBuilder)
-        client.getToken(cid, un, pw).enqueue {
+        client.getToken(un, pw).enqueue {
             val token = it.getOrThrow()
-            AirMap.authToken = token.accessToken
+            AirMap.login(token.refreshToken, token.accessToken)
             client.getAuthenticatedPilot().enqueue { pilot ->
                 AirMap.userId = pilot.getOrThrow().id
                 try {
