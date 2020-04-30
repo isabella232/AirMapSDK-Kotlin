@@ -1,5 +1,7 @@
 package com.airmap.sdk
 
+import com.airmap.sdk.auth.AuthSession
+import com.airmap.sdk.auth.AuthTokenListener
 import com.airmap.sdk.clients.AirMapClient
 import com.airmap.sdk.models.Config
 import com.airmap.sdk.models.GeometryJsonAdapterFactory
@@ -14,9 +16,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import okhttp3.CertificatePinner
 import okhttp3.HttpUrl
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.create
@@ -34,7 +34,7 @@ object AirMap {
     @JvmStatic var userId: String? = null
     @JvmStatic lateinit var config: Config
         private set
-    @JvmStatic var authToken: String? = null
+    private var authSession: AuthSession? = null
     internal val urlPrefix by lazy {
         if (config.airmap.environment.isNullOrBlank()) {
             ""
@@ -42,6 +42,15 @@ object AirMap {
             "${config.airmap.environment}."
         }
     }
+
+    /**
+     * Get updates about changes to the auth token and any potential refresh failures
+     */
+    @Suppress("SetterBackingFieldAssignment")
+    var authTokenListener: AuthTokenListener? = null
+        set(value) {
+            authSession?.listener = value
+        }
 
     /**
      * Initialize the SDK with the given [config]. This must be called first, before any other
@@ -82,17 +91,18 @@ object AirMap {
                         .build()
                 )
             }
-            // API Key Interceptor
-            addInterceptor { it.addHeaderToRequest("X-API-Key", config.airmap.apiKey) }
-
-            // Auth Token Interceptor - This needs to be added even if the token doesn't have a
-            // value yet (because the authToken will get set when the user logs in)
+            // Add API Key & Auth Token for requests to AirMap API. Refresh token if necessary
             addInterceptor {
-                when {
-                    // TODO: Login logic (Add a listener when auth token is blank for apps to be
-                    //  able to consume?)
-                    authToken.isNullOrBlank() -> it.proceed(it.request())
-                    else -> it.addHeaderToRequest("Authorization", "Bearer $authToken")
+                if (it.request().url().host().contains(config.airmap.domain)) {
+                    it.proceed(it.request().newBuilder().apply {
+                        addHeader("X-API-Key", config.airmap.apiKey)
+                        authSession?.apply {
+                            refreshIfExpired(600)
+                            addHeader("Authorization", "Bearer $authToken")
+                        }
+                    }.build())
+                } else {
+                    it.proceed(it.request())
                 }
             }
         }.build()
@@ -110,11 +120,15 @@ object AirMap {
     }
 
     /**
-     * Convenience method to simplify the verbose syntax of using an Interceptor to add a Header
-     * Sets the header [name] to [value]
+     * Set the credentials. If only [refreshToken] is provided, then [authToken] will get set on the
+     * first call to the API. To get these tokens initially, make use of one of the functions in
+     * [com.airmap.sdk.clients.AuthClient]. However, [init] should still be the very first function
+     * called!
      */
-    private fun Interceptor.Chain.addHeaderToRequest(name: String, value: String): Response {
-        return this.proceed(this.request().newBuilder().addHeader(name, value).build())
+    @JvmOverloads
+    @JvmStatic
+    fun login(refreshToken: String, authToken: String? = null) {
+        authSession = AuthSession(config.airmap.clientId, authToken, refreshToken)
     }
 
     /**

@@ -4,7 +4,6 @@
 - ~Enable `ktlint` pre-commit git hook~ (**Currently not working as `ktlint` does not yet support Kotlin 1.4 syntax (e.g. trailing commas and `fun interface`s**))
 
 ### TODO
-- Automatically refresh token
 - Tests
 - Tile API
 - System Status real time
