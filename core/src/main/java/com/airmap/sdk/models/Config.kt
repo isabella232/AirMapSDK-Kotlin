@@ -4,6 +4,10 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 // TODO: Represent this as a Map instead so that it is extensible from the app?
+//  Possibly: represent this as abstract base class (i.e "BaseConfig"). Then create a data class
+//  "RegularConfig" which is the instance that would be passed to init method. Then, in our app,
+//  We can extend the config with additional fields as necessary. But, the init method would require
+//  only an instance of BaseConfig
 @JsonClass(generateAdapter = true)
 data class Config(
     @Json(name = "airmap") val airmap: AirMapConfig,
