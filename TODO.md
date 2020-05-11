@@ -4,6 +4,10 @@
 - ~Enable `ktlint` pre-commit git hook~ (**Currently not working as `ktlint` does not yet support Kotlin 1.4 syntax (e.g. trailing commas and `fun interface`s**))
 
 ### TODO
+- Add Maven upload plugin and publish
+  - https://github.com/vanniktech/gradle-maven-publish-plugin
+  - https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-gradle-for-use-with-github-packages
+  - https://github.com/bintray/gradle-bintray-plugin
 - Tests
 - Tile API
 - System Status real time
@@ -26,10 +30,8 @@
 - Separate Mapping modules?
   - MapBox Extensions to convert individual lat+lon into `LatLng` class
   - GMaps Extensions to convert individual lat+lon into `LatLng` class
-- Add Bintray upload logic
 - Add R8/Proguard rules (esp retrofit and moshi) + README instructions
 - Cert Pinning updates?
-- Publish to Bintray
 - Create dummy `AirMapSDK-Java` repo that simply points to this?
   - Same with Android?
 - Move `AirMapClient` extension methods into the respective clients and use `JvmDefaults` (interface default methods) so that the interface declaration is closer to usage site)

@@ -1,4 +1,4 @@
-# This SDK is still a WIP
+# This SDK should not be used - it is a WIP and not published yet
 
 ![AirMap: The Airspace Platform for Developers](.github/logo.png)
 ![Kotlin 1.4](https://img.shields.io/badge/Kotlin-1.4-orange.svg)
